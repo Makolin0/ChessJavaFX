@@ -1,8 +1,11 @@
 package chess.chessjavafx;
 
+import chess.chessjavafx.Pieces.Pawn;
+import chess.chessjavafx.Pieces.Piece;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -10,12 +13,16 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Chess extends Application {
     private int mouseX;
     private int mouseY;
     int xPrev = 0;
     int yPrev = 0;
+    int x;
+    int y;
+    Piece holdingPiece;
 
 
     @Override
@@ -27,7 +34,29 @@ public class Chess extends Application {
         stage.setHeight(100*9);
         stage.setResizable(false);
 
-        List<Rectangle> board = setBoard(root);
+        Image icon = new Image("file:src/imgs/pawnW.png");
+        stage.getIcons().add(icon);
+
+        BoardController boardController = new BoardController(root);
+
+        boardController.setBoard();
+
+
+        PiecesController piecesController = new PiecesController(root);
+
+
+
+
+
+        //Testy pionkow
+        //Piece piece = new Pawn(Piece.Team.WHITE, Piece.Type.PAWN, 0, 1);
+        //root.getChildren().add(piece.getImg());
+
+
+        //List<Piece> pieces = boardController.setPieces();
+
+
+
 
 
 
@@ -35,52 +64,60 @@ public class Chess extends Application {
             mouseX = (int)event.getSceneX();
             mouseY = (int)event.getSceneY();
 
-            int x = mouseX / 100;
-            int y = mouseY / 100;
+            x = mouseX / 100;
+            y = mouseY / 100;
 
 
 
             if ((x != xPrev || y != yPrev) && x < 8 && y < 8) {
-                board.get(x*8+y).setOpacity(0.6);
-                board.get(xPrev*8+yPrev).setOpacity(1);
+                boardController.showSelected(x, y);
+
+
                 xPrev = x;
                 yPrev = y;
             }
 
+            if(!Objects.isNull(holdingPiece)){
+                //System.out.println("holding piece");
+                holdingPiece.moveFree(mouseX, mouseY);
+            }
 
 
-            System.out.printf("X: %d Y: %d   block: %d x %d%n", mouseX, mouseY, x, y);
+            //System.out.printf("X: %d Y: %d   block: %d x %d%n", mouseX, mouseY, x, y);
             //System.out.println(xPrev + "  " + yPrev);
         });
 
+        scene.setOnMousePressed((MouseEvent event) -> {
+            //System.out.println("press entered");
+
+            if(!Objects.isNull(holdingPiece)){
+                //System.out.println("placing piece");
+                //System.out.println("x" + x + "  y " + y);
+                for (Integer[] a : holdingPiece.movableList()) {
+                    if(a[0] == x && a[1] == y){
+                        //System.out.println("placed piece");
+                        holdingPiece.setPlace(x, y);
+                        holdingPiece = null;
+                        boardController.clearMovable();
+                        break;
+                    }
+                }
+                return;
+            }
 
 
 
+            holdingPiece = piecesController.checkForPiece(x, y);
+            if(!Objects.isNull(holdingPiece)){
+                //System.out.println("found piece");
+                boardController.showMovable(holdingPiece);
+            }
+        });
 
         stage.show();
     }
 
-    private List<Rectangle> setBoard(Group root){
-        List<Rectangle> board = new ArrayList<>();
 
-        for (int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++){
-                //System.out.printf("i: %d j: %d kolor: %s%n", i, j, (i+j)%2==0?"white":"gray");
-
-                Rectangle rectangle = new Rectangle();
-                rectangle.setFill((i+j)%2==0?Color.WHITE:Color.DARKGRAY);
-                rectangle.setX(i*100);
-                rectangle.setY(j*100);
-                rectangle.setWidth(100);
-                rectangle.setHeight(100);
-
-                board.add(rectangle);
-            }
-        }
-        root.getChildren().addAll(board);
-
-        return board;
-    }
 
 
     public static void main(String[] args) {
