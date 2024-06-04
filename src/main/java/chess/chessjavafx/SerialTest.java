@@ -16,7 +16,7 @@ public class SerialTest {
 
         long timeStart = System.currentTimeMillis();
 
-        var sp = SerialPort.getCommPort("/dev/ttyACM0");
+        var sp = SerialPort.getCommPort("COM5");
 //        SerialPort sp = SerialPort.getCommPorts()[0];
         System.out.println("sp " + sp);
         sp.setComPortParameters(9600, Byte.SIZE, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);

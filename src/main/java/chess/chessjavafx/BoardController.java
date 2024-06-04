@@ -57,16 +57,32 @@ public class BoardController {
     public void setNewGame(){
         pieceMap.clear();
         for(int x = 0; x < 8; x++){
-            Piece pieceW = new Pawn(Piece.Team.WHITE,new Position(x, 1));
-            Piece pieceB = new Pawn(Piece.Team.BLACK,new Position(x, 6));
+            Piece pieceW = new Pawn(Piece.Team.WHITE,new Position(x, 1), root);
+            Piece pieceB = new Pawn(Piece.Team.BLACK,new Position(x, 6), root);
             pieceMap.put(pieceW.getPosition().getInt(), pieceW);
-            root.getChildren().add(pieceW.getImg());
             pieceMap.put(pieceB.getPosition().getInt(), pieceB);
-            root.getChildren().add(pieceB.getImg());
         }
-        Piece pieceW = new Pawn(Piece.Team.WHITE,new Position(4, 4));
-        pieceMap.put(pieceW.getPosition().getInt(), pieceW);
-        root.getChildren().add(pieceW.getImg());
+
+        pieceMap.put(0, new Rook(Piece.Team.WHITE, new Position(0), root));
+        pieceMap.put(7, new Rook(Piece.Team.WHITE, new Position(7), root));
+        pieceMap.put(56, new Rook(Piece.Team.BLACK, new Position(56), root));
+        pieceMap.put(63, new Rook(Piece.Team.BLACK, new Position(63), root));
+
+        pieceMap.put(2, new Bishop(Piece.Team.WHITE, new Position(2), root));
+        pieceMap.put(5, new Bishop(Piece.Team.WHITE, new Position(5), root));
+        pieceMap.put(58, new Bishop(Piece.Team.BLACK, new Position(58), root));
+        pieceMap.put(61, new Bishop(Piece.Team.BLACK, new Position(61), root));
+
+        pieceMap.put(1, new Knight(Piece.Team.WHITE, new Position(1), root));
+        pieceMap.put(6, new Knight(Piece.Team.WHITE, new Position(6), root));
+        pieceMap.put(57, new Knight(Piece.Team.BLACK, new Position(57), root));
+        pieceMap.put(62, new Knight(Piece.Team.BLACK, new Position(62), root));
+
+        pieceMap.put(3, new Queen(Piece.Team.WHITE, new Position(3), root));
+        pieceMap.put(59, new Queen(Piece.Team.BLACK, new Position(59), root));
+
+        pieceMap.put(4, new King(Piece.Team.WHITE, new Position(4), root));
+        pieceMap.put(60, new King(Piece.Team.BLACK, new Position(60), root));
     }
 
     public void movePiece(Position oldPosition, Position newPosition){
@@ -97,6 +113,7 @@ public class BoardController {
         Piece movingPiece = pieceMap.get(myPosition.getInt());
         Piece beatingPiece = pieceMap.get(beatPosition.getInt());
         if(Objects.nonNull(movingPiece) && Objects.nonNull(beatingPiece)){
+            root.getChildren().remove(beatingPiece.getImg());
             pieceMap.replace(beatingPiece.getPosition().getInt(), movingPiece);
             pieceMap.remove(movingPiece.getPosition().getInt());
             movingPiece.setPosition(beatPosition);
@@ -118,6 +135,7 @@ public class BoardController {
         selected = new Position(x, y);
         update();
     }
+
     
     public void resetBoard(){
         for (Rectangle r :

@@ -28,9 +28,7 @@ public class TimerScheduleHandler extends TimerTask implements SerialPortDataLis
     @Override
     public void serialEvent(SerialPortEvent serialPortEvent){
         if(serialPortEvent.getEventType() == SerialPort.LISTENING_EVENT_DATA_RECEIVED){
-//            System.out.println(serialPortEvent.getSerialPort());
-//            System.out.println("Arduino is alive");
-            boardController.movePiece(new Position(4, 4), new Position(4, 5));
+            boardController.movePiece(new Position(1, 1), new Position(1, 3));
         }
     }
 }

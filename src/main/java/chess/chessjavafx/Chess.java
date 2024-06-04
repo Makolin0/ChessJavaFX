@@ -27,8 +27,8 @@ public class Chess extends Application {
         Group root = new Group();
         Scene scene = new Scene(root, Color.LIME);
         stage.setScene(scene);
-        stage.setWidth(100*8);
-        stage.setHeight(100*9);
+        stage.setWidth(100*8 + 10);
+        stage.setHeight(100*8 + 20);
         stage.setResizable(false);
 
         Image icon = new Image("file:src/imgs/pawnW.png");

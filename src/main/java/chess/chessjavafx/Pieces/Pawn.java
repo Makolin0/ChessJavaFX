@@ -1,6 +1,7 @@
 package chess.chessjavafx.Pieces;
 
 import chess.chessjavafx.Position;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -11,22 +12,16 @@ import java.util.Objects;
 
 public class Pawn implements Piece{
     private Team team;
-//    private Type type;
     private Position position;
     private ImageView img;
 
-//    public Pawn(Team team, Type type, Position position) {
-    public Pawn(Team team, Position position) {
+    public Pawn(Team team, Position position, Group root) {
         this.team = team;
-//        this.type = type;
-        this.img = new ImageView(new Image("file:src/imgs/pawnW.png"));
+        this.img = new ImageView(new Image("file:src/imgs/pawn" + (team == Team.WHITE ? "W" : "B") + ".png"));
         setPosition(position);
+        root.getChildren().add(this.img);
     }
 
-//    @Override
-//    public Type getType() {
-//        return type;
-//    }
 
     @Override
     public Team getTeam() {
