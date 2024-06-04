@@ -1,29 +1,32 @@
 package chess.chessjavafx.Pieces;
 
+import chess.chessjavafx.Position;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class Pawn implements Piece{
     private Team team;
-    private Type type;
-    private Integer[] place;
+//    private Type type;
+    private Position position;
     private ImageView img;
 
-    public Pawn(Team team, Type type, int x, int y) {
+//    public Pawn(Team team, Type type, Position position) {
+    public Pawn(Team team, Position position) {
         this.team = team;
-        this.type = type;
-        this.place = new Integer[2];
-        img = new ImageView(new Image("file:src/imgs/pawnW.png"));
-        setPlace(x, y);
+//        this.type = type;
+        this.img = new ImageView(new Image("file:src/imgs/pawnW.png"));
+        setPosition(position);
     }
 
-    @Override
-    public Type getType() {
-        return type;
-    }
+//    @Override
+//    public Type getType() {
+//        return type;
+//    }
 
     @Override
     public Team getTeam() {
@@ -36,31 +39,68 @@ public class Pawn implements Piece{
     }
 
     @Override
-    public boolean checkPlace(int x, int y) {
-        return x == place[0] && y == place[1];
+    public void setPosition(Position position) {
+        this.position = position;
+        img.setX(position.getX()*100);
+        img.setY(position.getY()*100);
+    }
+    @Override
+    public Position getPosition(){
+        return position;
     }
 
     @Override
-    public List<Integer[]> movableList() {
-        List<Integer[]> movable = new ArrayList<>();
+    public List<Position> getMovableList(Map<Integer, Piece> allPieces) {
+        List<Position> movableSquares = new ArrayList<>();
+        switch (team){
+            case WHITE -> {
+                if(position.getY() > 6)
+                    return movableSquares;
 
-        movable.add(place);
-        if(Team.WHITE.equals(team)){
-            if(place[1] == 1){
-                movable.add(new Integer[]{place[0], 3});
+                if(Objects.isNull(allPieces.get(position.getInt()+8))) {
+                    movableSquares.add(new Position(position.getX(), position.getY() + 1));
+                } else {return movableSquares;}
+                if(position.getY()==1)
+                    if(Objects.isNull(allPieces.get(position.getInt()+16)))
+                        movableSquares.add(new Position(position.getX(), 3));
             }
-            if(place[1] < 7)
-                movable.add(new Integer[]{place[0], place[1] + 1});
-        }
-        else if(Team.BLACK.equals(team)){
-            if(place[1] == 6){
-                movable.add(new Integer[]{place[0], 4});
-            }
-            if(place[1] > 0)
-                movable.add(new Integer[]{place[0], place[1] - 1});
-        }
+            case BLACK -> {
+                if(position.getY() < 1)
+                    return movableSquares;
 
-        return movable;
+                if(Objects.isNull(allPieces.get(position.getInt()-8))) {
+                    movableSquares.add(new Position(position.getX(), position.getY() - 1));
+                } else {return movableSquares;}
+                if(position.getY()==6)
+                    if(Objects.isNull(allPieces.get(position.getInt()-16)))
+                        movableSquares.add(new Position(position.getX(), 4));
+            }
+        }
+        return movableSquares;
+    }
+
+    @Override
+    public List<Position> getBeatableList(Map<Integer, Piece> allPieces) {
+        List<Position> beatableSquares = new ArrayList<>();
+        switch (team){
+            case WHITE -> {
+                Piece checkLeft = allPieces.get(position.getInt()+7);
+                Piece checkRight = allPieces.get(position.getInt()+9);
+                if(!Objects.isNull(checkLeft) && checkLeft.getTeam()==Team.BLACK)
+                    beatableSquares.add(new Position(position.getInt()+7));
+                if(!Objects.isNull(checkRight) && checkRight.getTeam()==Team.BLACK)
+                    beatableSquares.add(new Position(position.getInt()+9));
+            }
+            case BLACK -> {
+                Piece checkLeft = allPieces.get(position.getInt()-9);
+                Piece checkRight = allPieces.get(position.getInt()-7);
+                if(!Objects.isNull(checkLeft) && checkLeft.getTeam()==Team.WHITE)
+                    beatableSquares.add(new Position(position.getInt()-9));
+                if(!Objects.isNull(checkRight) && checkRight.getTeam()==Team.WHITE)
+                    beatableSquares.add(new Position(position.getInt()-7));
+            }
+        }
+        return beatableSquares;
     }
 
     @Override
@@ -71,16 +111,8 @@ public class Pawn implements Piece{
 
     @Override
     public void moveBack() {
-        img.setX(place[0]);
-        img.setY(place[1]);
+        img.setX(position.getX()*100);
+        img.setY(position.getY()*100);
     }
 
-    @Override
-    public void setPlace(int x, int y) {
-        img.setX(x*100);
-        img.setY(y*100);
-
-        place[0] = x;
-        place[1] = y;
-    }
 }

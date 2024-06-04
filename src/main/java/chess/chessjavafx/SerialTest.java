@@ -1,14 +1,22 @@
 package chess.chessjavafx;
 
 import com.fazecast.jSerialComm.SerialPort;
+import javafx.scene.Group;
 
 import java.util.Timer;
 
 public class SerialTest {
-    public static void main(String[] args) {
+    private BoardController boardController;
+
+    public SerialTest(BoardController boardController) {
+        this.boardController = boardController;
+    }
+
+    public void initiate() {
+
         long timeStart = System.currentTimeMillis();
 
-         var sp = SerialPort.getCommPort("/dev/ttyACM0");
+        var sp = SerialPort.getCommPort("/dev/ttyACM0");
 //        SerialPort sp = SerialPort.getCommPorts()[0];
         System.out.println("sp " + sp);
         sp.setComPortParameters(9600, Byte.SIZE, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
@@ -24,13 +32,11 @@ public class SerialTest {
         Runtime.getRuntime().addShutdownHook(new Thread(sp::closePort));
 
         var timer = new Timer();
-        var timedSchedule = new TimerScheduleHandler(timeStart);
+        var timedSchedule = new TimerScheduleHandler(timeStart, boardController);
 
         sp.addDataListener(timedSchedule);
 
         System.out.println("Listen: " + timedSchedule.getListeningEvents());
         timer.schedule(timedSchedule, 0, 1000);
-
-
     }
 }

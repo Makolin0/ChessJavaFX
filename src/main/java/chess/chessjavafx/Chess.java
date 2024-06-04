@@ -1,6 +1,5 @@
 package chess.chessjavafx;
 
-import chess.chessjavafx.Pieces.Pawn;
 import chess.chessjavafx.Pieces.Piece;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -8,11 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Chess extends Application {
@@ -22,11 +18,12 @@ public class Chess extends Application {
     int yPrev = 0;
     int x;
     int y;
-    Piece holdingPiece;
+    Position holdingPiece;
 
 
     @Override
     public void start(Stage stage) throws Exception {
+        // set scene
         Group root = new Group();
         Scene scene = new Scene(root, Color.LIME);
         stage.setScene(scene);
@@ -37,13 +34,16 @@ public class Chess extends Application {
         Image icon = new Image("file:src/imgs/pawnW.png");
         stage.getIcons().add(icon);
 
+
         BoardController boardController = new BoardController(root);
-
         boardController.setBoard();
+        boardController.setNewGame();
+        System.out.println(boardController);
 
 
-        PiecesController piecesController = new PiecesController(root);
-
+        // obsługa komunikacji z arduino
+        SerialTest serialTest = new SerialTest(boardController);
+        serialTest.initiate();
 
 
 
@@ -56,63 +56,47 @@ public class Chess extends Application {
         //List<Piece> pieces = boardController.setPieces();
 
 
-
-
-
-
+        // obsługa ruchu myszy
         scene.setOnMouseMoved((MouseEvent event) -> {
             mouseX = (int)event.getSceneX();
             mouseY = (int)event.getSceneY();
-
             x = mouseX / 100;
             y = mouseY / 100;
 
-
-
             if ((x != xPrev || y != yPrev) && x < 8 && y < 8) {
                 boardController.showSelected(x, y);
-
-
                 xPrev = x;
                 yPrev = y;
             }
 
             if(!Objects.isNull(holdingPiece)){
                 //System.out.println("holding piece");
-                holdingPiece.moveFree(mouseX, mouseY);
+                boardController.moveFree(holdingPiece, mouseX, mouseY);
             }
-
-
             //System.out.printf("X: %d Y: %d   block: %d x %d%n", mouseX, mouseY, x, y);
             //System.out.println(xPrev + "  " + yPrev);
         });
 
+
+        // obsługa klikniecia myszy
         scene.setOnMousePressed((MouseEvent event) -> {
             //System.out.println("press entered");
-
-            if(!Objects.isNull(holdingPiece)){
+            if(Objects.nonNull(holdingPiece)){
                 //System.out.println("placing piece");
                 //System.out.println("x" + x + "  y " + y);
-                for (Integer[] a : holdingPiece.movableList()) {
-                    if(a[0] == x && a[1] == y){
-                        //System.out.println("placed piece");
-                        holdingPiece.setPlace(x, y);
-                        holdingPiece = null;
+                        boardController.movePiece(holdingPiece, new Position(x, y));
                         boardController.clearMovable();
-                        break;
-                    }
+                        holdingPiece = null;
+            } else {
+                holdingPiece = boardController.checkForPiece(x, y);
+                if (Objects.nonNull(holdingPiece)) {
+                    //System.out.println("found piece");
+                    boardController.lightMovableSquares(holdingPiece);
                 }
-                return;
             }
-
-
-
-            holdingPiece = piecesController.checkForPiece(x, y);
-            if(!Objects.isNull(holdingPiece)){
-                //System.out.println("found piece");
-                boardController.showMovable(holdingPiece);
-            }
+            System.out.println(boardController);
         });
+
 
         stage.show();
     }

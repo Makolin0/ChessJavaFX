@@ -1,9 +1,11 @@
 package chess.chessjavafx.Pieces;
 
+import chess.chessjavafx.Position;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.List;
+import java.util.Map;
 
 public interface Piece {
 
@@ -16,12 +18,13 @@ public interface Piece {
         PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING;
     }
 
-    public Type getType();
+//    public Type getType();
     public Team getTeam();
     public ImageView getImg();
-    public boolean checkPlace(int x, int y);
-    public List<Integer[]> movableList();
+    public List<Position> getMovableList(Map<Integer, Piece> allPieces);
+    public List<Position> getBeatableList(Map<Integer, Piece> allPieces);
     public void moveFree(int x, int y);
     public void moveBack();
-    public void setPlace(int x, int y);
+    public void setPosition(Position position);
+    public Position getPosition();
 }

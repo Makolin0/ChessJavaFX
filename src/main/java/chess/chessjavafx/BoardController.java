@@ -1,29 +1,40 @@
 package chess.chessjavafx;
 
-import chess.chessjavafx.Pieces.Pawn;
-import chess.chessjavafx.Pieces.Piece;
+import chess.chessjavafx.Pieces.*;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class BoardController {
     private Group root;
     private List<Rectangle> board;
-    private Integer[] selected;
-    private List<Integer[]> piecePreview;
+    private Position selected;
+    private List<Position> piecePreview;
+    private Map<Integer, Piece> pieceMap;
 
 
     public BoardController(Group root){
         this.root = root;
         this.board = new ArrayList<>();
-        this.selected = new Integer[2];
+//        this.selected = new Position();
         this.piecePreview = new ArrayList<>();
+        this.pieceMap = new HashMap<>();
     }
 
+    public void moveFree(Position position, int x, int y) {
+        pieceMap.get(position.getInt()).moveFree(x, y);
+    }
+
+    public Position checkForPiece(int x, int y){
+        Piece piece = pieceMap.get(y*8 + x);
+        if(Objects.nonNull(piece)){
+            return piece.getPosition();
+        } else {
+            return null;
+        }
+    }
 
     public void setBoard(){
         for (int i = 0; i < 8; i++) {
@@ -43,21 +54,58 @@ public class BoardController {
         root.getChildren().addAll(board);
     }
 
-    public List<Piece> setPieces(){
-        List<Piece> pieces = new ArrayList<>();
-
-        for (int i = 0; i < 8; i++) {
-            Piece piece = new Pawn(Piece.Team.WHITE, Piece.Type.PAWN, i, 1);
-            pieces.add(piece);
-            root.getChildren().add(piece.getImg());
+    public void setNewGame(){
+        pieceMap.clear();
+        for(int x = 0; x < 8; x++){
+            Piece pieceW = new Pawn(Piece.Team.WHITE,new Position(x, 1));
+            Piece pieceB = new Pawn(Piece.Team.BLACK,new Position(x, 6));
+            pieceMap.put(pieceW.getPosition().getInt(), pieceW);
+            root.getChildren().add(pieceW.getImg());
+            pieceMap.put(pieceB.getPosition().getInt(), pieceB);
+            root.getChildren().add(pieceB.getImg());
         }
+        Piece pieceW = new Pawn(Piece.Team.WHITE,new Position(4, 4));
+        pieceMap.put(pieceW.getPosition().getInt(), pieceW);
+        root.getChildren().add(pieceW.getImg());
+    }
 
-        return pieces;
+    public void movePiece(Position oldPosition, Position newPosition){
+        Piece movingPiece = pieceMap.get(oldPosition.getInt());
+        if(Objects.nonNull(movingPiece)){
+            System.out.println("znaleziono pion");
+            List<Position> movable = movingPiece.getMovableList(pieceMap);
+            List<Position> beatable = movingPiece.getBeatableList(pieceMap);
+            System.out.println("move " + movable);
+            System.out.println("beat " + beatable);
+            System.out.println("ruch do: " + newPosition);
+            if(beatable.contains(newPosition)){
+                System.out.println("można zbić");
+                beatPiece(oldPosition, newPosition);
+            }
+            else if(movable.contains(newPosition)){
+                System.out.println("mozna sie ruszyc");
+                movingPiece.setPosition(newPosition);
+                pieceMap.put(newPosition.getInt(), movingPiece);
+                pieceMap.remove(oldPosition.getInt());
+            } else {
+                movingPiece.moveBack();
+            }
+        }
+    }
+
+    public void beatPiece(Position myPosition, Position beatPosition){
+        Piece movingPiece = pieceMap.get(myPosition.getInt());
+        Piece beatingPiece = pieceMap.get(beatPosition.getInt());
+        if(Objects.nonNull(movingPiece) && Objects.nonNull(beatingPiece)){
+            pieceMap.replace(beatingPiece.getPosition().getInt(), movingPiece);
+            pieceMap.remove(movingPiece.getPosition().getInt());
+            movingPiece.setPosition(beatPosition);
+        }
     }
 
 
-    public void showMovable(Piece piece){
-        piecePreview = piece.movableList();
+    public void lightMovableSquares(Position position){
+        piecePreview = pieceMap.get(position.getInt()).getMovableList(pieceMap);
 
         update();
     }
@@ -67,7 +115,7 @@ public class BoardController {
     }
 
     public void showSelected(int x, int y){
-        selected = new Integer[]{x, y};
+        selected = new Position(x, y);
         update();
     }
     
@@ -82,11 +130,24 @@ public class BoardController {
         resetBoard();
 
         if(!Objects.isNull(piecePreview))
-            for (Integer[] r : piecePreview) {
-                board.get(r[0]*8 + r[1]).setOpacity(0.8);
+            for (Position r : piecePreview) {
+                board.get(r.getX()*8 + r.getY()).setOpacity(0.8);
             }
 
-        board.get(selected[0] * 8 + selected[1]).setOpacity(0.6);
+        board.get(selected.getX() * 8 + selected.getY()).setOpacity(0.6);
     }
 
+    @Override
+    public String toString() {
+        String board = "";
+
+        for(int y = 0; y < 8; y++){
+            for(int x = 0; x < 8; x++){
+                Piece piece = pieceMap.get(y*8+x);
+                board = board + (Objects.isNull(piece) ? " __ " : (piece.getTeam() == Piece.Team.WHITE ? " wp " : " bp "));
+            }
+            board = board + "\n";
+        }
+        return board;
+    }
 }

@@ -3,13 +3,16 @@ package chess.chessjavafx;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
+import javafx.scene.Group;
 
 import java.util.TimerTask;
 
 public class TimerScheduleHandler extends TimerTask implements SerialPortDataListener {
     private final long timeStart;
-    public TimerScheduleHandler(long timeStart) {
+    private BoardController boardController;
+    public TimerScheduleHandler(long timeStart, BoardController boardController) {
         this.timeStart = timeStart;
+        this.boardController = boardController;
     }
 
     @Override
@@ -25,8 +28,9 @@ public class TimerScheduleHandler extends TimerTask implements SerialPortDataLis
     @Override
     public void serialEvent(SerialPortEvent serialPortEvent){
         if(serialPortEvent.getEventType() == SerialPort.LISTENING_EVENT_DATA_RECEIVED){
-            System.out.println(serialPortEvent.getSerialPort());
-            System.out.println("Arduino is alive");
+//            System.out.println(serialPortEvent.getSerialPort());
+//            System.out.println("Arduino is alive");
+            boardController.movePiece(new Position(4, 4), new Position(4, 5));
         }
     }
 }
