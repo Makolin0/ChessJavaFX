@@ -27,7 +27,7 @@ public class Chess extends Application {
         Group root = new Group();
         Scene scene = new Scene(root, Color.LIME);
         stage.setScene(scene);
-        stage.setWidth(100*8 + 10);
+        stage.setWidth(100*8 + 100);
         stage.setHeight(100*8 + 20);
         stage.setResizable(false);
 
@@ -40,10 +40,14 @@ public class Chess extends Application {
         boardController.setNewGame();
         System.out.println(boardController);
 
+        InfoPanel infoPanel = new InfoPanel(root);
+        boardController.setInfoPanel(infoPanel);
+
+
 
         // obsługa komunikacji z arduino
         SerialTest serialTest = new SerialTest(boardController);
-        serialTest.initiate();
+        // serialTest.initiate();
 
 
 
@@ -94,7 +98,6 @@ public class Chess extends Application {
                     boardController.lightMovableSquares(holdingPiece);
                 }
             }
-            System.out.println(boardController);
         });
 
 

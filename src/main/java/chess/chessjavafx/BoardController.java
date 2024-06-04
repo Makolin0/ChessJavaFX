@@ -13,6 +13,7 @@ public class BoardController {
     private Position selected;
     private List<Position> piecePreview;
     private Map<Integer, Piece> pieceMap;
+    private InfoPanel infoPanel;
 
 
     public BoardController(Group root){
@@ -21,6 +22,10 @@ public class BoardController {
 //        this.selected = new Position();
         this.piecePreview = new ArrayList<>();
         this.pieceMap = new HashMap<>();
+    }
+
+    public void setInfoPanel(InfoPanel infoPanel){
+        this.infoPanel = infoPanel;
     }
 
     public void moveFree(Position position, int x, int y) {
@@ -97,12 +102,14 @@ public class BoardController {
             if(beatable.contains(newPosition)){
                 System.out.println("można zbić");
                 beatPiece(oldPosition, newPosition);
+                lookForCheck(movingPiece);
             }
             else if(movable.contains(newPosition)){
                 System.out.println("mozna sie ruszyc");
                 movingPiece.setPosition(newPosition);
                 pieceMap.put(newPosition.getInt(), movingPiece);
                 pieceMap.remove(oldPosition.getInt());
+                lookForCheck(movingPiece);
             } else {
                 movingPiece.moveBack();
             }
@@ -117,6 +124,8 @@ public class BoardController {
             pieceMap.replace(beatingPiece.getPosition().getInt(), movingPiece);
             pieceMap.remove(movingPiece.getPosition().getInt());
             movingPiece.setPosition(beatPosition);
+            System.out.println("Bije");
+            lookForCheck(movingPiece);
         }
     }
 
@@ -136,6 +145,24 @@ public class BoardController {
         update();
     }
 
+    public boolean lookForCheck(Piece piece){
+        // default for white
+        System.out.println("Sprawdzam bicia");
+
+            System.out.println("Dla " + piece);
+            if(piece.getTeam() == Piece.Team.WHITE){
+                System.out.println("Bialy");
+                for(Position position : piece.getBeatableList(pieceMap)){
+                    Piece checkingPiece = pieceMap.get(position.getInt());
+                    if("King".equals(checkingPiece.getClass().getSimpleName()) && checkingPiece.getTeam() != piece.getTeam()){
+                        System.out.println("Szach");
+                        infoPanel.getCheck().setText("Szach");
+                    }
+                }
+            }
+
+        return false;
+    }
     
     public void resetBoard(){
         for (Rectangle r :
