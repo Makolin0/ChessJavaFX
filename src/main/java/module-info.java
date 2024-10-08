@@ -6,6 +6,8 @@ module chess.chessjavafx {
 
     opens chess.chessjavafx to javafx.fxml;
     exports chess.chessjavafx;
+    exports chess.chessjavafx.JavaFX;
+    opens chess.chessjavafx.JavaFX to javafx.fxml;
     // exports chess.chessjavafx.tests;
     // opens chess.chessjavafx.tests to javafx.fxml;
 }
