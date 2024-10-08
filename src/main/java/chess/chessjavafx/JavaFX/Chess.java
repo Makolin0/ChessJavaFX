@@ -20,10 +20,10 @@ public class Chess extends Application {
     public void start(Stage stage) throws Exception {
         // set scene
         Group root = new Group();
-//        Scene scene = new Scene(root, Color.LIME);
+        Scene scene = new Scene(root, Color.LIME);
+        GameScene gameScene = new GameScene(root);
 //        stage.setScene(scene);
-//        stage.setWidth(100*8 + 100);
-//        stage.setHeight(100*8 + 20);
+        stage.setScene(gameScene);
         stage.setResizable(false);
 
         Image icon = new Image("file:src/imgs/pawnW.png");
@@ -31,13 +31,8 @@ public class Chess extends Application {
 
 
 
-//        InfoPanel infoPanel = new InfoPanel(root);
-//        boardController.setInfoPanel(infoPanel);
 
-
-        // obsługa komunikacji z arduino
-//        SerialTest serialTest = new SerialTest(boardController);
-        // serialTest.initiate();
+        stage.show();
     }
     public static void main(String[] args) {
         launch(args);
