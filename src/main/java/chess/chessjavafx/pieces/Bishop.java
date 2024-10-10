@@ -1,6 +1,6 @@
-package chess.chessjavafx.Pieces;
+package chess.chessjavafx.pieces;
 
-import chess.chessjavafx.Position;
+import chess.chessjavafx.game.Position;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -8,27 +8,18 @@ import javafx.scene.image.ImageView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class Bishop implements Piece{
     private Team team;
     //    private Type type;
-    private Position position;
+    private Position currentPosition;
     private ImageView img;
 
-    //    public Pawn(Team team, Type type, Position position) {
-    public Bishop(Team team, Position position, Group root) {
+    public Bishop(Team team, Position currentPosition, Group root) {
         this.team = team;
-//        this.type = type;
         this.img = new ImageView(new Image("file:src/imgs/bishop" + (team == Team.WHITE ? "W" : "B") + ".png"));
-        setPosition(position);
         root.getChildren().add(this.img);
     }
-
-//    @Override
-//    public Type getType() {
-//        return type;
-//    }
 
     @Override
     public Team getTeam() {
@@ -41,22 +32,11 @@ public class Bishop implements Piece{
     }
 
     @Override
-    public void setPosition(Position position) {
-        this.position = position;
-        img.setX(position.getX()*100);
-        img.setY(position.getY()*100);
-    }
-    @Override
-    public Position getPosition(){
-        return position;
-    }
-
-    @Override
-    public List<Position> getMovableList(Map<Integer, Piece> allPieces) {
+    public List<Position> getMovableList(Map<Integer, Piece> allPieces, Position currentPosition) {
         List<Position> movableSquares = new ArrayList<>();
         // ruchy w lewo-gora
-        int x = position.getX();
-        int y = position.getY();
+        int x = currentPosition.getX();
+        int y = currentPosition.getY();
         while(x > 0 && y > 0){
             x--;
             y--;
@@ -67,8 +47,8 @@ public class Bishop implements Piece{
             }
         }
         // ruchy w lewo-dol
-        x = position.getX();
-        y = position.getY();
+        x = currentPosition.getX();
+        y = currentPosition.getY();
         while(x > 0 && y < 7){
             x--;
             y++;
@@ -79,8 +59,8 @@ public class Bishop implements Piece{
             }
         }
         // ruchy w prawo-gora
-        x = position.getX();
-        y = position.getY();
+        x = currentPosition.getX();
+        y = currentPosition.getY();
         while(x < 7 && y > 0){
             x++;
             y--;
@@ -91,8 +71,8 @@ public class Bishop implements Piece{
             }
         }
         // ruchy w prawo-dol
-        x = position.getX();
-        y = position.getY();
+        x = currentPosition.getX();
+        y = currentPosition.getY();
         while(x < 7 && y < 7){
             x++;
             y++;
@@ -106,11 +86,11 @@ public class Bishop implements Piece{
     }
 
     @Override
-    public List<Position> getBeatableList(Map<Integer, Piece> allPieces) {
+    public List<Position> getBeatableList(Map<Integer, Piece> allPieces, Position currentPosition) {
         List<Position> beatableSquares = new ArrayList<>();
         // ruchy w lewo-gora
-        int x = position.getX();
-        int y = position.getY();
+        int x = currentPosition.getX();
+        int y = currentPosition.getY();
         while(x >= 0 && y >= 0){
             x--;
             y--;
@@ -122,8 +102,8 @@ public class Bishop implements Piece{
             }
         }
         // ruchy w lewo-dol
-        x = position.getX();
-        y = position.getY();
+        x = currentPosition.getX();
+        y = currentPosition.getY();
         while(x >= 0 && y < 8){
             x--;
             y++;
@@ -135,8 +115,8 @@ public class Bishop implements Piece{
             }
         }
         // ruchy w prawo-gora
-        x = position.getX();
-        y = position.getY();
+        x = currentPosition.getX();
+        y = currentPosition.getY();
         while(x < 8 && y >= 0){
             x++;
             y--;
@@ -148,8 +128,8 @@ public class Bishop implements Piece{
             }
         }
         // ruchy w prawo-dol
-        x = position.getX();
-        y = position.getY();
+        x = currentPosition.getX();
+        y = currentPosition.getY();
         while(x < 8 && y < 8){
             x++;
             y++;
@@ -163,17 +143,4 @@ public class Bishop implements Piece{
 
         return beatableSquares;
     }
-
-    @Override
-    public void moveFree(int x, int y) {
-        img.setX(x - 50);
-        img.setY(y - 50);
-    }
-
-    @Override
-    public void moveBack() {
-        img.setX(position.getX()*100);
-        img.setY(position.getY()*100);
-    }
-
 }

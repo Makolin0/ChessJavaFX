@@ -1,14 +1,14 @@
-package chess.chessjavafx;
+package chess.chessjavafx.arduino;
 
+import chess.chessjavafx.BoardController;
 import com.fazecast.jSerialComm.SerialPort;
-import javafx.scene.Group;
 
 import java.util.Timer;
 
-public class SerialTest {
+public class SerialInit {
     private BoardController boardController;
 
-    public SerialTest(BoardController boardController) {
+    public SerialInit(BoardController boardController) {
         this.boardController = boardController;
     }
 

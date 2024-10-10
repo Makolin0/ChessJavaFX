@@ -1,18 +1,9 @@
-package chess.chessjavafx.JavaFX;
+package chess.chessjavafx.javaFX;
 
-import chess.chessjavafx.BoardController;
-import chess.chessjavafx.InfoPanel;
-import chess.chessjavafx.Position;
-import chess.chessjavafx.SerialTest;
 import javafx.application.Application;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import java.util.Objects;
 
 public class Chess extends Application {
 
@@ -20,10 +11,9 @@ public class Chess extends Application {
     public void start(Stage stage) throws Exception {
         // set scene
         Group root = new Group();
-        Scene scene = new Scene(root, Color.LIME);
-        GameScene gameScene = new GameScene(root);
+        GameSceneController gameSceneController = new GameSceneController(root);
 //        stage.setScene(scene);
-        stage.setScene(gameScene);
+        stage.setScene(gameSceneController.getScene());
         stage.setResizable(false);
 
         Image icon = new Image("file:src/imgs/pawnW.png");
