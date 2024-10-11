@@ -1,4 +1,4 @@
-package chess.chessjavafx;
+package chess.chessjavafx.game;
 
 public class Position {
     private int x;
@@ -43,7 +43,7 @@ public class Position {
 
     @Override
     public String toString() {
-        return "{" + x + " , " + y + "}";
+        return (char)(getX()+'a') + "" + (getY()+1);
     }
 
     @Override

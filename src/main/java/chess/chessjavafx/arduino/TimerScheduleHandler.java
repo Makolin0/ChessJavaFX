@@ -1,9 +1,10 @@
-package chess.chessjavafx;
+package chess.chessjavafx.arduino;
 
+import chess.chessjavafx.BoardController;
+import chess.chessjavafx.game.Position;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
-import javafx.scene.Group;
 
 import java.util.TimerTask;
 
@@ -28,7 +29,7 @@ public class TimerScheduleHandler extends TimerTask implements SerialPortDataLis
     @Override
     public void serialEvent(SerialPortEvent serialPortEvent){
         if(serialPortEvent.getEventType() == SerialPort.LISTENING_EVENT_DATA_RECEIVED){
-            boardController.movePiece(new Position(1, 1), new Position(1, 3));
+//            boardController.movePiece(new Position(1, 1), new Position(1, 3));
         }
     }
 }
