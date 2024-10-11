@@ -1,5 +1,6 @@
 package chess.chessjavafx.javaFX;
 
+import chess.chessjavafx.game.GameController;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -11,16 +12,13 @@ public class Chess extends Application {
     public void start(Stage stage) throws Exception {
         // set scene
         Group root = new Group();
-        GameSceneController gameSceneController = new GameSceneController(root);
-//        stage.setScene(scene);
+        GameController gameController = new GameController(root);
+        GameSceneController gameSceneController = gameController.getGameSceneController();
         stage.setScene(gameSceneController.getScene());
         stage.setResizable(false);
 
         Image icon = new Image("file:src/imgs/pawnW.png");
         stage.getIcons().add(icon);
-
-
-
 
         stage.show();
     }

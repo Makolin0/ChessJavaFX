@@ -2,6 +2,8 @@ package chess.chessjavafx.game;
 
 import chess.chessjavafx.pieces.*;
 import chess.chessjavafx.packages.Moveset;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +13,15 @@ public class Checkerboard {
 
     public Checkerboard(){
         this.board = new HashMap<>();
+        newGame();
+    }
+
+    public Map<Integer, ImageView> getImages(){
+        Map<Integer, ImageView> images = new HashMap<>();
+        board.forEach((key, piece) -> {
+            images.put(key, piece.getImg());
+        });
+        return images;
     }
 
     public void newGame(){
@@ -58,5 +69,24 @@ public class Checkerboard {
 
         return moveset;
     }
+
+    public void move(Move move) throws NullPointerException, IllegalArgumentException{
+        Piece piece = board.get(move.getStartPosition().getInt());
+        if(piece == null){
+            throw new NullPointerException("Nie odnaleziono takiego piona");
+        }
+        if(piece.getMovableList(board, move.getStartPosition()).contains(move.getEndPosition())){
+            // ruch
+            board.remove(move.getStartPosition().getInt());
+            board.put(move.getEndPosition().getInt(), piece);
+        } else if (piece.getBeatableList(board, move.getStartPosition()).contains(move.getEndPosition())) {
+            //bicie
+            board.remove(move.getStartPosition().getInt());
+            board.replace(move.getEndPosition().getInt(), piece);
+        } else {
+            throw new IllegalArgumentException("Pion nie może wykonać tego ruchu");
+        }
+    }
+
 
 }
