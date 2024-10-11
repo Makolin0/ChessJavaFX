@@ -12,17 +12,17 @@ public class GameController {
     private GameMoves gameMoves;
     private GameSceneController gameSceneController;
 
-    public GameController(Group group) {
+    public GameController() {
         this.checkerboard = new Checkerboard();
         this.currentPlayer = Piece.Team.WHITE;
         this.currentPieceMoveset = null;
         this.gameMoves = new GameMoves();
-        this.gameSceneController = new GameSceneController(group);
+        this.gameSceneController = new GameSceneController();
 
         gameSceneController.updateAllPieces(checkerboard);
 
-//        gameSceneController.movePiece(new Move(new Position(1, 1), new Position(1, 2)));
-//        gameSceneController.movePiece(new Move(new Position(0, 0), new Position(6, 6)));
+        gameSceneController.movePiece(new Move(new Position(1, 1), new Position(1, 2)));
+        gameSceneController.movePiece(new Move(new Position(0, 0), new Position(6, 6)));
 
         gameSceneController.showMoveset(checkerboard.possibleMoves(new Position(1, 0)));
         gameSceneController.clearBoard();

@@ -4,10 +4,12 @@ import chess.chessjavafx.game.Checkerboard;
 import chess.chessjavafx.game.Move;
 import chess.chessjavafx.game.Position;
 import chess.chessjavafx.packages.Moveset;
+import chess.chessjavafx.pieces.Piece;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -19,17 +21,31 @@ import java.util.Map;
 
 public class GameSceneController {
     private Scene scene;
-    private Group group;
+    private Group root;
     private List<Rectangle> board;
     private List<Text> positionText;
     private Map<Integer, ImageView> pieceImgs;
+    private VBox moveList;
+    private Text currentPlayerText;
+    private Piece.Team currentPlayer;
 
-    public GameSceneController(Group group) {
-        this.scene = new Scene(group, Color.BLUE);
-        this.group = group;
+    public GameSceneController() {
+        this.root = new Group();
+        this.scene = new Scene(root, Color.LIGHTGRAY);
         this.board = new ArrayList<>();
         this.positionText = new ArrayList<>();
         this.pieceImgs = new HashMap<>();
+        this.currentPlayer = Piece.Team.WHITE;
+        this.currentPlayerText = new Text(String.valueOf(currentPlayer));
+
+        currentPlayerText.setX(8*100 + 50);
+        currentPlayerText.setY(30);
+        root.getChildren().add(currentPlayerText);
+
+        this.moveList = new VBox(10);
+        root.getChildren().add(moveList);
+        moveList.setLayoutX(8*100 + 50);
+        moveList.setLayoutY(50);
 
         generateBoard();
     }
@@ -37,13 +53,6 @@ public class GameSceneController {
     public Scene getScene(){
         return scene;
     }
-
-//    private Integer toScenePos(Integer pos){
-//        int x = pos%8;
-//        int y = pos/8;
-//        y = 7-y;
-//        return new Position(x, y).getInt();
-//    }
 
     private void generateBoard(){
         for (int y = 0; y < 8; y++) {
@@ -54,7 +63,6 @@ public class GameSceneController {
                 rectangle.setY(7*100 - y*100);
                 rectangle.setWidth(100);
                 rectangle.setHeight(100);
-
                 board.add(rectangle);
             }
         }
@@ -69,30 +77,19 @@ public class GameSceneController {
         // alphabet
         for(int i = 0; i < 8; i++){
             Text text = new Text();
-//            System.out.println();
             text.setText((char)(i+'a') + "");
             text.setX(i*100 + 85);
             text.setY(8*100 - 5);
             positionText.add(text);
         }
 
-        // TEST - do usunięcia
-        Text Xtext = new Text("X");
-        Xtext.setX(85);
-        Xtext.setY(780);
-        positionText.add(Xtext);
-        Text Ytext = new Text("Y");
-        Ytext.setX(20);
-        Ytext.setY(715);
-        positionText.add(Ytext);
+        root.getChildren().addAll(board);
+        root.getChildren().addAll(positionText);
+    }
 
-        group.getChildren().addAll(board);
-        group.getChildren().addAll(positionText);
-
-        // TEST - do usunięcia
-//        board.get(new Position(2, 4).getInt()).setFill(Color.GREEN);
-//        board.get(new Position(6, 6).getInt()).setFill(Color.GREEN);
-//        board.get(new Position(0, 0).getInt()).setFill(Color.GREEN);
+    private void swapPlayer(){
+        currentPlayer = currentPlayer == Piece.Team.WHITE ? Piece.Team.BLACK : Piece.Team.WHITE;
+        currentPlayerText.setText(String.valueOf(currentPlayer));
     }
 
     public void showMoveset(Moveset moveset){
@@ -124,10 +121,15 @@ public class GameSceneController {
             img.setX(pos.getX() * 100);
             img.setY((7 - pos.getY()) * 100);
         });
-        group.getChildren().removeAll(new ArrayList<>(pieceImgs.values()));
+        root.getChildren().removeAll(new ArrayList<>(pieceImgs.values()));
         pieceImgs.clear();
         pieceImgs.putAll(newPieceImgs);
-        group.getChildren().addAll(new ArrayList<>(pieceImgs.values()));
+        root.getChildren().addAll(new ArrayList<>(pieceImgs.values()));
+    }
+
+    private void saveMove(Move move){
+        Text text = new Text(move.toString());
+        moveList.getChildren().add(0, text);
     }
 
     public void movePiece(Move move){
@@ -135,10 +137,11 @@ public class GameSceneController {
         pieceImg.setX(move.getEndPosition().getX() * 100);
         pieceImg.setY((7 - move.getEndPosition().getY()) * 100);
         pieceImgs.remove(move.getStartPosition().getInt());
-        group.getChildren().remove(pieceImgs.get(move.getEndPosition().getInt()));
+        root.getChildren().remove(pieceImgs.get(move.getEndPosition().getInt()));
 
         pieceImgs.replace(move.getEndPosition().getInt(), pieceImg);
+
+        saveMove(move);
+        swapPlayer();
     }
-
-
 }
