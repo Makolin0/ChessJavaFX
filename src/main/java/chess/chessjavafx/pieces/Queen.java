@@ -11,13 +11,11 @@ import java.util.Map;
 
 public class Queen implements Piece{
     private Team team;
-    private Position currentPosition;
     private ImageView img;
 
-    public Queen(Team team, Position currentPosition, Group root) {
+    public Queen(Team team) {
         this.team = team;
         this.img = new ImageView(new Image("file:src/imgs/queen" + (team == Team.WHITE ? "W" : "B") + ".png"));
-        root.getChildren().add(this.img);
     }
 
     @Override
@@ -34,40 +32,40 @@ public class Queen implements Piece{
     public List<Position> getMovableList(Map<Integer, Piece> allPieces, Position currentPosition) {
         List<Position> movableSquares = new ArrayList<>();
         // ruchy w lewo
-        for(int y = this.currentPosition.getY() - 1; y >= 0; y--){
-            if(allPieces.containsKey(this.currentPosition.getX() + y * 8)){
+        for(int y = currentPosition.getY() - 1; y >= 0; y--){
+            if(allPieces.containsKey(currentPosition.getX() + y * 8)){
                 break;
             } else {
-                movableSquares.add(new Position(this.currentPosition.getX(), y));
+                movableSquares.add(new Position(currentPosition.getX(), y));
             }
         }
         // ruchy w prawo
-        for(int y = this.currentPosition.getY() + 1; y < 8; y++){
-            if(allPieces.containsKey(this.currentPosition.getX() + y * 8)){
+        for(int y = currentPosition.getY() + 1; y < 8; y++){
+            if(allPieces.containsKey(currentPosition.getX() + y * 8)){
                 break;
             } else {
-                movableSquares.add(new Position(this.currentPosition.getX(), y));
+                movableSquares.add(new Position(currentPosition.getX(), y));
             }
         }
         // ruchy w gore
-        for(int x = this.currentPosition.getX() - 1; x >= 0; x--){
-            if(allPieces.containsKey(this.currentPosition.getY() * 8 + x)){
+        for(int x = currentPosition.getX() - 1; x >= 0; x--){
+            if(allPieces.containsKey(currentPosition.getY() * 8 + x)){
                 break;
             } else {
-                movableSquares.add(new Position(x, this.currentPosition.getY()));
+                movableSquares.add(new Position(x, currentPosition.getY()));
             }
         }
         // ruchy w dol
-        for(int x = this.currentPosition.getX() + 1; x < 8; x++){
-            if(allPieces.containsKey(this.currentPosition.getY() * 8 + x)){
+        for(int x = currentPosition.getX() + 1; x < 8; x++){
+            if(allPieces.containsKey(currentPosition.getY() * 8 + x)){
                 break;
             } else {
-                movableSquares.add(new Position(x, this.currentPosition.getY()));
+                movableSquares.add(new Position(x, currentPosition.getY()));
             }
         }
         // ruchy w lewo-gora
-        int x = this.currentPosition.getX();
-        int y = this.currentPosition.getY();
+        int x = currentPosition.getX();
+        int y = currentPosition.getY();
         while(x > 0 && y > 0){
             x--;
             y--;
@@ -78,8 +76,8 @@ public class Queen implements Piece{
             }
         }
         // ruchy w lewo-dol
-        x = this.currentPosition.getX();
-        y = this.currentPosition.getY();
+        x = currentPosition.getX();
+        y = currentPosition.getY();
         while(x > 0 && y < 7){
             x--;
             y++;
@@ -90,8 +88,8 @@ public class Queen implements Piece{
             }
         }
         // ruchy w prawo-gora
-        x = this.currentPosition.getX();
-        y = this.currentPosition.getY();
+        x = currentPosition.getX();
+        y = currentPosition.getY();
         while(x < 7 && y > 0){
             x++;
             y--;
@@ -102,8 +100,8 @@ public class Queen implements Piece{
             }
         }
         // ruchy w prawo-dol
-        x = this.currentPosition.getX();
-        y = this.currentPosition.getY();
+        x = currentPosition.getX();
+        y = currentPosition.getY();
         while(x < 7 && y < 7){
             x++;
             y++;

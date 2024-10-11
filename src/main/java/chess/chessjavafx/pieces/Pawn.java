@@ -12,13 +12,11 @@ import java.util.Objects;
 
 public class Pawn implements Piece{
     private Team team;
-    private Position currentPosition;
     private ImageView img;
 
-    public Pawn(Team team, Position currentPosition, Group root) {
+    public Pawn(Team team) {
         this.team = team;
         this.img = new ImageView(new Image("file:src/imgs/pawn" + (team == Team.WHITE ? "W" : "B") + ".png"));
-        root.getChildren().add(this.img);
     }
 
 
@@ -37,26 +35,26 @@ public class Pawn implements Piece{
         List<Position> movableSquares = new ArrayList<>();
         switch (team){
             case WHITE -> {
-                if(this.currentPosition.getY() > 6)
+                if(currentPosition.getY() > 6)
                     return movableSquares;
 
-                if(Objects.isNull(allPieces.get(this.currentPosition.getInt()+8))) {
-                    movableSquares.add(new Position(this.currentPosition.getX(), this.currentPosition.getY() + 1));
+                if(Objects.isNull(allPieces.get(currentPosition.getInt()+8))) {
+                    movableSquares.add(new Position(currentPosition.getX(), currentPosition.getY() + 1));
                 } else {return movableSquares;}
-                if(this.currentPosition.getY()==1)
-                    if(Objects.isNull(allPieces.get(this.currentPosition.getInt()+16)))
-                        movableSquares.add(new Position(this.currentPosition.getX(), 3));
+                if(currentPosition.getY()==1)
+                    if(Objects.isNull(allPieces.get(currentPosition.getInt()+16)))
+                        movableSquares.add(new Position(currentPosition.getX(), 3));
             }
             case BLACK -> {
-                if(this.currentPosition.getY() < 1)
+                if(currentPosition.getY() < 1)
                     return movableSquares;
 
-                if(Objects.isNull(allPieces.get(this.currentPosition.getInt()-8))) {
-                    movableSquares.add(new Position(this.currentPosition.getX(), this.currentPosition.getY() - 1));
+                if(Objects.isNull(allPieces.get(currentPosition.getInt()-8))) {
+                    movableSquares.add(new Position(currentPosition.getX(), currentPosition.getY() - 1));
                 } else {return movableSquares;}
-                if(this.currentPosition.getY()==6)
-                    if(Objects.isNull(allPieces.get(this.currentPosition.getInt()-16)))
-                        movableSquares.add(new Position(this.currentPosition.getX(), 4));
+                if(currentPosition.getY()==6)
+                    if(Objects.isNull(allPieces.get(currentPosition.getInt()-16)))
+                        movableSquares.add(new Position(currentPosition.getX(), 4));
             }
         }
         return movableSquares;

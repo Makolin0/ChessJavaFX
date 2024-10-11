@@ -11,14 +11,11 @@ import java.util.Map;
 
 public class Bishop implements Piece{
     private Team team;
-    //    private Type type;
-    private Position currentPosition;
     private ImageView img;
 
-    public Bishop(Team team, Position currentPosition, Group root) {
+    public Bishop(Team team) {
         this.team = team;
         this.img = new ImageView(new Image("file:src/imgs/bishop" + (team == Team.WHITE ? "W" : "B") + ".png"));
-        root.getChildren().add(this.img);
     }
 
     @Override

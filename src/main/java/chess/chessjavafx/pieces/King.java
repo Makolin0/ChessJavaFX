@@ -11,22 +11,12 @@ import java.util.Map;
 
 public class King implements Piece{
     private Team team;
-    //    private Type type;
-    private Position currentPosition;
     private ImageView img;
 
-    //    public Pawn(Team team, Type type, Position position) {
-    public King(Team team, Position currentPosition, Group root) {
+    public King(Team team) {
         this.team = team;
-//        this.type = type;
         this.img = new ImageView(new Image("file:src/imgs/king" + (team == Team.WHITE ? "W" : "B") + ".png"));
-        root.getChildren().add(this.img);
     }
-
-//    @Override
-//    public Type getType() {
-//        return type;
-//    }
 
     @Override
     public Team getTeam() {
@@ -42,13 +32,13 @@ public class King implements Piece{
     public List<Position> getMovableList(Map<Integer, Piece> allPieces, Position currentPosition) {
         List<Position> movableSquares = new ArrayList<>();
 
-        int xLeft = this.currentPosition.getX() - 1;
-        int xRight = this.currentPosition.getX() + 1;
-        int yDown = this.currentPosition.getY() - 1;
-        int yUp = this.currentPosition.getY() + 1;
+        int xLeft = currentPosition.getX() - 1;
+        int xRight = currentPosition.getX() + 1;
+        int yDown = currentPosition.getY() - 1;
+        int yUp = currentPosition.getY() + 1;
         if(xLeft >= 0){
-            if(!allPieces.containsKey(this.currentPosition.getY() * 8 + xLeft)){
-                movableSquares.add(new Position(xLeft, this.currentPosition.getY()));
+            if(!allPieces.containsKey(currentPosition.getY() * 8 + xLeft)){
+                movableSquares.add(new Position(xLeft, currentPosition.getY()));
             }
             if(yDown >= 0){
                 if(!allPieces.containsKey(yDown * 8 + xLeft)){
@@ -62,8 +52,8 @@ public class King implements Piece{
             }
         }
         if(xRight < 8){
-            if(!allPieces.containsKey(this.currentPosition.getY() * 8 + xRight)){
-                movableSquares.add(new Position(xRight, this.currentPosition.getY()));
+            if(!allPieces.containsKey(currentPosition.getY() * 8 + xRight)){
+                movableSquares.add(new Position(xRight, currentPosition.getY()));
             }
             if(yDown >= 0){
                 if(!allPieces.containsKey(yDown * 8 + xRight)){
@@ -77,13 +67,13 @@ public class King implements Piece{
             }
         }
         if(yDown >= 0){
-            if(!allPieces.containsKey(yDown * 8 + this.currentPosition.getX())){
-                movableSquares.add(new Position(this.currentPosition.getX(), yDown));
+            if(!allPieces.containsKey(yDown * 8 + currentPosition.getX())){
+                movableSquares.add(new Position(currentPosition.getX(), yDown));
             }
         }
         if(yUp < 8){
-            if(!allPieces.containsKey(yUp * 8 + this.currentPosition.getX())){
-                movableSquares.add(new Position(this.currentPosition.getX(), yUp));
+            if(!allPieces.containsKey(yUp * 8 + currentPosition.getX())){
+                movableSquares.add(new Position(currentPosition.getX(), yUp));
             }
         }
 
@@ -95,14 +85,14 @@ public class King implements Piece{
         List<Position> beatableSquares = new ArrayList<>();
 
 
-        int xLeft = this.currentPosition.getX() - 1;
-        int xRight = this.currentPosition.getX() + 1;
-        int yDown = this.currentPosition.getY() - 1;
-        int yUp = this.currentPosition.getY() + 1;
+        int xLeft = currentPosition.getX() - 1;
+        int xRight = currentPosition.getX() + 1;
+        int yDown = currentPosition.getY() - 1;
+        int yUp = currentPosition.getY() + 1;
         if(xLeft >= 0){
-            if(allPieces.containsKey(this.currentPosition.getY() * 8 + xLeft)){
-                if(allPieces.get(this.currentPosition.getY() * 8 + xLeft).getTeam() != team)
-                    beatableSquares.add(new Position(xLeft, this.currentPosition.getY()));
+            if(allPieces.containsKey(currentPosition.getY() * 8 + xLeft)){
+                if(allPieces.get(currentPosition.getY() * 8 + xLeft).getTeam() != team)
+                    beatableSquares.add(new Position(xLeft, currentPosition.getY()));
             }
             if(yDown >= 0){
                 if(allPieces.containsKey(yDown * 8 + xLeft)){
@@ -118,9 +108,9 @@ public class King implements Piece{
             }
         }
         if(xRight < 8){
-            if(allPieces.containsKey(this.currentPosition.getY() * 8 + xRight)){
-                if(allPieces.get(this.currentPosition.getY() * 8 + xRight).getTeam() != team)
-                    beatableSquares.add(new Position(xRight, this.currentPosition.getY()));
+            if(allPieces.containsKey(currentPosition.getY() * 8 + xRight)){
+                if(allPieces.get(currentPosition.getY() * 8 + xRight).getTeam() != team)
+                    beatableSquares.add(new Position(xRight, currentPosition.getY()));
             }
             if(yDown >= 0){
                 if(allPieces.containsKey(yDown * 8 + xRight)){
@@ -136,15 +126,15 @@ public class King implements Piece{
             }
         }
         if(yDown >= 0){
-            if(allPieces.containsKey(yDown * 8 + this.currentPosition.getX())){
-                if(allPieces.get(yDown * 8 + this.currentPosition.getX()).getTeam() != team)
-                    beatableSquares.add(new Position(this.currentPosition.getX(), yDown));
+            if(allPieces.containsKey(yDown * 8 + currentPosition.getX())){
+                if(allPieces.get(yDown * 8 + currentPosition.getX()).getTeam() != team)
+                    beatableSquares.add(new Position(currentPosition.getX(), yDown));
             }
         }
         if(yUp < 8){
-            if(allPieces.containsKey(yUp * 8 + this.currentPosition.getX())){
-                if(allPieces.get(yUp * 8 + this.currentPosition.getX()).getTeam() != team)
-                    beatableSquares.add(new Position(this.currentPosition.getX(), yUp));
+            if(allPieces.containsKey(yUp * 8 + currentPosition.getX())){
+                if(allPieces.get(yUp * 8 + currentPosition.getX()).getTeam() != team)
+                    beatableSquares.add(new Position(currentPosition.getX(), yUp));
             }
         }
 

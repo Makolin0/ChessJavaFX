@@ -15,6 +15,6 @@ public class Move {
 
     @Override
     public String toString() {
-        return startPosition + " -> " + endPosition;
+        return (startPosition!=null ? startPosition : "?") + " -> " + (endPosition!=null ? endPosition : "?");
     }
 }
