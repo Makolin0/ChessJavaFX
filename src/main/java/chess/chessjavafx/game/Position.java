@@ -13,6 +13,12 @@ public class Position {
         this.y = position / 8;
     }
 
+    public Position(String string){
+        x = string.charAt(0)-'a';
+        y = string.charAt(1) - '1';
+
+    }
+
     public int getX() {
         return x;
     }
@@ -48,7 +54,6 @@ public class Position {
 
     @Override
     public boolean equals(Object obj) {
-
         return this.x == ((Position) obj).x && this.y == ((Position) obj).y;
     }
 }

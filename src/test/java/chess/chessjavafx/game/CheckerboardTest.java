@@ -19,7 +19,7 @@ class CheckerboardTest {
 
     @Test
     void newGame() {
-        checkerboard
+//        checkerboard
     }
 
     @Test
@@ -27,10 +27,10 @@ class CheckerboardTest {
         Moveset moveset = new Moveset();
 
         //
-        List<Position> movableList = new ArrayList<>();
-        movableList.add(new Position())
-        moveset.setBeatableList(new ArrayList<>());
-        moveset.setMovableList();
+//        List<Position> movableList = new ArrayList<>();
+//        movableList.add(new Position());
+//        moveset.setBeatableList(new ArrayList<>());
+//        moveset.setMovableList();
     }
 
     @Test
