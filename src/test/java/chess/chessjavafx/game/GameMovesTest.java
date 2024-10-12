@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class GameMovesTest {
     GameMoves gm;
 
@@ -45,6 +43,7 @@ class GameMovesTest {
 
         System.out.println("duration" + gm.getDuration().getSeconds());
         System.out.println("winner" + gm.getWinner());
+        System.out.println("start" + gm.getStartTime());
 
         for(Move move : gm.getMoves()){
             System.out.println(move);
