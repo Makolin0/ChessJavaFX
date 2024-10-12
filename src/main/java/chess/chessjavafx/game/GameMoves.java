@@ -6,21 +6,20 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameMoves {
-    private List<Move> moves;
-    private DateTimeFormatter formatter;
+    private final List<Move> moves;
+    private final DateTimeFormatter formatter;
     private LocalDateTime startTime;
     private Duration duration;
     private Winner winner;
 
     public GameMoves() {
-        moves = new ArrayList<>();
+        this.moves = new ArrayList<>();
         this.formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        startTime = LocalDateTime.now();
-        duration = null;
-        winner = Winner.DRAW;
+        this.startTime = LocalDateTime.now();
+        this.duration = null;
+        this.winner = Winner.DRAW;
     }
 
     public Winner getWinner() {
