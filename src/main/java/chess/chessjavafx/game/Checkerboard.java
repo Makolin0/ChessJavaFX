@@ -87,6 +87,4 @@ public class Checkerboard {
             throw new IllegalArgumentException("Pion nie może wykonać tego ruchu");
         }
     }
-
-
 }
