@@ -45,6 +45,7 @@ class GameMovesTest {
 
         System.out.println("duration" + gm.getDuration().getSeconds());
         System.out.println("winner" + gm.getWinner());
+        System.out.println("start" + gm.getStartTime());
 
         for(Move move : gm.getMoves()){
             System.out.println(move);

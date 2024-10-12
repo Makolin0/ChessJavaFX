@@ -10,12 +10,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameMoves {
     private List<Move> moves;
+    private DateTimeFormatter formatter;
     private LocalDateTime startTime;
     private Duration duration;
     private Winner winner;
 
     public GameMoves() {
         moves = new ArrayList<>();
+        this.formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         startTime = LocalDateTime.now();
         duration = null;
         winner = Winner.DRAW;
@@ -50,7 +52,6 @@ public class GameMoves {
     }
 
     public void save(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String filename = startTime.format(formatter) + ".txt";
 
         try(FileWriter fw = new FileWriter(filename);
@@ -70,9 +71,11 @@ public class GameMoves {
 
     public void load(String fileName){
         try(BufferedReader br = new BufferedReader(new FileReader(fileName))){
+            String dateString = fileName.substring(0, fileName.length()-4);
             moves.clear();
             winner = Winner.valueOf(br.readLine());
             duration = Duration.parse(br.readLine());
+            startTime = LocalDateTime.parse(dateString, formatter);
 
             String moveString;
             while ((moveString = br.readLine()) != null){
