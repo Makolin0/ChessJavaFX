@@ -48,9 +48,18 @@ public class GameController {
             checkerboard.move(move);
             swapTeam();
             gameMoves.addMove(move);
+            currentPieceMoveset = null;
         } else if (!currentPieceMoveset.getCurrentPosition().equals(destination)) {
             // ani możliwy ruch ani odłożenie na poprzednie pole
             throw new IllegalArgumentException("Niemożliwy ruch!");
+        }
+    }
+
+    public void sendPosition(Position position){
+        if(currentPieceMoveset == null){
+            pickUp(position);
+        } else {
+            makeMove(position);
         }
     }
 }

@@ -17,7 +17,7 @@ public class MainMenuSceneController {
     private Button historyButton;
     private Button exitButton;
 
-    public MainMenuSceneController(Stage stage, Scene gameScene){
+    public MainMenuSceneController(Stage stage, Scene gameScene, Scene historyScene){
         this.root = new VBox(10);
         root.setMinWidth(1000);
         root.setMinHeight(1000);
@@ -28,6 +28,9 @@ public class MainMenuSceneController {
 
         gameButton.setOnAction(event -> {
             stage.setScene(gameScene);
+        });
+        historyButton.setOnAction(event -> {
+            stage.setScene(historyScene);
         });
         exitButton.setOnAction(event -> {
             stage.close();

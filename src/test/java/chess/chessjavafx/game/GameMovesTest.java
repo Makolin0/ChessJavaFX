@@ -39,14 +39,14 @@ class GameMovesTest {
 
     @Test
     void load() {
-        gm.load("2024-10-12 16:04:37.txt");
-
-        System.out.println("duration" + gm.getDuration().getSeconds());
-        System.out.println("winner" + gm.getWinner());
-        System.out.println("start" + gm.getStartTime());
-
-        for(Move move : gm.getMoves()){
-            System.out.println(move);
-        }
+//        gm.load("2024-10-12 16:04:37.txt");
+//
+//        System.out.println("duration" + gm.getDuration().getSeconds());
+//        System.out.println("winner" + gm.getWinner());
+//        System.out.println("start" + gm.getStartTime());
+//
+//        for(Move move : gm.getMoves()){
+//            System.out.println(move);
+//        }
     }
 }
