@@ -11,7 +11,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Chess extends Application {
-
     @Override
     public void start(Stage stage) throws Exception {
         Image icon = new Image("file:src/imgs/pawnW.png");
@@ -32,7 +31,6 @@ public class Chess extends Application {
         HistoryController historyController = new HistoryController(stage, MainMenu);
         HistorySceneController historySceneController = historyController.getHistorySceneController();
         mainMenuSceneController.setHistoryButton(historySceneController.getScene());
-
 
         stage.show();
     }
