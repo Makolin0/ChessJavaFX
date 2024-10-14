@@ -6,6 +6,7 @@ import chess.chessjavafx.javaFX.GameSceneController;
 import chess.chessjavafx.javaFX.HistorySceneController;
 import chess.chessjavafx.javaFX.MainMenuSceneController;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -20,14 +21,18 @@ public class Chess extends Application {
         stage.setWidth(1000);
         stage.setResizable(false);
 
+        MainMenuSceneController mainMenuSceneController = new MainMenuSceneController(stage);
+        Scene MainMenu = mainMenuSceneController.getScene();
+        stage.setScene(MainMenu);
+
         GameController gameController = new GameController();
         GameSceneController gameSceneController = gameController.getGameSceneController();
+        mainMenuSceneController.setGameButton(gameSceneController.getScene());
 
-        HistoryController historyController = new HistoryController(stage);
+        HistoryController historyController = new HistoryController(stage, MainMenu);
         HistorySceneController historySceneController = historyController.getHistorySceneController();
+        mainMenuSceneController.setHistoryButton(historySceneController.getScene());
 
-        MainMenuSceneController mainMenuSceneController = new MainMenuSceneController(stage, gameSceneController.getScene(), historySceneController.getScene());
-        stage.setScene(mainMenuSceneController.getScene());
 
         stage.show();
     }

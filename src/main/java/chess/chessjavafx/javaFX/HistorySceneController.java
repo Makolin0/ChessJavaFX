@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -23,10 +24,16 @@ public class HistorySceneController {
     private TableView<GameMoves> table;
     private ObservableList<GameMoves> tableData;
 
-    public HistorySceneController(Stage stage){
+    public HistorySceneController(Stage stage, Scene prevScene){
         this.root = new VBox(10);
         this.scene = new Scene(root);
         this.stage = stage;
+
+        Button button = new Button("Wróć");
+        button.setOnAction(event -> {
+            stage.setScene(prevScene);
+        });
+        root.getChildren().add(button);
 
         this.table = new TableView<>();
         this.tableData = FXCollections.observableArrayList();
@@ -62,7 +69,7 @@ public class HistorySceneController {
             row.setOnMouseClicked(event -> {
                 if(!row.isEmpty() && event.getClickCount() >= 1){
                     GameMoves gameMoves = row.getItem();
-                    HistoryGameSceneController historyGameSceneController = new HistoryGameSceneController(gameMoves.getMoves());
+                    HistoryGameSceneController historyGameSceneController = new HistoryGameSceneController(gameMoves.getMoves(), stage, scene);
 
                     stage.setScene(historyGameSceneController.getScene());
                 }

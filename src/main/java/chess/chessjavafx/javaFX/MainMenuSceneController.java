@@ -11,13 +11,16 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class MainMenuSceneController {
+    private Stage stage;
     private Scene scene;
     private VBox root;
     private Button gameButton;
     private Button historyButton;
     private Button exitButton;
 
-    public MainMenuSceneController(Stage stage, Scene gameScene, Scene historyScene){
+//    public MainMenuSceneController(Stage stage, Scene gameScene, Scene historyScene){
+    public MainMenuSceneController(Stage stage){
+        this.stage = stage;
         this.root = new VBox(10);
         root.setMinWidth(1000);
         root.setMinHeight(1000);
@@ -26,12 +29,12 @@ public class MainMenuSceneController {
         historyButton = new Button("Historia");
         exitButton = new Button("Wyjdź");
 
-        gameButton.setOnAction(event -> {
-            stage.setScene(gameScene);
-        });
-        historyButton.setOnAction(event -> {
-            stage.setScene(historyScene);
-        });
+//        gameButton.setOnAction(event -> {
+//            stage.setScene(gameScene);
+//        });
+//        historyButton.setOnAction(event -> {
+//            stage.setScene(historyScene);
+//        });
         exitButton.setOnAction(event -> {
             stage.close();
         });
@@ -42,6 +45,17 @@ public class MainMenuSceneController {
         root.setAlignment(Pos.CENTER);
 
         this.scene = new Scene(root, Color.RED);
+    }
+
+    public void setGameButton(Scene gameScene){
+        gameButton.setOnAction(event -> {
+            stage.setScene(gameScene);
+        });
+    }
+    public void setHistoryButton(Scene historyScene){
+        historyButton.setOnAction(event -> {
+            stage.setScene(historyScene);
+        });
     }
 
     public Scene getScene() {

@@ -2,6 +2,7 @@ package chess.chessjavafx.history;
 
 import chess.chessjavafx.game.GameMoves;
 import chess.chessjavafx.javaFX.HistorySceneController;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -16,9 +17,9 @@ public class HistoryController {
     private List<GameMoves> gameList;
     private HistorySceneController historySceneController;
 
-    public HistoryController(Stage stage){
+    public HistoryController(Stage stage, Scene prevScene){
         this.gameList = new ArrayList<>();
-        this.historySceneController = new HistorySceneController(stage);
+        this.historySceneController = new HistorySceneController(stage, prevScene);
 
         loadGames();
         historySceneController.loadGames(gameList);
