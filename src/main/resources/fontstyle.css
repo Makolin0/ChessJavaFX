@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Lato';
+    src: url('fonts/Lato-Regular.ttf');
+}
+
+.root{
+    -fx-font-family: 'Lato';
+    -fx-font-size: 16;
+}

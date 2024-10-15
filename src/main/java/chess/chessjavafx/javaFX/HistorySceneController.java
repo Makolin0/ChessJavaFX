@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HistorySceneController {
     private Scene scene;
@@ -46,6 +47,8 @@ public class HistorySceneController {
 
         table.setItems(tableData);
         root.getChildren().add(table);
+
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/fontstyle.css")).toExternalForm());
     }
 
     private void generateColumns(){

@@ -8,6 +8,7 @@ import chess.chessjavafx.javaFX.MainMenuSceneController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Chess extends Application {
