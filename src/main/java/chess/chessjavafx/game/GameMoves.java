@@ -61,7 +61,7 @@ public class GameMoves {
     public void save(){
         String filename = startTime.format(formatter) + ".txt";
 
-        try(FileWriter fw = new FileWriter(filename);
+        try(FileWriter fw = new FileWriter("data/" + filename);
             BufferedWriter bw = new BufferedWriter(fw)){
 
             bw.write(winner + "\n");

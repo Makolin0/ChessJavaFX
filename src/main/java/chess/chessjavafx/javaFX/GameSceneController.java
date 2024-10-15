@@ -142,5 +142,6 @@ public class GameSceneController {
 
         saveMove(move);
         swapPlayer();
+        clearBoard();
     }
 }

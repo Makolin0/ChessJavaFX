@@ -34,8 +34,8 @@ public class HistoryGameSceneController {
         generateColumns();
 
         table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-        table.setPrefWidth(100);
-        table.setMaxWidth(150);
+        table.setPrefWidth(150);
+        table.setMaxWidth(200);
 
 
 
