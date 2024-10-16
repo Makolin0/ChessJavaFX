@@ -21,10 +21,6 @@ public class GameController {
 
         gameSceneController.updateAllPieces(checkerboard);
 
-        gameSceneController.movePiece(new Move(new Position(1, 1), new Position(1, 2)));
-        gameSceneController.movePiece(new Move(new Position(0, 0), new Position(6, 6)));
-
-        gameSceneController.showMoveset(checkerboard.possibleMoves(new Position(1, 0)));
         gameSceneController.clearBoard();
     }
 
@@ -48,9 +44,27 @@ public class GameController {
             checkerboard.move(move);
             swapTeam();
             gameMoves.addMove(move);
-        } else if (!currentPieceMoveset.getCurrentPosition().equals(destination)) {
+//            gameSceneController.movePiece(move);
+            gameSceneController.updateAllPieces(checkerboard);
+            gameSceneController.clearBoard();
+            currentPieceMoveset = null;
+        } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
+            // odstawiamy w poprzednie miejsce
+            gameSceneController.clearBoard();
+            currentPieceMoveset = null;
+        } else{
             // ani możliwy ruch ani odłożenie na poprzednie pole
             throw new IllegalArgumentException("Niemożliwy ruch!");
+        }
+    }
+
+    public void sendPosition(Position position){
+        if(currentPieceMoveset == null){
+            System.out.println("podnosi");
+            pickUp(position);
+        } else {
+            System.out.println("stawia");
+            makeMove(position);
         }
     }
 }

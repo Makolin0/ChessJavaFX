@@ -1,6 +1,7 @@
 package chess.chessjavafx.game;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,6 +22,13 @@ public class GameMoves {
         this.duration = null;
         this.winner = Winner.DRAW;
     }
+
+    public GameMoves(Path file) {
+        this.moves = new ArrayList<>();
+        this.formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        load(file);
+    }
+
 
     public Winner getWinner() {
         return winner;
@@ -53,7 +61,7 @@ public class GameMoves {
     public void save(){
         String filename = startTime.format(formatter) + ".txt";
 
-        try(FileWriter fw = new FileWriter(filename);
+        try(FileWriter fw = new FileWriter("data/" + filename);
             BufferedWriter bw = new BufferedWriter(fw)){
 
             bw.write(winner + "\n");
@@ -68,8 +76,9 @@ public class GameMoves {
         }
     }
 
-    public void load(String fileName){
-        try(BufferedReader br = new BufferedReader(new FileReader(fileName))){
+    public void load(Path file){
+        try(BufferedReader br = new BufferedReader(new FileReader(String.valueOf(file)))){
+            String fileName = file.getFileName().toString();
             String dateString = fileName.substring(0, fileName.length()-4);
             moves.clear();
             winner = Winner.valueOf(br.readLine());
