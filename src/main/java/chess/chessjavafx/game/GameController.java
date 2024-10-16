@@ -44,7 +44,9 @@ public class GameController {
             checkerboard.move(move);
             swapTeam();
             gameMoves.addMove(move);
-            gameSceneController.movePiece(move);
+//            gameSceneController.movePiece(move);
+            gameSceneController.updateAllPieces(checkerboard);
+            gameSceneController.clearBoard();
             currentPieceMoveset = null;
         } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
             // odstawiamy w poprzednie miejsce
