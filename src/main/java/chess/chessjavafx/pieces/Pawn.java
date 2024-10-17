@@ -37,9 +37,6 @@ public class Pawn implements Piece{
         Position pos;
         switch (team){
             case WHITE -> {
-//                if(currentPosition.getY() > 6)
-//                    return movableSquares;
-
                 if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() + 1, allPieces)) != null)
                     movableSquares.add(pos);
 
@@ -49,9 +46,6 @@ public class Pawn implements Piece{
                 }
             }
             case BLACK -> {
-//                if(currentPosition.getY() < 1)
-//                    return movableSquares;
-
                 if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() - 1, allPieces)) != null)
                     movableSquares.add(pos);
 
@@ -71,15 +65,15 @@ public class Pawn implements Piece{
         Position pos;
         switch (team){
             case WHITE -> {
-                if((pos = Checks.legalBeat(currentPosition.getX()-1, currentPosition.getY()+1, Team.WHITE, allPieces)) != null)
+                if((pos = Checks.legalBeat(currentPosition.getX()-1, currentPosition.getY()+1, team, allPieces)) != null)
                     beatableSquares.add(pos);
-                if((pos = Checks.legalBeat(currentPosition.getX()+1, currentPosition.getY()+1, Team.WHITE, allPieces)) != null)
+                if((pos = Checks.legalBeat(currentPosition.getX()+1, currentPosition.getY()+1, team, allPieces)) != null)
                     beatableSquares.add(pos);
             }
             case BLACK -> {
-                if((pos = Checks.legalBeat(currentPosition.getX()-1, currentPosition.getY()-1, Team.BLACK, allPieces)) != null)
+                if((pos = Checks.legalBeat(currentPosition.getX()-1, currentPosition.getY()-1, team, allPieces)) != null)
                     beatableSquares.add(pos);
-                if((pos = Checks.legalBeat(currentPosition.getX()+1, currentPosition.getY()-1, Team.BLACK, allPieces)) != null)
+                if((pos = Checks.legalBeat(currentPosition.getX()+1, currentPosition.getY()-1, team, allPieces)) != null)
                     beatableSquares.add(pos);
             }
         }
