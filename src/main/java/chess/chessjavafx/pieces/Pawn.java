@@ -34,41 +34,30 @@ public class Pawn implements Piece{
     @Override
     public List<Position> getMovableList(Map<Integer, Piece> allPieces, Position currentPosition) {
         List<Position> movableSquares = new ArrayList<>();
+        Position pos;
         switch (team){
             case WHITE -> {
-                if(currentPosition.getY() > 6)
-                    return movableSquares;
+//                if(currentPosition.getY() > 6)
+//                    return movableSquares;
 
-                try{
-                    Position newPos = new Position(currentPosition.getX(), currentPosition.getY() + 1);
-                    if(Objects.isNull(allPieces.get(newPos.getInt())))
-                        movableSquares.add(newPos);
-                } catch(Exception ignored){}
+                if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() + 1, allPieces)) != null)
+                    movableSquares.add(pos);
 
                 if(currentPosition.getY()==1) {
-                    try {
-                        Position newPos = new Position(currentPosition.getX(), 3);
-                        if (Objects.isNull(allPieces.get(newPos.getInt())))
-                            movableSquares.add(newPos);
-                    } catch (Exception ignored){}
+                    if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() + 2, allPieces)) != null)
+                        movableSquares.add(pos);
                 }
             }
             case BLACK -> {
-                if(currentPosition.getY() < 1)
-                    return movableSquares;
+//                if(currentPosition.getY() < 1)
+//                    return movableSquares;
 
-                try{
-                    Position newPos = new Position(currentPosition.getX(), currentPosition.getY() - 1);
-                    if(Objects.isNull(allPieces.get(newPos.getInt())))
-                        movableSquares.add(newPos);
-                } catch(Exception ignored){}
+                if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() - 1, allPieces)) != null)
+                    movableSquares.add(pos);
 
                 if(currentPosition.getY()==1) {
-                    try {
-                        Position newPos = new Position(currentPosition.getX(), 4);
-                        if (Objects.isNull(allPieces.get(newPos.getInt())))
-                            movableSquares.add(newPos);
-                    } catch (Exception ignored){}
+                    if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() - 2, allPieces)) != null)
+                        movableSquares.add(pos);
                 }
             }
         }
@@ -79,36 +68,19 @@ public class Pawn implements Piece{
     public List<Position> getBeatableList(Map<Integer, Piece> allPieces, Position currentPosition) {
         System.out.println("beat for pawn");
         List<Position> beatableSquares = new ArrayList<>();
+        Position pos;
         switch (team){
             case WHITE -> {
-                try{
-                    Position leftPos = new Position(currentPosition.getX()-1, currentPosition.getY()+1);
-                    Piece checkLeft = allPieces.get(leftPos.getInt());
-                    if(!Objects.isNull(checkLeft) && checkLeft.getTeam()==Team.BLACK)
-                        beatableSquares.add(leftPos);
-                } catch (IllegalArgumentException ignored){}
-
-                try{
-                    Position rightPos = new Position(currentPosition.getX()+1, currentPosition.getY()+1);
-                    Piece checkRight = allPieces.get(rightPos.getInt());
-                    if(!Objects.isNull(checkRight) && checkRight.getTeam()==Team.BLACK)
-                        beatableSquares.add(rightPos);
-                } catch (Exception ignored){}
+                if((pos = Checks.legalBeat(currentPosition.getX()-1, currentPosition.getY()+1, Team.WHITE, allPieces)) != null)
+                    beatableSquares.add(pos);
+                if((pos = Checks.legalBeat(currentPosition.getX()+1, currentPosition.getY()+1, Team.WHITE, allPieces)) != null)
+                    beatableSquares.add(pos);
             }
             case BLACK -> {
-                try{
-                    Position posLeft = new Position(currentPosition.getX()-1, currentPosition.getY()-1);
-                    Piece checkLeft = allPieces.get(posLeft.getInt());
-                    if(!Objects.isNull(checkLeft) && checkLeft.getTeam()==Team.WHITE)
-                        beatableSquares.add(posLeft);
-                } catch (Exception ignored) {}
-
-                try{
-                    Position posRight = new Position(currentPosition.getX()+1, currentPosition.getY()-1);
-                    Piece checkRight = allPieces.get(posRight.getInt());
-                    if(!Objects.isNull(checkRight) && checkRight.getTeam()==Team.WHITE)
-                        beatableSquares.add(posRight);
-                } catch (Exception ignored) {}
+                if((pos = Checks.legalBeat(currentPosition.getX()-1, currentPosition.getY()-1, Team.BLACK, allPieces)) != null)
+                    beatableSquares.add(pos);
+                if((pos = Checks.legalBeat(currentPosition.getX()+1, currentPosition.getY()-1, Team.BLACK, allPieces)) != null)
+                    beatableSquares.add(pos);
             }
         }
         return beatableSquares;
