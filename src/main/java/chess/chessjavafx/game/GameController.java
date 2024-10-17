@@ -34,6 +34,11 @@ public class GameController {
 
     public void pickUp(Position position){
         currentPieceMoveset = checkerboard.possibleMoves(position);
+
+        for(Position pos : currentPieceMoveset.getBeatableList()){
+            System.out.println("bicie " + pos.getX() + " " + pos.getY());
+        }
+
         gameSceneController.showMoveset(currentPieceMoveset);
     }
 

@@ -5,6 +5,7 @@ public class Position {
     private int y;
 
     public Position(int x, int y){
+        System.out.println("new pos x" + x + " y" + y);
         checkIfValid(x, y);
         this.x = x;
         this.y = y;
@@ -53,7 +54,7 @@ public class Position {
     }
 
     private void checkIfValid(int x, int y){
-        if(x < 0 || y > 7 || y < 0){
+        if(x > 7 || x < 0 || y > 7 || y < 0){
             throw new IllegalArgumentException("Niepoprawna pozycja");
         }
     }

@@ -1,6 +1,7 @@
 package chess.chessjavafx.pieces;
 
 import chess.chessjavafx.game.Position;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -62,23 +63,38 @@ public class Pawn implements Piece{
 
     @Override
     public List<Position> getBeatableList(Map<Integer, Piece> allPieces, Position currentPosition) {
+        System.out.println("beat for pawn");
         List<Position> beatableSquares = new ArrayList<>();
         switch (team){
             case WHITE -> {
-                Piece checkLeft = allPieces.get(currentPosition.getInt()+7);
-                Piece checkRight = allPieces.get(currentPosition.getInt()+9);
-                if(!Objects.isNull(checkLeft) && checkLeft.getTeam()==Team.BLACK)
-                    beatableSquares.add(new Position(currentPosition.getInt()+7));
-                if(!Objects.isNull(checkRight) && checkRight.getTeam()==Team.BLACK)
-                    beatableSquares.add(new Position(currentPosition.getInt()+9));
+                try{
+                    Position leftPos = new Position(currentPosition.getX()-1, currentPosition.getY()+1);
+                    Piece checkLeft = allPieces.get(leftPos.getInt());
+                    if(!Objects.isNull(checkLeft) && checkLeft.getTeam()==Team.BLACK)
+                        beatableSquares.add(leftPos);
+                } catch (IllegalArgumentException ignored){}
+
+                try{
+                    Position rightPos = new Position(currentPosition.getX()+1, currentPosition.getY()+1);
+                    Piece checkRight = allPieces.get(rightPos.getInt());
+                    if(!Objects.isNull(checkRight) && checkRight.getTeam()==Team.BLACK)
+                        beatableSquares.add(rightPos);
+                } catch (Exception ignored){}
             }
             case BLACK -> {
-                Piece checkLeft = allPieces.get(currentPosition.getInt()-9);
-                Piece checkRight = allPieces.get(currentPosition.getInt()-7);
-                if(!Objects.isNull(checkLeft) && checkLeft.getTeam()==Team.WHITE)
-                    beatableSquares.add(new Position(currentPosition.getInt()-9));
-                if(!Objects.isNull(checkRight) && checkRight.getTeam()==Team.WHITE)
-                    beatableSquares.add(new Position(currentPosition.getInt()-7));
+                try{
+                    Position posLeft = new Position(currentPosition.getX()-1, currentPosition.getY()-1);
+                    Piece checkLeft = allPieces.get(posLeft.getInt());
+                    if(!Objects.isNull(checkLeft) && checkLeft.getTeam()==Team.WHITE)
+                        beatableSquares.add(posLeft);
+                } catch (Exception ignored) {}
+
+                try{
+                    Position posRight = new Position(currentPosition.getX()+1, currentPosition.getY()-1);
+                    Piece checkRight = allPieces.get(posRight.getInt());
+                    if(!Objects.isNull(checkRight) && checkRight.getTeam()==Team.WHITE)
+                        beatableSquares.add(posRight);
+                } catch (Exception ignored) {}
             }
         }
         return beatableSquares;
