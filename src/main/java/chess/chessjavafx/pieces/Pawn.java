@@ -39,23 +39,37 @@ public class Pawn implements Piece{
                 if(currentPosition.getY() > 6)
                     return movableSquares;
 
-                if(Objects.isNull(allPieces.get(currentPosition.getInt()+8))) {
-                    movableSquares.add(new Position(currentPosition.getX(), currentPosition.getY() + 1));
-                } else {return movableSquares;}
-                if(currentPosition.getY()==1)
-                    if(Objects.isNull(allPieces.get(currentPosition.getInt()+16)))
-                        movableSquares.add(new Position(currentPosition.getX(), 3));
+                try{
+                    Position newPos = new Position(currentPosition.getX(), currentPosition.getY() + 1);
+                    if(Objects.isNull(allPieces.get(newPos.getInt())))
+                        movableSquares.add(newPos);
+                } catch(Exception ignored){}
+
+                if(currentPosition.getY()==1) {
+                    try {
+                        Position newPos = new Position(currentPosition.getX(), 3);
+                        if (Objects.isNull(allPieces.get(newPos.getInt())))
+                            movableSquares.add(newPos);
+                    } catch (Exception ignored){}
+                }
             }
             case BLACK -> {
                 if(currentPosition.getY() < 1)
                     return movableSquares;
 
-                if(Objects.isNull(allPieces.get(currentPosition.getInt()-8))) {
-                    movableSquares.add(new Position(currentPosition.getX(), currentPosition.getY() - 1));
-                } else {return movableSquares;}
-                if(currentPosition.getY()==6)
-                    if(Objects.isNull(allPieces.get(currentPosition.getInt()-16)))
-                        movableSquares.add(new Position(currentPosition.getX(), 4));
+                try{
+                    Position newPos = new Position(currentPosition.getX(), currentPosition.getY() - 1);
+                    if(Objects.isNull(allPieces.get(newPos.getInt())))
+                        movableSquares.add(newPos);
+                } catch(Exception ignored){}
+
+                if(currentPosition.getY()==1) {
+                    try {
+                        Position newPos = new Position(currentPosition.getX(), 4);
+                        if (Objects.isNull(allPieces.get(newPos.getInt())))
+                            movableSquares.add(newPos);
+                    } catch (Exception ignored){}
+                }
             }
         }
         return movableSquares;
