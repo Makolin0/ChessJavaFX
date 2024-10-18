@@ -99,6 +99,8 @@ public class Bishop implements Piece{
             if((pos = Checks.legalBeat(x, y, team, allPieces)) != null){
                 beatableSquares.add(pos);
                 break;
+            } else if ((pos = Checks.legalPos(x, y)) != null && allPieces.containsKey(pos.getInt())) {
+                break;
             }
         }
         // moves up-left
@@ -109,6 +111,8 @@ public class Bishop implements Piece{
             y++;
             if((pos = Checks.legalBeat(x, y, team, allPieces)) != null){
                 beatableSquares.add(pos);
+                break;
+            } else if ((pos = Checks.legalPos(x, y)) != null && allPieces.containsKey(pos.getInt())) {
                 break;
             }
         }
@@ -121,6 +125,8 @@ public class Bishop implements Piece{
             if((pos = Checks.legalBeat(x, y, team, allPieces)) != null){
                 beatableSquares.add(pos);
                 break;
+            } else if ((pos = Checks.legalPos(x, y)) != null && allPieces.containsKey(pos.getInt())) {
+                break;
             }
         }
         // moves up-right
@@ -131,6 +137,8 @@ public class Bishop implements Piece{
             y++;
             if((pos = Checks.legalBeat(x, y, team, allPieces)) != null){
                 beatableSquares.add(pos);
+                break;
+            } else if ((pos = Checks.legalPos(x, y)) != null && allPieces.containsKey(pos.getInt())) {
                 break;
             }
         }

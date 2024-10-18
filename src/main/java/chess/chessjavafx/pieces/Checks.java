@@ -38,4 +38,13 @@ public class Checks {
             return null;
         }
     }
+
+    // checks if position is contained in board, and if it isn't then returns null
+    public static Position legalPos(int x, int y){
+        try{
+            return new Position(x, y);
+        } catch(Exception e){
+            return null;
+        }
+    }
 }
