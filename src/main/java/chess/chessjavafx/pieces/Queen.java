@@ -31,181 +31,216 @@ public class Queen implements Piece{
     @Override
     public List<Position> getMovableList(Map<Integer, Piece> allPieces, Position currentPosition) {
         List<Position> movableSquares = new ArrayList<>();
-        // ruchy w lewo
-        for(int y = currentPosition.getY() - 1; y >= 0; y--){
-            if(allPieces.containsKey(currentPosition.getX() + y * 8)){
-                break;
-            } else {
-                movableSquares.add(new Position(currentPosition.getX(), y));
-            }
-        }
-        // ruchy w prawo
-        for(int y = currentPosition.getY() + 1; y < 8; y++){
-            if(allPieces.containsKey(currentPosition.getX() + y * 8)){
-                break;
-            } else {
-                movableSquares.add(new Position(currentPosition.getX(), y));
-            }
-        }
-        // ruchy w gore
-        for(int x = currentPosition.getX() - 1; x >= 0; x--){
-            if(allPieces.containsKey(currentPosition.getY() * 8 + x)){
-                break;
-            } else {
-                movableSquares.add(new Position(x, currentPosition.getY()));
-            }
-        }
-        // ruchy w dol
-        for(int x = currentPosition.getX() + 1; x < 8; x++){
-            if(allPieces.containsKey(currentPosition.getY() * 8 + x)){
-                break;
-            } else {
-                movableSquares.add(new Position(x, currentPosition.getY()));
-            }
-        }
-        // ruchy w lewo-gora
+        Position pos;
+
+        // Bishop
+        // moves down-left
         int x = currentPosition.getX();
         int y = currentPosition.getY();
         while(x > 0 && y > 0){
             x--;
             y--;
-            if(allPieces.containsKey(x + y*8)){
-                break;
+            if((pos = Checks.legalMove(x, y, allPieces)) != null){
+                movableSquares.add(pos);
             } else {
-                movableSquares.add(new Position(x, y));
+                break;
             }
         }
-        // ruchy w lewo-dol
+        // moves up-left
         x = currentPosition.getX();
         y = currentPosition.getY();
         while(x > 0 && y < 7){
             x--;
             y++;
-            if(allPieces.containsKey(x + y*8)){
-                break;
+            if((pos = Checks.legalMove(x, y, allPieces)) != null){
+                movableSquares.add(pos);
             } else {
-                movableSquares.add(new Position(x, y));
+                break;
             }
         }
-        // ruchy w prawo-gora
+        // moves down-right
         x = currentPosition.getX();
         y = currentPosition.getY();
         while(x < 7 && y > 0){
             x++;
             y--;
-            if(allPieces.containsKey(x + y*8)){
-                break;
+            if((pos = Checks.legalMove(x, y, allPieces)) != null){
+                movableSquares.add(pos);
             } else {
-                movableSquares.add(new Position(x, y));
+                break;
             }
         }
-        // ruchy w prawo-dol
+        // moves up-right
         x = currentPosition.getX();
         y = currentPosition.getY();
         while(x < 7 && y < 7){
             x++;
             y++;
-            if(allPieces.containsKey(x + y*8)){
-                break;
+            if((pos = Checks.legalMove(x, y, allPieces)) != null){
+                movableSquares.add(pos);
             } else {
-                movableSquares.add(new Position(x, y));
+                break;
             }
         }
+
+        // Rook
+        // moves down
+        x = currentPosition.getX();
+        y = currentPosition.getY();
+        while(y > 0){
+            y--;
+            if((pos = Checks.legalMove(x, y, allPieces)) != null){
+                movableSquares.add(pos);
+            } else {
+                break;
+            }
+        }
+        // moves up
+        x = currentPosition.getX();
+        y = currentPosition.getY();
+        while(y < 7){
+            y++;
+            if((pos = Checks.legalMove(x, y, allPieces)) != null){
+                movableSquares.add(pos);
+            } else {
+                break;
+            }
+        }
+        // moves left
+        x = currentPosition.getX();
+        y = currentPosition.getY();
+        while(x > 0){
+            x--;
+            if((pos = Checks.legalMove(x, y, allPieces)) != null){
+                movableSquares.add(pos);
+            } else {
+                break;
+            }
+        }
+        // moves right
+        x = currentPosition.getX();
+        y = currentPosition.getY();
+        while(x < 7){
+            x++;
+            if((pos = Checks.legalMove(x, y, allPieces)) != null){
+                movableSquares.add(pos);
+            } else {
+                break;
+            }
+        }
+
         return movableSquares;
     }
 
     @Override
     public List<Position> getBeatableList(Map<Integer, Piece> allPieces, Position currentPosition) {
         List<Position> beatableSquares = new ArrayList<>();
+        Position pos;
 
-        // ruchy w lewo
-        for(int y = currentPosition.getY() - 1; y >= 0; y--){
-            if(allPieces.containsKey(currentPosition.getX() + y * 8)){
-                if(allPieces.get(currentPosition.getX() + y * 8).getTeam() != team){
-                    beatableSquares.add(new Position(currentPosition.getX(),y));
-                }
-                break;
-            }
-        }
-        // ruchy w prawo
-        for(int y = currentPosition.getY() + 1; y < 8; y++){
-            if(allPieces.containsKey(currentPosition.getX() + y * 8)){
-                if(allPieces.get(currentPosition.getX() + y * 8).getTeam() != team){
-                    beatableSquares.add(new Position(currentPosition.getX(),y));
-                }
-                break;
-            }
-        }
-        // ruchy w gore
-        for(int x = currentPosition.getX() - 1; x >= 0; x--){
-            if(allPieces.containsKey(currentPosition.getY() * 8 + x)){
-                if(allPieces.get(currentPosition.getY() * 8 + x).getTeam() != team){
-                    beatableSquares.add(new Position(x, currentPosition.getY()));
-                }
-                break;
-            }
-        }
-        // ruchy w dol
-        for(int x = currentPosition.getX() + 1; x < 8; x++){
-            if(allPieces.containsKey(currentPosition.getY() * 8 + x)){
-                if(allPieces.get(currentPosition.getY() * 8 + x).getTeam() != team){
-                    beatableSquares.add(new Position(x, currentPosition.getY()));
-                }
-                break;
-            }
-        }
-        // ruchy w lewo-gora
+        // Bishop
+        // moves down-left
         int x = currentPosition.getX();
         int y = currentPosition.getY();
-        while(x >= 0 && y >= 0){
+        while(x > 0 && y > 0){
             x--;
             y--;
-            if(allPieces.containsKey(x + y*8)){
-                if(allPieces.get(x + y*8).getTeam() != team){
-                    beatableSquares.add(new Position(x, y));
-                }
+            if((pos = Checks.legalBeat(x, y, team, allPieces)) != null){
+                beatableSquares.add(pos);
+                break;
+            } else if ((pos = Checks.legalPos(x, y)) != null && allPieces.containsKey(pos.getInt())) {
                 break;
             }
         }
-        // ruchy w lewo-dol
+        // moves up-left
         x = currentPosition.getX();
         y = currentPosition.getY();
-        while(x >= 0 && y < 8){
+        while(x > 0 && y < 7){
             x--;
             y++;
-            if(allPieces.containsKey(x + y*8)){
-                if(allPieces.get(x + y*8).getTeam() != team){
-                    beatableSquares.add(new Position(x, y));
-                }
+            if((pos = Checks.legalBeat(x, y, team, allPieces)) != null){
+                beatableSquares.add(pos);
+                break;
+            } else if ((pos = Checks.legalPos(x, y)) != null && allPieces.containsKey(pos.getInt())) {
                 break;
             }
         }
-        // ruchy w prawo-gora
+        // moves down-right
         x = currentPosition.getX();
         y = currentPosition.getY();
-        while(x < 8 && y >= 0){
+        while(x < 7 && y > 0){
             x++;
             y--;
-            if(allPieces.containsKey(x + y*8)){
-                if(allPieces.get(x + y*8).getTeam() != team){
-                    beatableSquares.add(new Position(x, y));
-                }
+            if((pos = Checks.legalBeat(x, y, team, allPieces)) != null){
+                beatableSquares.add(pos);
+                break;
+            } else if ((pos = Checks.legalPos(x, y)) != null && allPieces.containsKey(pos.getInt())) {
                 break;
             }
         }
-        // ruchy w prawo-dol
+        // moves up-right
         x = currentPosition.getX();
         y = currentPosition.getY();
-        while(x < 8 && y < 8){
+        while(x < 7 && y < 7){
             x++;
             y++;
-            if(allPieces.containsKey(x + y*8)){
-                if(allPieces.get(x + y*8).getTeam() != team){
-                    beatableSquares.add(new Position(x, y));
-                }
+            if((pos = Checks.legalBeat(x, y, team, allPieces)) != null){
+                beatableSquares.add(pos);
+                break;
+            } else if ((pos = Checks.legalPos(x, y)) != null && allPieces.containsKey(pos.getInt())) {
                 break;
             }
         }
+
+        // Rook
+        // moves down
+        x = currentPosition.getX();
+        y = currentPosition.getY();
+        while(y > 0){
+            y--;
+            if((pos = Checks.legalBeat(x, y, team, allPieces)) != null){
+                beatableSquares.add(pos);
+                break;
+            } else if ((pos = Checks.legalPos(x, y)) != null && allPieces.containsKey(pos.getInt())) {
+                break;
+            }
+        }
+        // moves up
+        x = currentPosition.getX();
+        y = currentPosition.getY();
+        while(y < 7){
+            y++;
+            if((pos = Checks.legalBeat(x, y, team, allPieces)) != null){
+                beatableSquares.add(pos);
+                break;
+            } else if ((pos = Checks.legalPos(x, y)) != null && allPieces.containsKey(pos.getInt())) {
+                break;
+            }
+        }
+        // moves left
+        x = currentPosition.getX();
+        y = currentPosition.getY();
+        while(x > 0){
+            x--;
+            if((pos = Checks.legalBeat(x, y, team, allPieces)) != null){
+                beatableSquares.add(pos);
+                break;
+            } else if ((pos = Checks.legalPos(x, y)) != null && allPieces.containsKey(pos.getInt())) {
+                break;
+            }
+        }
+        // moves right
+        x = currentPosition.getX();
+        y = currentPosition.getY();
+        while(x < 7){
+            x++;
+            if((pos = Checks.legalBeat(x, y, team, allPieces)) != null){
+                beatableSquares.add(pos);
+                break;
+            } else if ((pos = Checks.legalPos(x, y)) != null && allPieces.containsKey(pos.getInt())) {
+                break;
+            }
+        }
+
         return beatableSquares;
     }
 }
