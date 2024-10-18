@@ -24,6 +24,7 @@ public class GameSceneController {
     private Map<Integer, ImageView> pieceImgs;
     private VBox moveList;
     private Text currentPlayerText;
+    private Text checkText;
     private Piece.Team currentPlayer;
 
     public GameSceneController() {
@@ -33,7 +34,12 @@ public class GameSceneController {
         this.positionText = new ArrayList<>();
         this.pieceImgs = new HashMap<>();
         this.currentPlayer = Piece.Team.WHITE;
+        this.checkText = new Text();
         this.currentPlayerText = new Text(String.valueOf(currentPlayer));
+
+        checkText.setX(8*100 + 50);
+        checkText.setY(10);
+        root.getChildren().add(checkText);
 
         currentPlayerText.setX(8*100 + 50);
         currentPlayerText.setY(30);
@@ -143,5 +149,13 @@ public class GameSceneController {
         saveMove(move);
         swapPlayer();
         clearBoard();
+    }
+
+    public void modifyCheck(Piece.Team team){
+        if(team == null){
+            checkText.setText("");
+        } else {
+            checkText.setText(team.toString());
+        }
     }
 }

@@ -92,15 +92,20 @@ public class Checkerboard {
     }
 
     public Piece.Team lookForCheck(){
+        System.out.println("loook for check");
         for(Map.Entry<Integer, Piece> entry : board.entrySet()) {
             Piece piece = entry.getValue();
             Piece.Team team = piece.getTeam();
             Position currentPos = new Position(entry.getKey());
 
             piece.getBeatableList(board, currentPos);
+
+
             for(Position pos : piece.getBeatableList(board, currentPos)){
-                if("King".equals(board.get(pos.getInt()).getClass().getName())){
-                    return piece.getTeam();
+                System.out.println(board.get(pos.getInt()).getClass().getSimpleName());
+                if("King".equals(board.get(pos.getInt()).getClass().getSimpleName())){
+                    System.out.println("CHECK!!!!!!!!!!!!!!!");
+                    return board.get(pos.getInt()).getTeam();
                 }
             }
         }

@@ -35,7 +35,6 @@ public class HistoryController {
 
         try(DirectoryStream<Path> ds = Files.newDirectoryStream(dir)){
             for(Path file : ds){
-                System.out.println(file.getFileName());
                 gameList.add(new GameMoves(file));
             }
         } catch (IOException e) {

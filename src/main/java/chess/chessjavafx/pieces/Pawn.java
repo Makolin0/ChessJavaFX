@@ -60,7 +60,6 @@ public class Pawn implements Piece{
 
     @Override
     public List<Position> getBeatableList(Map<Integer, Piece> allPieces, Position currentPosition) {
-        System.out.println("beat for pawn");
         List<Position> beatableSquares = new ArrayList<>();
         Position pos;
         switch (team){

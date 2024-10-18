@@ -5,7 +5,6 @@ public class Position {
     private int y;
 
     public Position(int x, int y){
-        System.out.println("new pos x" + x + " y" + y);
         checkIfValid(x, y);
         this.x = x;
         this.y = y;
