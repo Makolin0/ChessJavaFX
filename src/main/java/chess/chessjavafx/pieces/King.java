@@ -31,51 +31,24 @@ public class King implements Piece{
     @Override
     public List<Position> getMovableList(Map<Integer, Piece> allPieces, Position currentPosition) {
         List<Position> movableSquares = new ArrayList<>();
+        Position pos;
 
-        int xLeft = currentPosition.getX() - 1;
-        int xRight = currentPosition.getX() + 1;
-        int yDown = currentPosition.getY() - 1;
-        int yUp = currentPosition.getY() + 1;
-        if(xLeft >= 0){
-            if(!allPieces.containsKey(currentPosition.getY() * 8 + xLeft)){
-                movableSquares.add(new Position(xLeft, currentPosition.getY()));
-            }
-            if(yDown >= 0){
-                if(!allPieces.containsKey(yDown * 8 + xLeft)){
-                    movableSquares.add(new Position(xLeft, yDown));
-                }
-            }
-            if(yUp < 8){
-                if(!allPieces.containsKey(yUp * 8 + xLeft)){
-                    movableSquares.add(new Position(xLeft, yUp));
-                }
-            }
-        }
-        if(xRight < 8){
-            if(!allPieces.containsKey(currentPosition.getY() * 8 + xRight)){
-                movableSquares.add(new Position(xRight, currentPosition.getY()));
-            }
-            if(yDown >= 0){
-                if(!allPieces.containsKey(yDown * 8 + xRight)){
-                    movableSquares.add(new Position(xRight, yDown));
-                }
-            }
-            if(yUp < 8){
-                if(!allPieces.containsKey(yUp * 8 + xRight)){
-                    movableSquares.add(new Position(xRight, yUp));
-                }
-            }
-        }
-        if(yDown >= 0){
-            if(!allPieces.containsKey(yDown * 8 + currentPosition.getX())){
-                movableSquares.add(new Position(currentPosition.getX(), yDown));
-            }
-        }
-        if(yUp < 8){
-            if(!allPieces.containsKey(yUp * 8 + currentPosition.getX())){
-                movableSquares.add(new Position(currentPosition.getX(), yUp));
-            }
-        }
+        if((pos = Checks.legalMove(currentPosition.getX()+1, currentPosition.getY()+1, allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX()+1, currentPosition.getY(), allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX()+1, currentPosition.getY()-1, allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX()-1, currentPosition.getY()+1, allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX()-1, currentPosition.getY(), allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX()-1, currentPosition.getY()-1, allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY()+1, allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY()-1, allPieces)) != null)
+            movableSquares.add(pos);
 
         return movableSquares;
     }
@@ -83,60 +56,24 @@ public class King implements Piece{
     @Override
     public List<Position> getBeatableList(Map<Integer, Piece> allPieces, Position currentPosition) {
         List<Position> beatableSquares = new ArrayList<>();
+        Position pos;
 
-
-        int xLeft = currentPosition.getX() - 1;
-        int xRight = currentPosition.getX() + 1;
-        int yDown = currentPosition.getY() - 1;
-        int yUp = currentPosition.getY() + 1;
-        if(xLeft >= 0){
-            if(allPieces.containsKey(currentPosition.getY() * 8 + xLeft)){
-                if(allPieces.get(currentPosition.getY() * 8 + xLeft).getTeam() != team)
-                    beatableSquares.add(new Position(xLeft, currentPosition.getY()));
-            }
-            if(yDown >= 0){
-                if(allPieces.containsKey(yDown * 8 + xLeft)){
-                    if(allPieces.get(yDown * 8 + xLeft).getTeam() != team)
-                        beatableSquares.add(new Position(xLeft, yDown));
-                }
-            }
-            if(yUp < 8){
-                if(allPieces.containsKey(yUp * 8 + xLeft)){
-                    if(allPieces.get(yUp * 8 + xLeft).getTeam() != team)
-                        beatableSquares.add(new Position(xLeft, yUp));
-                }
-            }
-        }
-        if(xRight < 8){
-            if(allPieces.containsKey(currentPosition.getY() * 8 + xRight)){
-                if(allPieces.get(currentPosition.getY() * 8 + xRight).getTeam() != team)
-                    beatableSquares.add(new Position(xRight, currentPosition.getY()));
-            }
-            if(yDown >= 0){
-                if(allPieces.containsKey(yDown * 8 + xRight)){
-                    if(allPieces.get(yDown * 8 + xRight).getTeam() != team)
-                        beatableSquares.add(new Position(xRight, yDown));
-                }
-            }
-            if(yUp < 8){
-                if(allPieces.containsKey(yUp * 8 + xRight)){
-                    if(allPieces.get(yUp * 8 + xRight).getTeam() != team)
-                        beatableSquares.add(new Position(xRight, yUp));
-                }
-            }
-        }
-        if(yDown >= 0){
-            if(allPieces.containsKey(yDown * 8 + currentPosition.getX())){
-                if(allPieces.get(yDown * 8 + currentPosition.getX()).getTeam() != team)
-                    beatableSquares.add(new Position(currentPosition.getX(), yDown));
-            }
-        }
-        if(yUp < 8){
-            if(allPieces.containsKey(yUp * 8 + currentPosition.getX())){
-                if(allPieces.get(yUp * 8 + currentPosition.getX()).getTeam() != team)
-                    beatableSquares.add(new Position(currentPosition.getX(), yUp));
-            }
-        }
+        if((pos = Checks.legalBeat(currentPosition.getX()+1, currentPosition.getY()+1, team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX()+1, currentPosition.getY(), team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX()+1, currentPosition.getY()-1, team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX()-1, currentPosition.getY()+1, team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX()-1, currentPosition.getY(), team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX()-1, currentPosition.getY()-1, team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX(), currentPosition.getY()+1, team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX(), currentPosition.getY()-1, team, allPieces)) != null)
+            beatableSquares.add(pos);
 
         return beatableSquares;
     }

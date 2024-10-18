@@ -31,55 +31,24 @@ public class Knight implements Piece{
     @Override
     public List<Position> getMovableList(Map<Integer, Piece> allPieces, Position currentPosition) {
         List<Position> movableSquares = new ArrayList<>();
+        Position pos;
 
-        if(currentPosition.getX() < 6 && currentPosition.getY() >= 1) {
-            if (!allPieces.containsKey(currentPosition.getInt() - 6)) {
-                movableSquares.add(new Position(currentPosition.getInt() - 6));
-
-            }
-        }
-        if(currentPosition.getX() >= 2 && currentPosition.getY() >= 1) {
-            if (!allPieces.containsKey(currentPosition.getInt() - 10)) {
-                movableSquares.add(new Position(currentPosition.getInt() - 10));
-
-            }
-        }
-        if(currentPosition.getX() < 7 && currentPosition.getY() >= 2) {
-            if (!allPieces.containsKey(currentPosition.getInt() - 15)) {
-                movableSquares.add(new Position(currentPosition.getInt() - 15));
-
-            }
-        }
-        if(currentPosition.getX() >= 1 && currentPosition.getY() >= 2){
-            if(!allPieces.containsKey(currentPosition.getInt() - 17)){
-                movableSquares.add(new Position(currentPosition.getInt() - 17));
-
-            }
-        }
-        if(currentPosition.getX() >= 2 && currentPosition.getY() <= 6) {
-            if (!allPieces.containsKey(currentPosition.getInt() + 6)) {
-                movableSquares.add(new Position(currentPosition.getInt() + 6));
-
-            }
-        }
-        if(currentPosition.getX() <= 5 && currentPosition.getY() <= 6) {
-            if (!allPieces.containsKey(currentPosition.getInt() + 10)) {
-                movableSquares.add(new Position(currentPosition.getInt() + 10));
-
-            }
-        }
-        if(currentPosition.getX() >= 1 && currentPosition.getY() <= 5) {
-            if (!allPieces.containsKey(currentPosition.getInt() + 15)) {
-                movableSquares.add(new Position(currentPosition.getInt() + 15));
-
-            }
-        }
-        if(currentPosition.getX() <= 6 && currentPosition.getY() <= 5){
-            if(!allPieces.containsKey(currentPosition.getInt() + 17)) {
-                movableSquares.add(new Position(currentPosition.getInt() + 17));
-
-            }
-        }
+        if((pos = Checks.legalMove(currentPosition.getX()-1, currentPosition.getY()+2, allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX()+1, currentPosition.getY()+2, allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX()-1, currentPosition.getY()-2, allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX()+1, currentPosition.getY()-2, allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX()+2, currentPosition.getY()-1, allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX()+2, currentPosition.getY()+1, allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX()-2, currentPosition.getY()-1, allPieces)) != null)
+            movableSquares.add(pos);
+        if((pos = Checks.legalMove(currentPosition.getX()-2, currentPosition.getY()+1, allPieces)) != null)
+            movableSquares.add(pos);
 
         return movableSquares;
     }
@@ -87,67 +56,24 @@ public class Knight implements Piece{
     @Override
     public List<Position> getBeatableList(Map<Integer, Piece> allPieces, Position currentPosition) {
         List<Position> beatableSquares = new ArrayList<>();
+        Position pos;
 
-        if(currentPosition.getX() < 6 && currentPosition.getY() >= 1) {
-            if (allPieces.containsKey(currentPosition.getInt() - 6)) {
-                if (allPieces.get(currentPosition.getInt() - 6).getTeam() != team) {
-                    beatableSquares.add(new Position(currentPosition.getInt() - 6));
-                }
-            }
-        }
-        if(currentPosition.getX() >= 2 && currentPosition.getY() >= 1) {
-            if (allPieces.containsKey(currentPosition.getInt() - 10)) {
-                if (allPieces.get(currentPosition.getInt() - 10).getTeam() != team) {
-                    beatableSquares.add(new Position(currentPosition.getInt() - 10));
-                }
-            }
-        }
-        if(currentPosition.getX() < 7 && currentPosition.getY() >= 2) {
-            if (allPieces.containsKey(currentPosition.getInt() - 15)) {
-                if (allPieces.get(currentPosition.getInt() - 15).getTeam() != team) {
-                    beatableSquares.add(new Position(currentPosition.getInt() - 15));
-                }
-            }
-        }
-        if(currentPosition.getX() >= 1 && currentPosition.getY() >= 2){
-            if(allPieces.containsKey(currentPosition.getInt() - 17)){
-                if(allPieces.get(currentPosition.getInt() - 17).getTeam() != team) {
-                    beatableSquares.add(new Position(currentPosition.getInt() - 17));
-                }
-            }
-        }
-        if(currentPosition.getX() >= 2 && currentPosition.getY() <= 6) {
-            if (allPieces.containsKey(currentPosition.getInt() + 6)) {
-                if (allPieces.get(currentPosition.getInt() + 6).getTeam() != team) {
-                    beatableSquares.add(new Position(currentPosition.getInt() + 6));
-                }
-            }
-        }
-
-        // POZAMIENIAC SRODKOWY IF
-
-        if(currentPosition.getX() <= 5 && currentPosition.getY() <= 6) {
-            if (allPieces.containsKey(currentPosition.getInt() + 10)) {
-                if (allPieces.get(currentPosition.getInt() + 10).getTeam() != team) {
-                    beatableSquares.add(new Position(currentPosition.getInt() + 10));
-                }
-            }
-        }
-        if(currentPosition.getX() >= 1 && currentPosition.getY() <= 5) {
-            if (allPieces.containsKey(currentPosition.getInt() + 15)) {
-                if (allPieces.get(currentPosition.getInt() + 15).getTeam() != team) {
-                    beatableSquares.add(new Position(currentPosition.getInt() + 15));
-                }
-            }
-        }
-        if(currentPosition.getX() <= 6 && currentPosition.getY() <= 5){
-            if(allPieces.containsKey(currentPosition.getInt() + 17)) {
-                if (allPieces.get(currentPosition.getInt() + 17).getTeam() != team) {
-                    beatableSquares.add(new Position(currentPosition.getInt() + 17));
-                }
-            }
-        }
-
+        if((pos = Checks.legalBeat(currentPosition.getX()-1, currentPosition.getY()+2, team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX()+1, currentPosition.getY()+2, team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX()-1, currentPosition.getY()-2, team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX()+1, currentPosition.getY()-2, team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX()+2, currentPosition.getY()-1, team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX()+2, currentPosition.getY()+1, team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX()-2, currentPosition.getY()-1, team, allPieces)) != null)
+            beatableSquares.add(pos);
+        if((pos = Checks.legalBeat(currentPosition.getX()-2, currentPosition.getY()+1, team, allPieces)) != null)
+            beatableSquares.add(pos);
 
         return beatableSquares;
     }
