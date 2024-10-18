@@ -1,7 +1,6 @@
 package chess.chessjavafx.arduino;
 
-import chess.chessjavafx.BoardController;
-import chess.chessjavafx.game.Position;
+import chess.chessjavafx.game.GameController;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
@@ -10,10 +9,10 @@ import java.util.TimerTask;
 
 public class TimerScheduleHandler extends TimerTask implements SerialPortDataListener {
     private final long timeStart;
-    private BoardController boardController;
-    public TimerScheduleHandler(long timeStart, BoardController boardController) {
+    private GameController gameController;
+    public TimerScheduleHandler(long timeStart, GameController gameController) {
         this.timeStart = timeStart;
-        this.boardController = boardController;
+        this.gameController = gameController;
     }
 
     @Override
@@ -29,7 +28,7 @@ public class TimerScheduleHandler extends TimerTask implements SerialPortDataLis
     @Override
     public void serialEvent(SerialPortEvent serialPortEvent){
         if(serialPortEvent.getEventType() == SerialPort.LISTENING_EVENT_DATA_RECEIVED){
-//            boardController.movePiece(new Position(1, 1), new Position(1, 3));
+//            gameController.sendPosition(new Position(1, 1));
         }
     }
 }

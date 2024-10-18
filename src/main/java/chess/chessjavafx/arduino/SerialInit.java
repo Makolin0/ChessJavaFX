@@ -1,15 +1,15 @@
 package chess.chessjavafx.arduino;
 
-import chess.chessjavafx.BoardController;
+import chess.chessjavafx.game.GameController;
 import com.fazecast.jSerialComm.SerialPort;
 
 import java.util.Timer;
 
 public class SerialInit {
-    private BoardController boardController;
+    private GameController gameController;
 
-    public SerialInit(BoardController boardController) {
-        this.boardController = boardController;
+    public SerialInit(GameController gameController) {
+        this.gameController = gameController;
     }
 
     public void initiate() {
@@ -32,7 +32,7 @@ public class SerialInit {
         Runtime.getRuntime().addShutdownHook(new Thread(sp::closePort));
 
         var timer = new Timer();
-        var timedSchedule = new TimerScheduleHandler(timeStart, boardController);
+        var timedSchedule = new TimerScheduleHandler(timeStart, gameController);
 
         sp.addDataListener(timedSchedule);
 
