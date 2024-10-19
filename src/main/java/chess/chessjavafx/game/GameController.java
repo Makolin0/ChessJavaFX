@@ -1,19 +1,15 @@
 package chess.chessjavafx.game;
 
 import chess.chessjavafx.javaFX.Game;
-import chess.chessjavafx.javaFX.GameSceneController;
 import chess.chessjavafx.packages.Moveset;
 import chess.chessjavafx.pieces.Piece;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class GameController {
