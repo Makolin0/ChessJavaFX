@@ -23,8 +23,7 @@ public class MainMenu {
     public void enterHistory(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/history.fxml")));
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+        stage.getScene().setRoot(root);
         stage.show();
     }
     public void enterGame(ActionEvent event) throws IOException {
@@ -38,8 +37,7 @@ public class MainMenu {
     public void enterLoadGame(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/load-game.fxml")));
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+        stage.getScene().setRoot(root);
         stage.show();
     }
 }

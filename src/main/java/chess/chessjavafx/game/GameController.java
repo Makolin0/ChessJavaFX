@@ -31,8 +31,7 @@ public class GameController {
 
         game.updateAllPieces(checkerboard);
 
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+        stage.getScene().setRoot(root);
         stage.show();
 
 
