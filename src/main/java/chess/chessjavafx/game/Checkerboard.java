@@ -112,4 +112,48 @@ public class Checkerboard {
 
         return null;
     }
+
+    public boolean lookForCheckmate(Piece.Team team) {
+        Checkerboard mockCheckerboard = null;
+        try {
+            mockCheckerboard = (Checkerboard) this.clone();
+        } catch (CloneNotSupportedException e) {
+            System.out.println("CloneNotSupportedException");
+        }
+        assert mockCheckerboard != null;
+
+        for(Map.Entry<Integer, Piece> entry : this.board.entrySet()){
+            Piece piece = entry.getValue();
+            Position startPos = new Position(entry.getKey());
+
+            if(piece.getTeam() != team)
+                continue;
+
+            Moveset moveset = this.possibleMoves(startPos);
+
+            List<Position> allMoves = moveset.getMovableList();
+            allMoves.addAll(moveset.getBeatableList());
+
+            for(Position endPos : allMoves){
+                mockCheckerboard.move(new Move(startPos, endPos));
+                if(mockCheckerboard.lookForCheck() == null)
+                    return false;
+                try {
+                    mockCheckerboard = (Checkerboard) this.clone();
+                } catch (CloneNotSupportedException e) {
+                    System.out.println("CloneNotSupportedException");
+                }
+            }
+        }
+        System.out.println("SZACH MAT!!!!!!!!!!SZACH MAT!!!!!!!!!!SZACH MAT!!!!!!!!!!SZACH MAT!!!!!!!!!!SZACH MAT!!!!!!!!!!");
+        return true;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Checkerboard copy = new Checkerboard();
+        copy.board.clear();
+        copy.board.putAll(this.board);
+        return copy;
+    }
 }

@@ -49,7 +49,13 @@ public class GameController {
             gameSceneController.clearBoard();
             currentPieceMoveset = null;
 
-            gameSceneController.modifyCheck(checkerboard.lookForCheck());
+            Piece.Team checkTeam = checkerboard.lookForCheck();
+            gameSceneController.modifyCheck(checkTeam);
+            if(checkTeam != null){
+                if(checkerboard.lookForCheckmate(checkTeam)){
+                    // TODO - co zrobic po wykryciu szach mat
+                }
+            }
 
         } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
             // odstawiamy w poprzednie miejsce
