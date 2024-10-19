@@ -3,21 +3,18 @@ package chess.chessjavafx.game;
 import chess.chessjavafx.javaFX.Game;
 import chess.chessjavafx.packages.Moveset;
 import chess.chessjavafx.pieces.Piece;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 public class GameController {
-    private Checkerboard checkerboard;
+    private final Checkerboard checkerboard;
     private Piece.Team currentPlayer;
     private Moveset currentPieceMoveset;
-    private GameMoves gameMoves;
-    private Game game;
+    private final GameMoves gameMoves;
+    private final Game game;
 
     public GameController(Stage stage) throws IOException {
         this.checkerboard = new Checkerboard();
@@ -55,7 +52,6 @@ public class GameController {
             checkerboard.move(move);
             swapTeam();
             gameMoves.addMove(move);
-//            gameSceneController.movePiece(move);
             game.updateAllPieces(checkerboard);
             game.clearBoard();
             game.swapPlayer();

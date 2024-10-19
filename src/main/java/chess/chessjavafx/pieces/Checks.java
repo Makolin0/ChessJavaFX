@@ -1,7 +1,6 @@
 package chess.chessjavafx.pieces;
 
 import chess.chessjavafx.game.Position;
-
 import java.util.Map;
 import java.util.Objects;
 

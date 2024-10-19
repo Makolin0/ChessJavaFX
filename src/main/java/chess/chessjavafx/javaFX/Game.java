@@ -10,10 +10,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -21,7 +19,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -74,8 +71,6 @@ public class Game implements Initializable {
         this.whiteCol.setCellValueFactory(new PropertyValueFactory<>("moveWhite"));
         this.blackCol.setCellValueFactory(new PropertyValueFactory<>("moveBlack"));
 
-//        tableView.getItems().add(new MoveRow("a", "b"));
-
         this.squares = new ArrayList<>();
         this.positionText = new ArrayList<>();
         this.pieceImgs = new HashMap<>();
@@ -83,7 +78,6 @@ public class Game implements Initializable {
         this.currentPlayerText.setText("Aktualny gracz: "+ currentPlayer);
 
         this.tableView.getItems().add(0, new MoveRow());
-//        this.tableView.getItems().get(0).setMoveWhite("init");
 
         generateBoard();
     }
@@ -136,17 +130,12 @@ public class Game implements Initializable {
     }
 
     public void showMoveset(Moveset moveset){
-//        rectangle.setFill((i+j)%2==0? Color.DARKGRAY:Color.WHITE);
         // current position
         squares.get(moveset.getCurrentPosition().getInt()).setFill(Color.BLUE);
         // movable
-        moveset.getMovableList().forEach((pos)->{
-            squares.get(pos.getInt()).setFill(Color.GREEN);
-        });
+        moveset.getMovableList().forEach((pos)-> squares.get(pos.getInt()).setFill(Color.GREEN));
         // beatable
-        moveset.getBeatableList().forEach((pos)->{
-            squares.get(pos.getInt()).setFill(Color.RED);
-        });
+        moveset.getBeatableList().forEach((pos)-> squares.get(pos.getInt()).setFill(Color.RED));
     }
 
     public void clearBoard(){
@@ -174,12 +163,10 @@ public class Game implements Initializable {
         switch (tableView.getItems().get(0).getState()){
             case 0:
                 tableView.getItems().get(0).setMoveWhite(move.toString());
-                System.out.println("save move white " + move.toString());
                 break;
                 case 1:
                     tableView.getItems().get(0).setMoveBlack(move.toString());
                     tableView.getItems().add(0, new MoveRow());
-                    System.out.println("save move black");
                     break;
                     case 2:
                         System.out.println("Nigdy nie powinno byc");
@@ -208,5 +195,4 @@ public class Game implements Initializable {
             checkText.setText("Szach dla: " + team);
         }
     }
-
 }

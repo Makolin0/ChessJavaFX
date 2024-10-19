@@ -7,12 +7,11 @@ import javafx.scene.image.ImageView;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static chess.chessjavafx.pieces.Piece.Team.WHITE;
 
 public class Checkerboard {
-    private Map<Integer, Piece> board;
+    private final Map<Integer, Piece> board;
 
     public Checkerboard(){
         this.board = new HashMap<>();
@@ -21,9 +20,7 @@ public class Checkerboard {
 
     public Map<Integer, ImageView> getImages(){
         Map<Integer, ImageView> images = new HashMap<>();
-        board.forEach((key, piece) -> {
-            images.put(key, piece.getImg());
-        });
+        board.forEach((key, piece) -> images.put(key, piece.getImg()));
         return images;
     }
 
@@ -96,19 +93,15 @@ public class Checkerboard {
     }
 
     public Piece.Team lookForCheck(){
-        System.out.println("loook for check");
         for(Map.Entry<Integer, Piece> entry : board.entrySet()) {
             Piece piece = entry.getValue();
-            Piece.Team team = piece.getTeam();
             Position currentPos = new Position(entry.getKey());
 
             piece.getBeatableList(board, currentPos);
 
-
             for(Position pos : piece.getBeatableList(board, currentPos)){
                 System.out.println(board.get(pos.getInt()).getClass().getSimpleName());
                 if("King".equals(board.get(pos.getInt()).getClass().getSimpleName())){
-                    System.out.println("CHECK!!!!!!!!!!!!!!!");
                     return board.get(pos.getInt()).getTeam();
                 }
             }
@@ -149,7 +142,7 @@ public class Checkerboard {
                 }
             }
         }
-        System.out.println("SZACH MAT!!!!!!!!!!SZACH MAT!!!!!!!!!!SZACH MAT!!!!!!!!!!SZACH MAT!!!!!!!!!!SZACH MAT!!!!!!!!!!");
+        System.out.println("SZACH MAT!!");
         return true;
     }
 
