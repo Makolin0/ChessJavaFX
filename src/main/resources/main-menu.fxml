@@ -8,9 +8,8 @@
             prefHeight="400.0" prefWidth="600.0" >
     <VBox>
         <Text text="Szachy" />
-        <Button fx:id="game" text="Gra" onAction="#printHelloWorld"/>
-        <Button fx:id="history" text="Historia" onAction="#printHelloWorld" />
-        <Button fx:id="exit" text="Wyjście" onAction="#printHelloWorld" />
+        <Button fx:id="game" text="Gra" onAction="#enterGame"/>
+        <Button fx:id="history" text="Historia" onAction="#enterHistory" />
+        <Button fx:id="exit" text="Wyjście" onAction="#closeApp" />
     </VBox>
-
 </AnchorPane>

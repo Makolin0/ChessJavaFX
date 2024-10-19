@@ -12,6 +12,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
@@ -26,7 +27,7 @@ public class Chess extends Application {
         Image icon = new Image("file:src/imgs/pawnW.png");
         stage.getIcons().add(icon);
         stage.setTitle("Szachy - Arduino");
-        stage.setFullScreen(true);
+//        stage.setFullScreen(true);
 
 //        MainMenuSceneController mainMenuSceneController = new MainMenuSceneController(stage);
 //        Scene MainMenu = mainMenuSceneController.getScene();
@@ -46,9 +47,8 @@ public class Chess extends Application {
 //        });
 //        thread.start();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/main-menu.fxml")));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/main-menu.fxml")));
+        Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
 
