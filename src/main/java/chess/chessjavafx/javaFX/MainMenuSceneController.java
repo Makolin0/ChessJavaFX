@@ -1,5 +1,6 @@
 package chess.chessjavafx.javaFX;
 
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -43,26 +44,20 @@ public class MainMenuSceneController {
         root.getChildren().add(exitButton);
         root.setAlignment(Pos.CENTER);
 
-        this.scene = new Scene(root, Color.RED);
+        this.scene = new Scene(root);
 
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/fontstyle.css")).toExternalForm());
 
     }
 
     public void setGameButton(Scene gameScene){
-        gameButton.setOnAction(event -> {
-            stage.setScene(gameScene);
-        });
+//        stage.getScene().setRoot(gameScene.getRoot());
     }
     public void setHistoryButton(Scene historyScene){
-        historyButton.setOnAction(event -> {
-            stage.setScene(historyScene);
-        });
+//            stage.getScene().setRoot(historyScene.getRoot());
     }
 
     public Scene getScene() {
         return scene;
     }
-
-
 }
