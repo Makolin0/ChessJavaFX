@@ -27,6 +27,10 @@ public class Checkerboard {
         return images;
     }
 
+    public Piece.Team getPieceTeam(Position position){
+        return board.get(position.getInt()).getTeam();
+    }
+
     public void newGame(){
         board.clear();
 

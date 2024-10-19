@@ -5,7 +5,6 @@ import chess.chessjavafx.game.Move;
 import chess.chessjavafx.game.Position;
 import chess.chessjavafx.packages.Moveset;
 import chess.chessjavafx.pieces.Piece;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -52,7 +51,7 @@ public class GameSceneController {
 
         generateBoard();
 
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/fontstyle.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
     }
 
     public Scene getScene(){

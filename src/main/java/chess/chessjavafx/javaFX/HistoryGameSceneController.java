@@ -1,6 +1,5 @@
 package chess.chessjavafx.javaFX;
 
-import chess.chessjavafx.game.GameMoves;
 import chess.chessjavafx.game.Move;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,7 +10,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.List;
@@ -53,7 +51,7 @@ public class HistoryGameSceneController {
 
         loadMoves(moves);
 
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/fontstyle.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
     }
 
     private void generateColumns() {

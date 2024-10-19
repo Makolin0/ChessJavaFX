@@ -49,7 +49,7 @@ public class Pawn implements Piece{
                 if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() - 1, allPieces)) != null)
                     movableSquares.add(pos);
 
-                if(currentPosition.getY()==1) {
+                if(currentPosition.getY()==6) {
                     if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() - 2, allPieces)) != null)
                         movableSquares.add(pos);
                 }

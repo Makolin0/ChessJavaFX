@@ -32,7 +32,6 @@ public class HistoryController {
     public void loadGames(){
         gameList.clear();
         Path dir = Paths.get("data");
-
         try(DirectoryStream<Path> ds = Files.newDirectoryStream(dir)){
             for(Path file : ds){
                 gameList.add(new GameMoves(file));

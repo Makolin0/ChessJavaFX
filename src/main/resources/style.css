@@ -20,6 +20,11 @@
     -fx-background-radius: 0;
 }
 
+.label {
+    -fx-font-weight: bold;
+    -fx-font-size: 30px;
+}
+
 .root {
     -fx-background-image: url("ezra.jpg");
     -fx-background-position: center;
