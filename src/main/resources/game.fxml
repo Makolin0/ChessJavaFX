@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<?import java.net.URL?>
 <AnchorPane prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chess.chessjavafx.javaFX.Game">
     <Button layoutY="2.0" onAction="#goBack" text="Wróć" />
    <Pane fx:id="board" layoutX="24.0" layoutY="25.0" prefHeight="800.0" prefWidth="800.0" />
     <Text fx:id="currentPlayerText" layoutX="854.0" layoutY="39.0" />
     <Text fx:id="checkText" layoutX="853.0" layoutY="75.0" />
-   <TableView fx:id="tableView" layoutX="848.0" layoutY="124.0" prefHeight="200.0" prefWidth="200.0">
+   <TableView fx:id="tableView" layoutX="848.0" layoutY="124.0" prefHeight="433.0" prefWidth="214.0">
        <columns>
            <TableColumn fx:id="whiteCol" prefWidth="75.0" text="Biały" />
            <TableColumn fx:id="blackCol" prefWidth="75.0" text="Czarny" />
@@ -19,6 +19,8 @@
          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
       </columnResizePolicy>
    </TableView>
+   <TextField fx:id="positionField" layoutX="848.0" layoutY="610.0" onAction="#sendPosition" />
+   <Button fx:id="sendPositionButton" layoutX="848.0" layoutY="640.0" mnemonicParsing="false" onAction="#sendPosition" text="Rusz" />
   <stylesheets>
     <URL value="@style.css" />
   </stylesheets>

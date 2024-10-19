@@ -14,8 +14,10 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -43,7 +45,6 @@ public class Game implements Initializable {
     public TableColumn<MoveRow, String> whiteCol;
     @FXML
     public TableColumn<MoveRow, String> blackCol;
-    private MoveRow currentRow;
 
     private List<Rectangle> squares;
     private List<Text> positionText;
@@ -51,6 +52,22 @@ public class Game implements Initializable {
     private Map<Integer, ImageView> pieceImgs;
     private Piece.Team currentPlayer;
 
+    @FXML
+    public TextField positionField;
+    @FXML
+    public Button sendPositionButton;
+    private GameController gameController;
+
+    // temporary for testing without arduino
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
+    }
+    public void sendPosition(){
+        Position position = new Position(positionField.getText());
+        positionField.clear();
+
+        gameController.sendPosition(position);
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -188,7 +205,8 @@ public class Game implements Initializable {
         if(team == null){
             checkText.setText("");
         } else {
-            checkText.setText(team.toString());
+            checkText.setText("Szach dla: " + team);
         }
     }
+
 }

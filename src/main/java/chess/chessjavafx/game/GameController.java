@@ -31,14 +31,10 @@ public class GameController {
 
         game.updateAllPieces(checkerboard);
 
+        game.setGameController(this);
+
         stage.getScene().setRoot(root);
         stage.show();
-
-
-        Thread thread = new Thread(() -> {
-            terminalController();
-        });
-        thread.start();
     }
 
     private void swapTeam(){
@@ -90,24 +86,5 @@ public class GameController {
         } else {
             makeMove(position);
         }
-    }
-
-
-    private void terminalController(){
-        while (true) {
-            Scanner scanner = new Scanner(System.in);
-            String text = scanner.next();
-            System.out.println("napisano " + text);
-            Position pos = new Position(text);
-            System.out.println("pozycja " + pos);
-
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    sendPosition(pos);
-                }
-            });
-        }
-
     }
 }
