@@ -1,40 +1,48 @@
 package chess.chessjavafx.game;
 
-import chess.chessjavafx.javaFX.GameSceneController;
+import chess.chessjavafx.javaFX.Game;
 import chess.chessjavafx.packages.Moveset;
 import chess.chessjavafx.pieces.Piece;
-import javafx.scene.Group;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class GameController {
-    private Checkerboard checkerboard;
+    private final Checkerboard checkerboard;
     private Piece.Team currentPlayer;
     private Moveset currentPieceMoveset;
-    private GameMoves gameMoves;
-    private GameSceneController gameSceneController;
+    private final GameMoves gameMoves;
+    private final Game game;
 
-    public GameController() {
+    public GameController(Stage stage) throws IOException {
         this.checkerboard = new Checkerboard();
         this.currentPlayer = Piece.Team.WHITE;
         this.currentPieceMoveset = null;
         this.gameMoves = new GameMoves();
-        this.gameSceneController = new GameSceneController();
 
-        gameSceneController.updateAllPieces(checkerboard);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
+        Parent root = loader.load();
+        this.game = loader.getController();
 
-        gameSceneController.clearBoard();
+        game.updateAllPieces(checkerboard);
+
+        game.setGameController(this);
+
+        stage.getScene().setRoot(root);
+        stage.show();
     }
 
     private void swapTeam(){
         currentPlayer = currentPlayer == Piece.Team.WHITE ? Piece.Team.BLACK : Piece.Team.WHITE;
     }
 
-    public GameSceneController getGameSceneController() {
-        return gameSceneController;
-    }
-
     public void pickUp(Position position){
-        currentPieceMoveset = checkerboard.possibleMoves(position);
-        gameSceneController.showMoveset(currentPieceMoveset);
+        if(currentPlayer == checkerboard.getPieceTeam(position)){
+            currentPieceMoveset = checkerboard.possibleMoves(position);
+            game.showMoveset(currentPieceMoveset);
+        }
     }
 
     public void makeMove(Position destination){
@@ -44,13 +52,14 @@ public class GameController {
             checkerboard.move(move);
             swapTeam();
             gameMoves.addMove(move);
-//            gameSceneController.movePiece(move);
-            gameSceneController.updateAllPieces(checkerboard);
-            gameSceneController.clearBoard();
+            game.updateAllPieces(checkerboard);
+            game.clearBoard();
+            game.swapPlayer();
+            game.saveMove(move);
             currentPieceMoveset = null;
 
             Piece.Team checkTeam = checkerboard.lookForCheck();
-            gameSceneController.modifyCheck(checkTeam);
+            game.modifyCheck(checkTeam);
             if(checkTeam != null){
                 if(checkerboard.lookForCheckmate(checkTeam)){
                     // TODO - co zrobic po wykryciu szach mat
@@ -59,7 +68,7 @@ public class GameController {
 
         } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
             // odstawiamy w poprzednie miejsce
-            gameSceneController.clearBoard();
+            game.clearBoard();
             currentPieceMoveset = null;
         } else{
             // ani możliwy ruch ani odłożenie na poprzednie pole

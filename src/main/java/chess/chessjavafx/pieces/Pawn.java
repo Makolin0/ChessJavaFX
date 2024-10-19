@@ -1,19 +1,15 @@
 package chess.chessjavafx.pieces;
 
 import chess.chessjavafx.game.Position;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class Pawn implements Piece{
-    private Team team;
-    private ImageView img;
+    private final Team team;
+    private final ImageView img;
 
     public Pawn(Team team) {
         this.team = team;
@@ -49,7 +45,7 @@ public class Pawn implements Piece{
                 if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() - 1, allPieces)) != null)
                     movableSquares.add(pos);
 
-                if(currentPosition.getY()==1) {
+                if(currentPosition.getY()==6) {
                     if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() - 2, allPieces)) != null)
                         movableSquares.add(pos);
                 }

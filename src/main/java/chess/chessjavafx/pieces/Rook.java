@@ -1,17 +1,15 @@
 package chess.chessjavafx.pieces;
 
 import chess.chessjavafx.game.Position;
-import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class Rook implements Piece{
-    private Team team;
-    private ImageView img;
+    private final Team team;
+    private final ImageView img;
 
     public Rook(Team team) {
         this.team = team;

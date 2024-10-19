@@ -6,7 +6,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import java.util.Timer;
 
 public class SerialInit {
-    private GameController gameController;
+    private final GameController gameController;
 
     public SerialInit(GameController gameController) {
         this.gameController = gameController;

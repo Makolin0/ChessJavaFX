@@ -1,17 +1,15 @@
 package chess.chessjavafx.pieces;
 
 import chess.chessjavafx.game.Position;
-import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class King implements Piece{
-    private Team team;
-    private ImageView img;
+    private final Team team;
+    private final ImageView img;
 
     public King(Team team) {
         this.team = team;

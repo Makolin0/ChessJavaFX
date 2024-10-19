@@ -1,0 +1,33 @@
+@font-face {
+    font-family: 'Lato';
+    src: url('fonts/Lato-Regular.ttf');
+}
+@font-face {
+    font-family: 'Lato';
+    src: url('fonts/Lato-Bold.ttf');
+}
+
+
+.root {
+    -fx-font-family: 'Lato';
+    -fx-font-size: 16;
+}
+
+.button {
+    -fx-font-weight: bold;
+    -fx-padding: 10;
+    -fx-background-color: #aaaaaa;
+    -fx-background-radius: 0;
+}
+
+.label {
+    -fx-font-weight: bold;
+    -fx-font-size: 30px;
+}
+
+.root {
+    -fx-background-image: url("ezra.jpg");
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
