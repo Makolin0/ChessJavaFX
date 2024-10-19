@@ -34,11 +34,6 @@ public class GameController {
 
     public void pickUp(Position position){
         currentPieceMoveset = checkerboard.possibleMoves(position);
-
-        for(Position pos : currentPieceMoveset.getBeatableList()){
-            System.out.println("bicie " + pos.getX() + " " + pos.getY());
-        }
-
         gameSceneController.showMoveset(currentPieceMoveset);
     }
 
@@ -53,6 +48,15 @@ public class GameController {
             gameSceneController.updateAllPieces(checkerboard);
             gameSceneController.clearBoard();
             currentPieceMoveset = null;
+
+            Piece.Team checkTeam = checkerboard.lookForCheck();
+            gameSceneController.modifyCheck(checkTeam);
+            if(checkTeam != null){
+                if(checkerboard.lookForCheckmate(checkTeam)){
+                    // TODO - co zrobic po wykryciu szach mat
+                }
+            }
+
         } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
             // odstawiamy w poprzednie miejsce
             gameSceneController.clearBoard();
@@ -65,10 +69,8 @@ public class GameController {
 
     public void sendPosition(Position position){
         if(currentPieceMoveset == null){
-            System.out.println("podnosi");
             pickUp(position);
         } else {
-            System.out.println("stawia");
             makeMove(position);
         }
     }
