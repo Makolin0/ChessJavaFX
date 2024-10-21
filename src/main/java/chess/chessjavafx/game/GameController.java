@@ -11,6 +11,7 @@ import java.io.IOException;
 
 public class GameController {
     private final Checkerboard checkerboard;
+    private Checkerboard savedCheckerboard;
     private Piece.Team currentPlayer;
     private Moveset currentPieceMoveset;
     private final GameMoves gameMoves;

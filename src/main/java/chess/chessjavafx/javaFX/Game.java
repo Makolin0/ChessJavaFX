@@ -129,13 +129,20 @@ public class Game implements Initializable {
         currentPlayerText.setText("Aktualny gracz: " + currentPlayer);
     }
 
+    private void colorCurrentPos(Position pos){
+        squares.get(pos.getInt()).setFill((pos.getX() + pos.getY())%2==0? Color.BLUE:Color.LIGHTBLUE);
+    }
+    private void colorMovePos(Position pos){
+        squares.get(pos.getInt()).setFill((pos.getX() + pos.getY())%2==0? Color.GREEN:Color.LIGHTGREEN);
+    }
+    private void colorBeatPos(Position pos){
+        squares.get(pos.getInt()).setFill((pos.getX() + pos.getY())%2==0? Color.DARKRED:Color.RED);
+    }
+
     public void showMoveset(Moveset moveset){
-        // current position
-        squares.get(moveset.getCurrentPosition().getInt()).setFill(Color.BLUE);
-        // movable
-        moveset.getMovableList().forEach((pos)-> squares.get(pos.getInt()).setFill(Color.GREEN));
-        // beatable
-        moveset.getBeatableList().forEach((pos)-> squares.get(pos.getInt()).setFill(Color.RED));
+        colorCurrentPos(moveset.getCurrentPosition());
+        moveset.getMovableList().forEach(this::colorMovePos);
+        moveset.getBeatableList().forEach(this::colorBeatPos);
     }
 
     public void clearBoard(){
