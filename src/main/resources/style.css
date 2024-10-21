@@ -31,3 +31,8 @@
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
 }
+
+.pane {
+    -fx-background-color: #611919;
+    -fx-padding: 20px;
+}
