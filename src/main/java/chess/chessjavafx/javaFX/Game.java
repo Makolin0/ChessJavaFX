@@ -63,12 +63,7 @@ public class Game implements Initializable {
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
-    public void sendPosition(){
-        Position position = new Position(positionField.getText());
-        positionField.clear();
-
-        gameController.sendPosition(position);
-    }
+    
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -219,5 +214,26 @@ public class Game implements Initializable {
         for(Position position : illegalPickUp){
             colorCurrentPos(position);
         }
+    }
+
+    public void sendPosition(){
+        Position position = new Position(positionField.getText());
+        positionField.clear();
+
+        gameController.sendPosition(position);
+    }
+
+    public void sendPickUp(ActionEvent actionEvent) {
+        Position position = new Position(positionField.getText());
+        positionField.clear();
+
+        gameController.pickUp(position);
+    }
+
+    public void sendPlace(ActionEvent actionEvent) {
+        Position position = new Position(positionField.getText());
+        positionField.clear();
+
+        gameController.makeMove(position);
     }
 }

@@ -22,8 +22,9 @@
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
             </columnResizePolicy>
         </TableView>
-        <TextField fx:id="positionField" layoutX="848.0" layoutY="610.0" onAction="#sendPosition" />
-        <Button fx:id="sendPositionButton" layoutX="848.0" layoutY="640.0" mnemonicParsing="false" onAction="#sendPosition" text="Rusz" />
+        <TextField fx:id="positionField" layoutX="848.0" layoutY="610.0" />
+        <Button fx:id="sendPickUpButton" layoutX="848.0" layoutY="640.0" mnemonicParsing="false" onAction="#sendPickUp" text="Podnieś" />
+        <Button fx:id="sendPlaceButton" layoutX="848.0" layoutY="640.0" mnemonicParsing="false" onAction="#sendPlace" text="Postaw" />
     </VBox>
     <Text fx:id="alarm" styleClass="alarm" layoutX="900.0" layoutY="708.0" text="COFNIJ DO POPRZEDNIEGO STANU" />
     <stylesheets>

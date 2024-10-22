@@ -45,11 +45,21 @@ public class GameController {
     }
 
     public void pickUp(Position position){
+        if(!illegalPickUp.isEmpty()){
+            illegalPickUp.add(position);
+            game.clearBoard();
+            game.colorIllegalPlace(illegalPlace);
+            game.colorIllegalPickUp(illegalPickUp);
+        }
+
+
         if(currentPlayer == checkerboard.getPieceTeam(position)){
             currentPieceMoveset = checkerboard.possibleMoves(position);
             game.showMoveset(currentPieceMoveset);
         } else {
             illegalPickUp.add(position);
+            game.clearBoard();
+            game.colorIllegalPlace(illegalPlace);
             game.colorIllegalPickUp(illegalPickUp);
         }
     }
@@ -60,6 +70,7 @@ public class GameController {
             game.clearBoard();
             illegalPlace.add(destination);
             game.colorIllegalPlace(illegalPlace);
+            game.colorIllegalPickUp(illegalPickUp);
             currentPieceMoveset = null;
             return;
         }
@@ -93,6 +104,7 @@ public class GameController {
             game.clearBoard();
             illegalPlace.add(destination);
             game.colorIllegalPlace(illegalPlace);
+            game.colorIllegalPickUp(illegalPickUp);
             currentPieceMoveset = null;
         }
     }
