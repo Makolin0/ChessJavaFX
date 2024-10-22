@@ -10,7 +10,7 @@
     <Pane layoutX="24.0" layoutY="25.0" prefHeight="850.0" prefWidth="850.0" styleClass="pane">
         <Pane fx:id="board" layoutX="25.0" layoutY="25.0" />
     </Pane>
-    <VBox spacing="10.0" layoutX="900.0" layoutY="20.0">
+    <VBox layoutX="900.0" layoutY="20.0" spacing="10.0">
         <Text fx:id="currentPlayerText" layoutX="854.0" layoutY="39.0" />
         <Text fx:id="checkText" layoutX="853.0" layoutY="75.0" />
         <TableView fx:id="tableView" layoutX="848.0" layoutY="124.0" prefHeight="433.0" prefWidth="214.0">
@@ -25,6 +25,7 @@
         <TextField fx:id="positionField" layoutX="848.0" layoutY="610.0" onAction="#sendPosition" />
         <Button fx:id="sendPositionButton" layoutX="848.0" layoutY="640.0" mnemonicParsing="false" onAction="#sendPosition" text="Rusz" />
     </VBox>
+    <Text fx:id="alarm" styleClass="alarm" layoutX="900.0" layoutY="708.0" text="COFNIJ DO POPRZEDNIEGO STANU" />
     <stylesheets>
     <URL value="@style.css" />
   </stylesheets>

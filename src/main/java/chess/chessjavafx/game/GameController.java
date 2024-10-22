@@ -8,10 +8,13 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameController {
     private final Checkerboard checkerboard;
-    private Checkerboard savedCheckerboard;
+    private List<Position> illegalPickUp;
+    private List<Position> illegalPlace;
     private Piece.Team currentPlayer;
     private Moveset currentPieceMoveset;
     private final GameMoves gameMoves;
@@ -22,6 +25,8 @@ public class GameController {
         this.currentPlayer = Piece.Team.WHITE;
         this.currentPieceMoveset = null;
         this.gameMoves = new GameMoves();
+        this.illegalPlace = new ArrayList<>();
+        this.illegalPickUp = new ArrayList<>();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
         Parent root = loader.load();
@@ -43,10 +48,22 @@ public class GameController {
         if(currentPlayer == checkerboard.getPieceTeam(position)){
             currentPieceMoveset = checkerboard.possibleMoves(position);
             game.showMoveset(currentPieceMoveset);
+        } else {
+            illegalPickUp.add(position);
+            game.colorIllegalPickUp(illegalPickUp);
         }
     }
 
     public void makeMove(Position destination){
+        if(!illegalPickUp.isEmpty()){
+            // bad state on the physical board, need to put back
+            game.clearBoard();
+            illegalPlace.add(destination);
+            game.colorIllegalPlace(illegalPlace);
+            currentPieceMoveset = null;
+            return;
+        }
+
         Move move = new Move(currentPieceMoveset.getCurrentPosition(), destination);
         if(currentPieceMoveset.getMovableList().contains(destination) || currentPieceMoveset.getBeatableList().contains(destination)){
             // ruch
@@ -72,13 +89,16 @@ public class GameController {
             game.clearBoard();
             currentPieceMoveset = null;
         } else{
-            // ani możliwy ruch ani odłożenie na poprzednie pole
-            throw new IllegalArgumentException("Niemożliwy ruch!");
+            // bad state on the physical board, need to put back
+            game.clearBoard();
+            illegalPlace.add(destination);
+            game.colorIllegalPlace(illegalPlace);
+            currentPieceMoveset = null;
         }
     }
 
-    public void sendPosition(Position position){
-        if(currentPieceMoveset == null){
+    public void sendPosition(Position position) {
+        if (currentPieceMoveset == null) {
             pickUp(position);
         } else {
             makeMove(position);

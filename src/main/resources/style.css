@@ -9,7 +9,7 @@
 
 * {
     -fx-font-family: 'Lato';
-    -fx-text-fill: #222;
+    /*-fx-text-fill: #222;*/
 }
 
 
@@ -29,6 +29,13 @@
 }
 .main-menu-button:pressed {
     -fx-background-color: #4c6c98;
+}
+
+.alarm {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f00;
+    -fx-background-color: red;
 }
 
 .root {
