@@ -108,12 +108,4 @@ public class GameController {
             currentPieceMoveset = null;
         }
     }
-
-    public void sendPosition(Position position) {
-        if (currentPieceMoveset == null) {
-            pickUp(position);
-        } else {
-            makeMove(position);
-        }
-    }
 }

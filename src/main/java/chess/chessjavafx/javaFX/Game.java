@@ -216,13 +216,6 @@ public class Game implements Initializable {
         }
     }
 
-    public void sendPosition(){
-        Position position = new Position(positionField.getText());
-        positionField.clear();
-
-        gameController.sendPosition(position);
-    }
-
     public void sendPickUp(ActionEvent actionEvent) {
         Position position = new Position(positionField.getText());
         positionField.clear();
