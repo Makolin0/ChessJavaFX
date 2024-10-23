@@ -45,18 +45,12 @@ public class GameController {
     }
 
     public void pickUp(Position position){
-        if(!illegalPickUp.isEmpty()){
-            illegalPickUp.add(position);
-            game.clearBoard();
-            game.colorIllegalPlace(illegalPlace);
-            game.colorIllegalPickUp(illegalPickUp);
-        }
-
-
-        if(currentPlayer == checkerboard.getPieceTeam(position)){
+        System.out.println("pick up " + position);
+        if(illegalPickUp.isEmpty() && currentPlayer == checkerboard.getPieceTeam(position)){
             currentPieceMoveset = checkerboard.possibleMoves(position);
             game.showMoveset(currentPieceMoveset);
         } else {
+            System.out.println("illegal!");
             illegalPickUp.add(position);
             game.clearBoard();
             game.colorIllegalPlace(illegalPlace);
@@ -64,48 +58,54 @@ public class GameController {
         }
     }
 
-    public void makeMove(Position destination){
-        if(!illegalPickUp.isEmpty()){
-            // bad state on the physical board, need to put back
-            game.clearBoard();
-            illegalPlace.add(destination);
-            game.colorIllegalPlace(illegalPlace);
-            game.colorIllegalPickUp(illegalPickUp);
-            currentPieceMoveset = null;
-            return;
-        }
+    public void place(Position destination){
+        System.out.println("place " + destination);
+        if(illegalPickUp.isEmpty() && illegalPlace.isEmpty()){
+            if(currentPieceMoveset.getMovableList().contains(destination) || currentPieceMoveset.getBeatableList().contains(destination)){
+                Move move = new Move(currentPieceMoveset.getCurrentPosition(), destination);
+                System.out.println("move " + move);
+                // move
+                checkerboard.move(move);
+                swapTeam();
+                gameMoves.addMove(move);
+                game.updateAllPieces(checkerboard);
+                game.clearBoard();
+                game.swapPlayer();
+                game.saveMove(move);
+                currentPieceMoveset = null;
 
-        Move move = new Move(currentPieceMoveset.getCurrentPosition(), destination);
-        if(currentPieceMoveset.getMovableList().contains(destination) || currentPieceMoveset.getBeatableList().contains(destination)){
-            // ruch
-            checkerboard.move(move);
-            swapTeam();
-            gameMoves.addMove(move);
-            game.updateAllPieces(checkerboard);
-            game.clearBoard();
-            game.swapPlayer();
-            game.saveMove(move);
-            currentPieceMoveset = null;
-
-            Piece.Team checkTeam = checkerboard.lookForCheck();
-            game.modifyCheck(checkTeam);
-            if(checkTeam != null){
-                if(checkerboard.lookForCheckmate(checkTeam)){
-                    // TODO - co zrobic po wykryciu szach mat
+                Piece.Team checkTeam = checkerboard.lookForCheck();
+                game.modifyCheck(checkTeam);
+                if(checkTeam != null){
+                    if(checkerboard.lookForCheckmate(checkTeam)){
+                        // TODO - co zrobic po wykryciu szach mat
+                    }
                 }
-            }
 
-        } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
-            // odstawiamy w poprzednie miejsce
-            game.clearBoard();
-            currentPieceMoveset = null;
-        } else{
-            // bad state on the physical board, need to put back
-            game.clearBoard();
+            } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
+                System.out.println("revert");
+                // previous place
+                game.clearBoard();
+                currentPieceMoveset = null;
+            } else {
+                System.out.println("illegal place with piece!");
+                // illegal place
+                illegalPlace.add(destination);
+                illegalPickUp.add(currentPieceMoveset.getCurrentPosition());
+                game.clearBoard();
+                game.colorIllegalPlace(illegalPlace);
+                game.colorIllegalPickUp(illegalPickUp);
+                currentPieceMoveset = null;
+            }
+        } else {
+            System.out.println("illegal place unknown object!");
+            // illegal place
             illegalPlace.add(destination);
+            game.clearBoard();
             game.colorIllegalPlace(illegalPlace);
             game.colorIllegalPickUp(illegalPickUp);
             currentPieceMoveset = null;
         }
     }
+
 }

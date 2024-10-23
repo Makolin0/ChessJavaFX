@@ -10,7 +10,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -227,6 +226,6 @@ public class Game implements Initializable {
         Position position = new Position(positionField.getText());
         positionField.clear();
 
-        gameController.makeMove(position);
+        gameController.place(position);
     }
 }
