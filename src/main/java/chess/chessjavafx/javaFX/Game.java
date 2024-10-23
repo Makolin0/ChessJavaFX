@@ -42,12 +42,15 @@ public class Game implements Initializable {
     public TableColumn<MoveRow, String> whiteCol;
     @FXML
     public TableColumn<MoveRow, String> blackCol;
+    @FXML
+    public Text alarm;
 
     private List<Rectangle> squares;
     private List<Text> positionText;
 
     private Map<Integer, ImageView> pieceImgs;
     private Piece.Team currentPlayer;
+    private List<Move> illegalMoves;
 
     @FXML
     public TextField positionField;
@@ -59,12 +62,7 @@ public class Game implements Initializable {
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
-    public void sendPosition(){
-        Position position = new Position(positionField.getText());
-        positionField.clear();
-
-        gameController.sendPosition(position);
-    }
+    
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -76,6 +74,7 @@ public class Game implements Initializable {
         this.pieceImgs = new HashMap<>();
         this.currentPlayer = Piece.Team.WHITE;
         this.currentPlayerText.setText("Aktualny gracz: "+ currentPlayer);
+        this.illegalMoves = new ArrayList<>();
 
         this.tableView.getItems().add(0, new MoveRow());
 
@@ -201,5 +200,32 @@ public class Game implements Initializable {
         } else {
             checkText.setText("Szach dla: " + team);
         }
+    }
+
+
+    public void colorIllegalPlace(List<Position> illegalPlace){
+        for(Position position : illegalPlace){
+            colorBeatPos(position);
+        }
+    }
+
+    public void colorIllegalPickUp(List<Position> illegalPickUp){
+        for(Position position : illegalPickUp){
+            colorCurrentPos(position);
+        }
+    }
+
+    public void sendPickUp(ActionEvent actionEvent) {
+        Position position = new Position(positionField.getText());
+        positionField.clear();
+
+        gameController.pickUp(position);
+    }
+
+    public void sendPlace(ActionEvent actionEvent) {
+        Position position = new Position(positionField.getText());
+        positionField.clear();
+
+        gameController.place(position);
     }
 }
