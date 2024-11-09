@@ -13,8 +13,7 @@ import java.util.List;
 
 public class GameController {
     private final Checkerboard checkerboard;
-    private List<Position> illegalPickUp;
-    private List<Position> illegalPlace;
+    private Boolean isIllegal;
     private Piece.Team currentPlayer;
     private Moveset currentPieceMoveset;
     private final GameMoves gameMoves;
@@ -25,8 +24,7 @@ public class GameController {
         this.currentPlayer = Piece.Team.WHITE;
         this.currentPieceMoveset = null;
         this.gameMoves = new GameMoves();
-        this.illegalPlace = new ArrayList<>();
-        this.illegalPickUp = new ArrayList<>();
+        this.isIllegal = false;
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
         Parent root = loader.load();
@@ -46,32 +44,32 @@ public class GameController {
 
     public void pickUp(Position position){
         System.out.println("pick up " + position);
-        if(illegalPickUp.isEmpty() && currentPlayer == checkerboard.getPieceTeam(position)){
+        if(!isIllegal && currentPlayer == checkerboard.getPieceTeam(position)){
             currentPieceMoveset = checkerboard.possibleMoves(position);
             game.showMoveset(currentPieceMoveset);
         } else {
             System.out.println("illegal!");
-            illegalPickUp.add(position);
-            game.clearBoard();
-            game.colorIllegalPlace(illegalPlace);
-            game.colorIllegalPickUp(illegalPickUp);
+            setAlarm();
         }
     }
 
     public void place(Position destination){
         System.out.println("place " + destination);
-        if(illegalPickUp.isEmpty() && illegalPlace.isEmpty()){
+
+        if(!isIllegal){
+//            podniesienie gdy legalne
             if(currentPieceMoveset.getMovableList().contains(destination) || currentPieceMoveset.getBeatableList().contains(destination)){
+//                legalny ruch
                 Move move = new Move(currentPieceMoveset.getCurrentPosition(), destination);
                 System.out.println("move " + move);
-                // move
+
                 checkerboard.move(move);
-                swapTeam();
                 gameMoves.addMove(move);
                 game.updateAllPieces(checkerboard);
                 game.clearBoard();
-                game.swapPlayer();
                 game.saveMove(move);
+                game.swapPlayer();
+                swapTeam();
                 currentPieceMoveset = null;
 
                 Piece.Team checkTeam = checkerboard.lookForCheck();
@@ -84,28 +82,31 @@ public class GameController {
 
             } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
                 System.out.println("revert");
-                // previous place
+//                odłożenie figury
                 game.clearBoard();
                 currentPieceMoveset = null;
             } else {
                 System.out.println("illegal place with piece!");
-                // illegal place
-                illegalPlace.add(destination);
-                illegalPickUp.add(currentPieceMoveset.getCurrentPosition());
-                game.clearBoard();
-                game.colorIllegalPlace(illegalPlace);
-                game.colorIllegalPickUp(illegalPickUp);
-                currentPieceMoveset = null;
+//                nielegalny ruch
+                setAlarm();
             }
-        } else {
-            System.out.println("illegal place unknown object!");
-            // illegal place
-            illegalPlace.add(destination);
-            game.clearBoard();
-            game.colorIllegalPlace(illegalPlace);
-            game.colorIllegalPickUp(illegalPickUp);
-            currentPieceMoveset = null;
         }
     }
 
+    private void setAlarm(){
+        System.out.println("ALARM");
+        isIllegal = true;
+        game.setAlarmVisibility(true);
+        game.clearBoard();
+        currentPieceMoveset = null;
+    }
+
+    public void fixBoard(List<Integer> physicalBoard){
+        if(checkerboard.checkIfLegal(physicalBoard)){
+            isIllegal = false;
+            game.setAlarmVisibility(false);
+            game.clearBoard();
+            currentPieceMoveset = null;
+        }
+    }
 }

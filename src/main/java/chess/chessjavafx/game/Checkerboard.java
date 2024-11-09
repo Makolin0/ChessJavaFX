@@ -153,4 +153,16 @@ public class Checkerboard {
         copy.board.putAll(this.board);
         return copy;
     }
+
+    public Boolean checkIfLegal(List<Integer> physicalBoard) {
+        if(physicalBoard.size() == board.size()){
+            for (Integer position : physicalBoard) {
+                if(!board.containsKey(position)){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 }
