@@ -55,7 +55,6 @@ public class Game implements Initializable {
     private List<Text> positionText;
 
     private Piece.Team currentPlayer;
-    private List<Move> illegalMoves;
 
     private GameController gameController;
 
@@ -75,7 +74,8 @@ public class Game implements Initializable {
         this.pieceImgs = new HashMap<>();
         this.currentPlayer = Piece.Team.WHITE;
         this.currentPlayerText.setText("Aktualny gracz: "+ currentPlayer);
-        this.illegalMoves = new ArrayList<>();
+
+        this.alarm.setVisible(false);
 
         this.tableView.getItems().add(0, new MoveRow());
 
@@ -228,5 +228,9 @@ public class Game implements Initializable {
         positionField.clear();
 
         gameController.place(position);
+    }
+
+    public void setAlarmVisibility(Boolean isVisible){
+        alarm.setVisible(isVisible);
     }
 }
