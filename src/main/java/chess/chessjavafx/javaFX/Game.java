@@ -45,17 +45,18 @@ public class Game implements Initializable {
     @FXML
     public Text alarm;
 
-    private List<Rectangle> squares;
-    private List<Text> positionText;
-
-    private Map<Integer, ImageView> pieceImgs;
-    private Piece.Team currentPlayer;
-    private List<Move> illegalMoves;
-
     @FXML
     public TextField positionField;
     @FXML
     public Button sendPositionButton;
+
+    private List<Rectangle> squares;
+    private Map<Integer, ImageView> pieceImgs;
+    private List<Text> positionText;
+
+    private Piece.Team currentPlayer;
+    private List<Move> illegalMoves;
+
     private GameController gameController;
 
     // temporary for testing without arduino
