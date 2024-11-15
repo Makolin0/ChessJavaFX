@@ -99,6 +99,7 @@ public class GameController {
         game.setAlarmVisibility(true);
         game.clearBoard();
         currentPieceMoveset = null;
+        // TODO - Informuj płytkę Arduino żeby wysyłała cały stan
     }
 
     public void fixBoard(List<Integer> physicalBoard){
