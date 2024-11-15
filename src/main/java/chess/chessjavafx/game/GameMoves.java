@@ -20,7 +20,7 @@ public class GameMoves {
         this.formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         this.startTime = LocalDateTime.now();
         this.duration = null;
-        this.winner = Winner.DRAW;
+        this.winner = null;
     }
 
     public GameMoves(Path file) {
@@ -81,7 +81,8 @@ public class GameMoves {
             String fileName = file.getFileName().toString();
             String dateString = fileName.substring(0, fileName.length()-4);
             moves.clear();
-            winner = Winner.valueOf(br.readLine());
+            String line = br.readLine();
+            winner = "null".equals(line) ? null : Winner.valueOf(line);
             duration = Duration.parse(br.readLine());
             startTime = LocalDateTime.parse(dateString, formatter);
 
@@ -94,6 +95,4 @@ public class GameMoves {
             throw new RuntimeException(e);
         }
     }
-
-
 }

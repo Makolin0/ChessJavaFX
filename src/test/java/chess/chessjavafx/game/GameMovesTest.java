@@ -31,7 +31,7 @@ class GameMovesTest {
         gm.addMove(new Move(new Position(4, 1), new Position(2, 6)));
         gm.addMove(new Move(new Position(4, 1), new Position(2, 6)));
 
-        gm.setWinner(Winner.WHITE);
+//        gm.setWinner(Winner.WHITE);
         gm.setDuration(Duration.ofHours(2));
 
         gm.save();
