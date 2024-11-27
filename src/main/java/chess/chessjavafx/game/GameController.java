@@ -8,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameController {
@@ -33,6 +32,28 @@ public class GameController {
         game.updateAllPieces(checkerboard);
 
         game.setGameController(this);
+
+        stage.getScene().setRoot(root);
+        stage.show();
+    }
+
+    public GameController(Stage stage, GameMoves gameMoves) throws IOException {
+        this.checkerboard = new Checkerboard();
+        this.currentPlayer = Piece.Team.WHITE;
+        this.currentPieceMoveset = null;
+        this.gameMoves = new GameMoves();
+        this.isIllegal = false;
+
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
+        Parent root = loader.load();
+        this.game = loader.getController();
+
+        game.updateAllPieces(checkerboard);
+
+        game.setGameController(this);
+
+        loadGame(gameMoves);
 
         stage.getScene().setRoot(root);
         stage.show();
@@ -68,8 +89,8 @@ public class GameController {
                 game.updateAllPieces(checkerboard);
                 game.clearBoard();
                 game.saveMove(move);
-                game.swapPlayer();
                 swapTeam();
+                game.setPlayer(currentPlayer);
                 currentPieceMoveset = null;
 
                 Piece.Team checkTeam = checkerboard.lookForCheck();
@@ -109,5 +130,20 @@ public class GameController {
             game.clearBoard();
             currentPieceMoveset = null;
         }
+    }
+
+    private void loadGame(GameMoves gameMoves) throws IOException {
+        for(Move move : gameMoves.getMoves()){
+            checkerboard.move(move);
+            game.saveMove(move);
+        }
+        currentPlayer = gameMoves.getMoves().size() % 2 == 0 ? Piece.Team.WHITE : Piece.Team.BLACK;
+        game.updateAllPieces(checkerboard);
+
+
+        game.setPlayer(currentPlayer);
+
+        Piece.Team checkTeam = checkerboard.lookForCheck();
+        game.modifyCheck(checkTeam);
     }
 }

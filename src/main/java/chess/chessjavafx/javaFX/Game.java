@@ -54,8 +54,6 @@ public class Game implements Initializable {
     private Map<Integer, ImageView> pieceImgs;
     private List<Text> positionText;
 
-    private Piece.Team currentPlayer;
-
     private GameController gameController;
 
     // temporary for testing without arduino
@@ -72,8 +70,7 @@ public class Game implements Initializable {
         this.squares = new ArrayList<>();
         this.positionText = new ArrayList<>();
         this.pieceImgs = new HashMap<>();
-        this.currentPlayer = Piece.Team.WHITE;
-        this.currentPlayerText.setText("Aktualny gracz: "+ currentPlayer);
+        this.currentPlayerText.setText("Aktualny gracz: "+ Piece.Team.WHITE);
 
         this.alarm.setVisible(false);
 
@@ -124,8 +121,7 @@ public class Game implements Initializable {
     }
 
 
-    public void swapPlayer(){
-        currentPlayer = currentPlayer == Piece.Team.WHITE ? Piece.Team.BLACK : Piece.Team.WHITE;
+    public void setPlayer(Piece.Team currentPlayer){
         currentPlayerText.setText("Aktualny gracz: " + currentPlayer);
     }
 
