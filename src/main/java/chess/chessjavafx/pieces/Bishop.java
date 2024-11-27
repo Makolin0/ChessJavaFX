@@ -1,5 +1,6 @@
 package chess.chessjavafx.pieces;
 
+import chess.chessjavafx.game.Checkerboard;
 import chess.chessjavafx.game.Position;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,7 +28,8 @@ public class Bishop implements Piece{
     }
 
     @Override
-    public List<Position> getMovableList(Map<Integer, Piece> allPieces, Position currentPosition) {
+    public List<Position> getMovableList(Checkerboard checkerboard, Position currentPosition) {
+        Map<Integer, Piece> allPieces = checkerboard.getBoard();
         List<Position> movableSquares = new ArrayList<>();
         Position pos;
 
@@ -84,7 +86,8 @@ public class Bishop implements Piece{
     }
 
     @Override
-    public List<Position> getBeatableList(Map<Integer, Piece> allPieces, Position currentPosition) {
+    public List<Position> getBeatableList(Checkerboard checkerboard, Position currentPosition) {
+        Map<Integer, Piece> allPieces = checkerboard.getBoard();
         List<Position> beatableSquares = new ArrayList<>();
         Position pos;
 

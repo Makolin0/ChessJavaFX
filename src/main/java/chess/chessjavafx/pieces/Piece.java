@@ -1,9 +1,9 @@
 package chess.chessjavafx.pieces;
 
+import chess.chessjavafx.game.Checkerboard;
 import chess.chessjavafx.game.Position;
 import javafx.scene.image.ImageView;
 import java.util.List;
-import java.util.Map;
 
 public interface Piece {
 
@@ -13,6 +13,6 @@ public interface Piece {
 
     ImageView getImg();
     Team getTeam();
-    List<Position> getMovableList(Map<Integer, Piece> allPieces, Position currentPosition);
-    List<Position> getBeatableList(Map<Integer, Piece> allPieces, Position currentPosition);
+    List<Position> getMovableList(Checkerboard checkerboard, Position currentPosition);
+    List<Position> getBeatableList(Checkerboard checkerboard, Position currentPosition);
 }

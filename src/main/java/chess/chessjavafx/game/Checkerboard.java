@@ -28,6 +28,10 @@ public class Checkerboard {
         return board.get(position.getInt()).getTeam();
     }
 
+    public Map<Integer, Piece> getBoard(){
+        return board;
+    }
+
     public void newGame(){
         board.clear();
 
@@ -68,8 +72,8 @@ public class Checkerboard {
 
         Moveset moveset = new Moveset();
         moveset.setCurrentPosition(position);
-        moveset.setMovableList(piece.getMovableList(board, position));
-        moveset.setBeatableList(piece.getBeatableList(board, position));
+        moveset.setMovableList(piece.getMovableList(this, position));
+        moveset.setBeatableList(piece.getBeatableList(this, position));
 
         return moveset;
     }
@@ -79,11 +83,11 @@ public class Checkerboard {
         if(piece == null){
             throw new NullPointerException("Nie odnaleziono takiego piona");
         }
-        if(piece.getMovableList(board, move.getStartPosition()).contains(move.getEndPosition())){
+        if(piece.getMovableList(this, move.getStartPosition()).contains(move.getEndPosition())){
             // ruch
             board.remove(move.getStartPosition().getInt());
             board.put(move.getEndPosition().getInt(), piece);
-        } else if (piece.getBeatableList(board, move.getStartPosition()).contains(move.getEndPosition())) {
+        } else if (piece.getBeatableList(this, move.getStartPosition()).contains(move.getEndPosition())) {
             //bicie
             board.remove(move.getStartPosition().getInt());
             board.replace(move.getEndPosition().getInt(), piece);
@@ -97,9 +101,9 @@ public class Checkerboard {
             Piece piece = entry.getValue();
             Position currentPos = new Position(entry.getKey());
 
-            piece.getBeatableList(board, currentPos);
+            piece.getBeatableList(this, currentPos);
 
-            for(Position pos : piece.getBeatableList(board, currentPos)){
+            for(Position pos : piece.getBeatableList(this, currentPos)){
                 System.out.println(board.get(pos.getInt()).getClass().getSimpleName());
                 if("King".equals(board.get(pos.getInt()).getClass().getSimpleName())){
                     return board.get(pos.getInt()).getTeam();
@@ -147,7 +151,7 @@ public class Checkerboard {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         Checkerboard copy = new Checkerboard();
         copy.board.clear();
         copy.board.putAll(this.board);
