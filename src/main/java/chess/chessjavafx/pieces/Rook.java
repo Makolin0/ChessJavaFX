@@ -11,10 +11,12 @@ import java.util.Map;
 public class Rook implements Piece{
     private final Team team;
     private final ImageView img;
+    private Boolean moved;
 
     public Rook(Team team) {
         this.team = team;
         this.img = new ImageView(new Image("file:src/imgs/rook" + (team == Team.WHITE ? "W" : "B") + ".png"));
+        this.moved = false;
     }
 
     @Override
@@ -25,6 +27,14 @@ public class Rook implements Piece{
     @Override
     public ImageView getImg() {
         return img;
+    }
+
+    public void markMoved() {
+        this.moved = true;
+    }
+
+    public Boolean getMoved() {
+        return moved;
     }
 
     @Override
