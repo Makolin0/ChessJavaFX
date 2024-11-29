@@ -68,7 +68,7 @@ public class King implements Piece{
 //        System.out.println(checkerboard.getBoard());
 //        System.out.println(movableSquares);
 
-        Piece king = allPieces.get(currentPosition.getX());
+        Piece king = allPieces.get(currentPosition.getInt());
         if (!king.getClass().getSimpleName().equals("King")) {
             throw new IllegalArgumentException("it's not a king");
         }
