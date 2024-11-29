@@ -79,12 +79,12 @@ public class Checkerboard {
     }
 
 
-    public void move(Move move, boolean castling) throws NullPointerException, IllegalArgumentException{
+    public void move(Move move, boolean special) throws NullPointerException, IllegalArgumentException{
         Piece piece = board.get(move.getStartPosition().getInt());
         if(piece == null){
             throw new NullPointerException("Nie odnaleziono takiego piona");
         }
-        if(castling || piece.getMovableList(this, move.getStartPosition()).contains(move.getEndPosition())){
+        if(special || piece.getMovableList(this, move.getStartPosition()).contains(move.getEndPosition())){
             // ruch
             String className = board.get(move.getStartPosition().getInt()).getClass().getSimpleName();
             if("King".equals(className)){
@@ -117,7 +117,6 @@ public class Checkerboard {
             piece.getBeatableList(this, currentPos);
 
             for(Position pos : piece.getBeatableList(this, currentPos)){
-                System.out.println(board.get(pos.getInt()).getClass().getSimpleName());
                 if("King".equals(board.get(pos.getInt()).getClass().getSimpleName())){
                     return board.get(pos.getInt()).getTeam();
                 }

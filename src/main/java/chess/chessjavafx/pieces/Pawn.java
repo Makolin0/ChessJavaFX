@@ -1,6 +1,7 @@
 package chess.chessjavafx.pieces;
 
 import chess.chessjavafx.game.Checkerboard;
+import chess.chessjavafx.game.Move;
 import chess.chessjavafx.game.Position;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -42,6 +43,25 @@ public class Pawn implements Piece{
                     if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() + 2, allPieces)) != null)
                         movableSquares.add(pos);
                 }
+
+
+                if(currentPosition.getY()==4) {
+                    System.out.println("Current position is 4");
+                    pos = Checks.legalBeat(currentPosition.getX() - 1, currentPosition.getY(), Team.WHITE, allPieces);
+                    if(pos != null){
+                        System.out.println("enemy on left");
+                        Piece leftPawn = allPieces.get(pos.getInt());
+                        if(leftPawn.getClass().equals(Pawn.class)){
+                            System.out.println("enemy on left is pawn");
+                            Position p = new Position(currentPosition.getX() - 1, currentPosition.getY() + 1);
+                            p.setPassing(new Move(currentPosition, pos));
+                            movableSquares.add(p);
+                        }
+                    }
+                }
+
+
+
             }
             case BLACK -> {
                 if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() - 1, allPieces)) != null)
