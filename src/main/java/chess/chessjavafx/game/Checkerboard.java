@@ -28,6 +28,10 @@ public class Checkerboard {
         return board.get(position.getInt()).getTeam();
     }
 
+    public Map<Integer, Piece> getBoard(){
+        return board;
+    }
+
     public void newGame(){
         board.clear();
 
@@ -68,28 +72,41 @@ public class Checkerboard {
 
         Moveset moveset = new Moveset();
         moveset.setCurrentPosition(position);
-        moveset.setMovableList(piece.getMovableList(board, position));
-        moveset.setBeatableList(piece.getBeatableList(board, position));
+        moveset.setMovableList(piece.getMovableList(this, position));
+        moveset.setBeatableList(piece.getBeatableList(this, position));
 
         return moveset;
     }
 
-    public void move(Move move) throws NullPointerException, IllegalArgumentException{
+
+    public void move(Move move, boolean special) throws NullPointerException, IllegalArgumentException{
         Piece piece = board.get(move.getStartPosition().getInt());
         if(piece == null){
             throw new NullPointerException("Nie odnaleziono takiego piona");
         }
-        if(piece.getMovableList(board, move.getStartPosition()).contains(move.getEndPosition())){
+        if(special || piece.getMovableList(this, move.getStartPosition()).contains(move.getEndPosition())){
             // ruch
+            String className = board.get(move.getStartPosition().getInt()).getClass().getSimpleName();
+            if("King".equals(className)){
+                ((King)board.get(move.getStartPosition().getInt())).setMoved(true);
+            } else if ("Rook".equals(className)) {
+                ((Rook)board.get(move.getStartPosition().getInt())).setMoved(true);
+            }
+
             board.remove(move.getStartPosition().getInt());
             board.put(move.getEndPosition().getInt(), piece);
-        } else if (piece.getBeatableList(board, move.getStartPosition()).contains(move.getEndPosition())) {
+        } else if (piece.getBeatableList(this, move.getStartPosition()).contains(move.getEndPosition())) {
             //bicie
             board.remove(move.getStartPosition().getInt());
             board.replace(move.getEndPosition().getInt(), piece);
+
+
         } else {
             throw new IllegalArgumentException("Pion nie może wykonać tego ruchu");
         }
+    }
+    public void move(Move move) throws NullPointerException, IllegalArgumentException {
+        move(move, false);
     }
 
     public Piece.Team lookForCheck(){
@@ -97,10 +114,9 @@ public class Checkerboard {
             Piece piece = entry.getValue();
             Position currentPos = new Position(entry.getKey());
 
-            piece.getBeatableList(board, currentPos);
+            piece.getBeatableList(this, currentPos);
 
-            for(Position pos : piece.getBeatableList(board, currentPos)){
-                System.out.println(board.get(pos.getInt()).getClass().getSimpleName());
+            for(Position pos : piece.getBeatableList(this, currentPos)){
                 if("King".equals(board.get(pos.getInt()).getClass().getSimpleName())){
                     return board.get(pos.getInt()).getTeam();
                 }
@@ -147,7 +163,7 @@ public class Checkerboard {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         Checkerboard copy = new Checkerboard();
         copy.board.clear();
         copy.board.putAll(this.board);

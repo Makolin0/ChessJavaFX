@@ -1,5 +1,6 @@
 package chess.chessjavafx.pieces;
 
+import chess.chessjavafx.game.Checkerboard;
 import chess.chessjavafx.game.Position;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,10 +11,16 @@ import java.util.Map;
 public class Rook implements Piece{
     private final Team team;
     private final ImageView img;
+    private Boolean moved;
 
     public Rook(Team team) {
         this.team = team;
         this.img = new ImageView(new Image("file:src/imgs/rook" + (team == Team.WHITE ? "W" : "B") + ".png"));
+        this.moved = false;
+    }
+
+    public void setMoved(Boolean moved) {
+        this.moved = moved;
     }
 
     @Override
@@ -26,8 +33,17 @@ public class Rook implements Piece{
         return img;
     }
 
+    public void markMoved() {
+        this.moved = true;
+    }
+
+    public Boolean getMoved() {
+        return moved;
+    }
+
     @Override
-    public List<Position> getMovableList(Map<Integer, Piece> allPieces, Position currentPosition) {
+    public List<Position> getMovableList(Checkerboard checkerboard, Position currentPosition) {
+        Map<Integer, Piece> allPieces = checkerboard.getBoard();
         List<Position> movableSquares = new ArrayList<>();
         Position pos;
 
@@ -80,7 +96,8 @@ public class Rook implements Piece{
     }
 
     @Override
-    public List<Position> getBeatableList(Map<Integer, Piece> allPieces, Position currentPosition) {
+    public List<Position> getBeatableList(Checkerboard checkerboard, Position currentPosition) {
+        Map<Integer, Piece> allPieces = checkerboard.getBoard();
         List<Position> beatableSquares = new ArrayList<>();
         Position pos;
 

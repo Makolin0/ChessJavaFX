@@ -84,7 +84,22 @@ public class GameController {
                 Move move = new Move(currentPieceMoveset.getCurrentPosition(), destination);
                 System.out.println("move " + move);
 
-                checkerboard.move(move);
+
+                Position extractedEndPosition = currentPieceMoveset.getMovableList().stream().filter(pos -> {
+                    System.out.println("extracted " + pos + " - " + move.getEndPosition() + " - " + (pos.equals(move.getEndPosition())));
+                    return pos.equals(move.getEndPosition());
+                }).findFirst().get();
+
+                if(extractedEndPosition.getCastling() != null) {
+                    checkerboard.move(move);
+                    checkerboard.move(extractedEndPosition.getCastling(), true);
+                } else if (extractedEndPosition.getPassing() != null) {
+                    checkerboard.move(extractedEndPosition.getPassing(), true);
+                    checkerboard.move(new Move(extractedEndPosition.getPassing().getEndPosition(), destination), true);
+                } else {
+                    checkerboard.move(move);
+                }
+
                 gameMoves.addMove(move);
                 game.updateAllPieces(checkerboard);
                 game.clearBoard();
