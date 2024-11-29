@@ -44,24 +44,28 @@ public class Pawn implements Piece{
                         movableSquares.add(pos);
                 }
 
-
+                // en passant
                 if(currentPosition.getY()==4) {
-                    System.out.println("Current position is 4");
                     pos = Checks.legalBeat(currentPosition.getX() - 1, currentPosition.getY(), Team.WHITE, allPieces);
                     if(pos != null){
-                        System.out.println("enemy on left");
                         Piece leftPawn = allPieces.get(pos.getInt());
                         if(leftPawn.getClass().equals(Pawn.class)){
-                            System.out.println("enemy on left is pawn");
                             Position p = new Position(currentPosition.getX() - 1, currentPosition.getY() + 1);
                             p.setPassing(new Move(currentPosition, pos));
                             movableSquares.add(p);
                         }
                     }
+
+                    pos = Checks.legalBeat(currentPosition.getX() + 1, currentPosition.getY(), Team.WHITE, allPieces);
+                    if(pos != null){
+                        Piece leftPawn = allPieces.get(pos.getInt());
+                        if(leftPawn.getClass().equals(Pawn.class)){
+                            Position p = new Position(currentPosition.getX() + 1, currentPosition.getY() + 1);
+                            p.setPassing(new Move(currentPosition, pos));
+                            movableSquares.add(p);
+                        }
+                    }
                 }
-
-
-
             }
             case BLACK -> {
                 if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() - 1, allPieces)) != null)
@@ -70,6 +74,29 @@ public class Pawn implements Piece{
                 if(currentPosition.getY()==6) {
                     if((pos = Checks.legalMove(currentPosition.getX(), currentPosition.getY() - 2, allPieces)) != null)
                         movableSquares.add(pos);
+                }
+
+                // en passant
+                if(currentPosition.getY()==3) {
+                    pos = Checks.legalBeat(currentPosition.getX() - 1, currentPosition.getY(), Team.BLACK, allPieces);
+                    if(pos != null){
+                        Piece rightPawn = allPieces.get(pos.getInt());
+                        if(rightPawn.getClass().equals(Pawn.class)){
+                            Position p = new Position(currentPosition.getX() - 1, currentPosition.getY() - 1);
+                            p.setPassing(new Move(currentPosition, pos));
+                            movableSquares.add(p);
+                        }
+                    }
+
+                    pos = Checks.legalBeat(currentPosition.getX() + 1, currentPosition.getY(), Team.BLACK, allPieces);
+                    if(pos != null){
+                        Piece rightPawn = allPieces.get(pos.getInt());
+                        if(rightPawn.getClass().equals(Pawn.class)){
+                            Position p = new Position(currentPosition.getX() + 1, currentPosition.getY() - 1);
+                            p.setPassing(new Move(currentPosition, pos));
+                            movableSquares.add(p);
+                        }
+                    }
                 }
             }
         }
