@@ -78,22 +78,35 @@ public class Checkerboard {
         return moveset;
     }
 
-    public void move(Move move) throws NullPointerException, IllegalArgumentException{
+
+    public void move(Move move, boolean castling) throws NullPointerException, IllegalArgumentException{
         Piece piece = board.get(move.getStartPosition().getInt());
         if(piece == null){
             throw new NullPointerException("Nie odnaleziono takiego piona");
         }
-        if(piece.getMovableList(this, move.getStartPosition()).contains(move.getEndPosition())){
+        if(castling || piece.getMovableList(this, move.getStartPosition()).contains(move.getEndPosition())){
             // ruch
+            String className = board.get(move.getStartPosition().getInt()).getClass().getSimpleName();
+            if("King".equals(className)){
+                ((King)board.get(move.getStartPosition().getInt())).setMoved(true);
+            } else if ("Rook".equals(className)) {
+                ((Rook)board.get(move.getStartPosition().getInt())).setMoved(true);
+            }
+
             board.remove(move.getStartPosition().getInt());
             board.put(move.getEndPosition().getInt(), piece);
         } else if (piece.getBeatableList(this, move.getStartPosition()).contains(move.getEndPosition())) {
             //bicie
             board.remove(move.getStartPosition().getInt());
             board.replace(move.getEndPosition().getInt(), piece);
+
+
         } else {
             throw new IllegalArgumentException("Pion nie może wykonać tego ruchu");
         }
+    }
+    public void move(Move move) throws NullPointerException, IllegalArgumentException {
+        move(move, false);
     }
 
     public Piece.Team lookForCheck(){

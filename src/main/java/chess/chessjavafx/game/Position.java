@@ -4,22 +4,37 @@ public class Position {
     private int x;
     private int y;
 
+    private Move castling;
+
+
     public Position(int x, int y){
         checkIfValid(x, y);
         this.x = x;
         this.y = y;
+        this.castling = null;
     }
     public Position(int position){
         checkIfValid(position);
         this.x = position % 8;
         this.y = position / 8;
+        this.castling = null;
     }
 
     public Position(String string){
         checkIfValid(string);
         x = string.charAt(0)-'a';
         y = string.charAt(1) - '1';
+        this.castling = null;
     }
+
+    public Move getCastling() {
+        return castling;
+    }
+
+    public void setCastling(Move castling) {
+        this.castling = castling;
+    }
+
 
     public int getX() {
         return x;

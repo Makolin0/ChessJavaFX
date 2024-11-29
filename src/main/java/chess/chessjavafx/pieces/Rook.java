@@ -19,6 +19,10 @@ public class Rook implements Piece{
         this.moved = false;
     }
 
+    public void setMoved(Boolean moved) {
+        this.moved = moved;
+    }
+
     @Override
     public Team getTeam() {
         return team;

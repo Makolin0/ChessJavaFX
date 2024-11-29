@@ -3,18 +3,17 @@ package chess.chessjavafx.pieces;
 import chess.chessjavafx.game.Checkerboard;
 import chess.chessjavafx.game.Move;
 import chess.chessjavafx.game.Position;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
+
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class King implements Piece{
     private final Team team;
     private final ImageView img;
-    private final boolean moved;
+    private boolean moved;
 
     public King(Team team) {
         this.team = team;
@@ -22,6 +21,9 @@ public class King implements Piece{
         this.moved = false;
     }
 
+    public void setMoved(boolean moved) {
+        this.moved = moved;
+    }
 
     @Override
     public Team getTeam() {
@@ -62,9 +64,12 @@ public class King implements Piece{
         if(moved)
             return movableSquares;
 
+//        System.out.println(currentPosition);
+//        System.out.println(checkerboard.getBoard());
+//        System.out.println(movableSquares);
 
-        Piece king = allPieces.get(currentPosition);
-        if (!(king instanceof King)) {
+        Piece king = allPieces.get(currentPosition.getX());
+        if (!king.getClass().getSimpleName().equals("King")) {
             throw new IllegalArgumentException("it's not a king");
         }
 
@@ -73,30 +78,31 @@ public class King implements Piece{
             return movableSquares;
         }
 
-        Checkerboard testCheckerboard = null;
-        try {
-            testCheckerboard = (Checkerboard) checkerboard.clone();
-        } catch (CloneNotSupportedException e){
-            System.out.println("Clone not supported");
-            System.exit(1);
-        }
+//        Checkerboard testCheckerboard = null;
+//        try {
+//            testCheckerboard = (Checkerboard) checkerboard.clone();
+//        } catch (CloneNotSupportedException e){
+//            System.out.println("Clone not supported");
+//            System.exit(1);
+//        }
 
 
         int y = currentPosition.getY();
         Position rookLPosition = new Position(0, y);
         Position rookRPosition = new Position(7, y);
-        Piece rookL = allPieces.get(rookLPosition);
-        Piece rookR = allPieces.get(rookRPosition);
+        Piece rookL = allPieces.get(rookLPosition.getInt());
+        Piece rookR = allPieces.get(rookRPosition.getInt());
 
         // must be rook's first move
-        if(rookL instanceof Rook) {
+        if(rookL.getClass().getSimpleName().equals("Rook")) {
             if(((Rook) rookL).getMoved()){
                 rookL = null;
             }
+
         } else {
             rookL = null;
         }
-        if(rookR instanceof Rook) {
+        if(rookR.getClass().getSimpleName().equals("Rook")) {
             if(((Rook) rookR).getMoved()){
                 rookR = null;
             }
@@ -107,43 +113,50 @@ public class King implements Piece{
         // no pieces between rook and king
         // no check at path for king
         // Rook on left
-        for(int posInt : IntStream.range(currentPosition.getInt() - 1, rookLPosition.getInt() + 1).toArray()){
+        for(int posInt : IntStream.rangeClosed(rookLPosition.getInt() + 1, currentPosition.getInt() - 1).toArray()){
             if (allPieces.containsKey(posInt)) {
                 rookL = null;
                 break;
             }
-            testCheckerboard.move(new Move(new Position(posInt), new Position(posInt-1)));
-            if(testCheckerboard.lookForCheck() == king.getTeam()){
-                rookL = null;
-                break;
-            }
+//            testCheckerboard.move(new Move(new Position(posInt + 1), new Position(posInt)));
+//            if(testCheckerboard.lookForCheck() == king.getTeam()){
+//                rookL = null;
+//                break;
+//            }
         }
 
-        try {
-            testCheckerboard = (Checkerboard) checkerboard.clone();
-        } catch (CloneNotSupportedException e){
-            System.out.println("Clone not supported");
-            System.exit(1);
-        }
+//        try {
+//            testCheckerboard = (Checkerboard) checkerboard.clone();
+//        } catch (CloneNotSupportedException e){
+//            System.out.println("Clone not supported");
+//            System.exit(1);
+//        }
 
         // Rook on right
+//        System.out.println(Arrays.toString(IntStream.range(currentPosition.getInt() + 1, rookRPosition.getInt() - 1).toArray()));
         for(int posInt : IntStream.range(currentPosition.getInt() + 1, rookRPosition.getInt() - 1).toArray()){
             if (allPieces.containsKey(posInt)) {
                 rookR = null;
                 break;
             }
-            testCheckerboard.move(new Move(new Position(posInt), new Position(posInt+1)));
-            if(testCheckerboard.lookForCheck() == king.getTeam()){
-                rookR = null;
-                break;
-            }
+//            testCheckerboard.move(new Move(new Position(posInt - 1), new Position(posInt)));
+//            if(testCheckerboard.lookForCheck() == king.getTeam()){
+//                rookR = null;
+//                break;
+//            }
         }
 
         if(rookL != null){
-            movableSquares.add(new Position(currentPosition.getInt() - 2));
+            Position p = new Position(currentPosition.getInt() - 2);
+            p.setCastling(new Move(rookLPosition, new Position(currentPosition.getInt() - 1)));
+            System.out.println("Special move: " + p.getCastling());
+            movableSquares.add(p);
         }
         if(rookR != null){
-            movableSquares.add(new Position(currentPosition.getInt() + 2));
+            Position p = new Position(currentPosition.getInt() + 2);
+            p.setCastling(new Move(rookRPosition, new Position(currentPosition.getInt() + 1)));
+            System.out.println("Special move: " + p.getCastling());
+            movableSquares.add(p);
         }
 
         return movableSquares;
