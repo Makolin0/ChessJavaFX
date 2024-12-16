@@ -17,13 +17,19 @@ public class GameController {
     private Moveset currentPieceMoveset;
     private final GameMoves gameMoves;
     private final Game game;
+    private final Engine engine;
+    private boolean vsAI;
 
-    public GameController(Stage stage) throws IOException {
+    public GameController(Stage stage, boolean vsAI) throws IOException {
         this.checkerboard = new Checkerboard();
         this.currentPlayer = Piece.Team.WHITE;
         this.currentPieceMoveset = null;
         this.gameMoves = new GameMoves();
         this.isIllegal = false;
+        this.vsAI = vsAI;
+
+        this.engine = new Engine();
+        engine.initialize(null);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
         Parent root = loader.load();
@@ -44,6 +50,8 @@ public class GameController {
         this.gameMoves = new GameMoves();
         this.isIllegal = false;
 
+        this.engine = new Engine();
+        engine.initialize(gameMoves.getMoves());
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
         Parent root = loader.load();

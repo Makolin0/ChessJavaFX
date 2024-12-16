@@ -19,7 +19,11 @@ public class MainMenu {
     }
     public void enterGame(ActionEvent event) throws IOException {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        new GameController(stage);
+        new GameController(stage, false);
+    }
+    public void enterGameAI(ActionEvent event) throws IOException {
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        new GameController(stage, true);
     }
     public void closeApp() {
         System.exit(0);

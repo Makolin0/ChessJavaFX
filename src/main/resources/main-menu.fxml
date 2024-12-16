@@ -8,6 +8,7 @@
     <VBox alignment="TOP_CENTER" spacing="10">
         <Label styleClass="title" text="Szachy" />
         <Button onAction="#enterGame" styleClass="main-menu-button" text="Nowa gra" />
+        <Button onAction="#enterGameAI" styleClass="main-menu-button" text="Nowa gra vs AI" />
         <Button onAction="#enterLoadGame" styleClass="main-menu-button" text="Załaduj grę" />
         <Button onAction="#enterHistory" styleClass="main-menu-button" text="Historia" />
         <Button onAction="#closeApp" styleClass="main-menu-button" text="Wyjście" />
