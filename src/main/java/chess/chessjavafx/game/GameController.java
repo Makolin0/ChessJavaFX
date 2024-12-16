@@ -18,9 +18,9 @@ public class GameController {
     private final GameMoves gameMoves;
     private final Game game;
     private final Engine engine;
-    private boolean vsAI;
+    private Piece.Team vsAI;
 
-    public GameController(Stage stage, boolean vsAI) throws IOException {
+    public GameController(Stage stage, Piece.Team vsAI) throws IOException {
         this.checkerboard = new Checkerboard();
         this.currentPlayer = Piece.Team.WHITE;
         this.currentPieceMoveset = null;
@@ -29,7 +29,7 @@ public class GameController {
         this.vsAI = vsAI;
 
         this.engine = new Engine();
-        engine.initialize(null);
+        engine.initialize();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
         Parent root = loader.load();
@@ -38,6 +38,10 @@ public class GameController {
         game.updateAllPieces(checkerboard);
 
         game.setGameController(this);
+
+        if(vsAI == Piece.Team.WHITE) {
+            aiMove();
+        }
 
         stage.getScene().setRoot(root);
         stage.show();
@@ -51,7 +55,7 @@ public class GameController {
         this.isIllegal = false;
 
         this.engine = new Engine();
-        engine.initialize(gameMoves.getMoves());
+        engine.initialize();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
         Parent root = loader.load();
@@ -71,6 +75,27 @@ public class GameController {
         currentPlayer = currentPlayer == Piece.Team.WHITE ? Piece.Team.BLACK : Piece.Team.WHITE;
     }
 
+    private void aiMove() {
+        Move move = engine.calculateMove(gameMoves.getMoves());
+
+        checkerboard.move(move);
+        gameMoves.addMove(move);
+        game.updateAllPieces(checkerboard);
+        game.clearBoard();
+        game.saveMove(move);
+        swapTeam();
+        game.setPlayer(currentPlayer);
+        currentPieceMoveset = null;
+
+        Piece.Team checkTeam = checkerboard.lookForCheck();
+        game.modifyCheck(checkTeam);
+        if(checkTeam != null){
+            if(checkerboard.lookForCheckmate(checkTeam)){
+                // TODO - co zrobic po wykryciu szach mat
+            }
+        }
+    }
+
     public void pickUp(Position position){
         System.out.println("pick up " + position);
         if(!isIllegal && currentPlayer == checkerboard.getPieceTeam(position)){
@@ -82,7 +107,7 @@ public class GameController {
         }
     }
 
-    public void place(Position destination){
+    public void place(Position destination) {
         System.out.println("place " + destination);
 
         if(!isIllegal){
@@ -93,7 +118,9 @@ public class GameController {
                 System.out.println("move " + move);
 
 
-                Position extractedEndPosition = currentPieceMoveset.getMovableList().stream().filter(pos -> {
+                List<Position> availableMoves = currentPieceMoveset.getMovableList();
+                availableMoves.addAll(currentPieceMoveset.getBeatableList());
+                Position extractedEndPosition = availableMoves.stream().filter(pos -> {
                     System.out.println("extracted " + pos + " - " + move.getEndPosition() + " - " + (pos.equals(move.getEndPosition())));
                     return pos.equals(move.getEndPosition());
                 }).findFirst().get();
@@ -122,6 +149,10 @@ public class GameController {
                     if(checkerboard.lookForCheckmate(checkTeam)){
                         // TODO - co zrobic po wykryciu szach mat
                     }
+                }
+
+                if (vsAI == currentPlayer) {
+                    aiMove();
                 }
 
             } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
@@ -155,7 +186,7 @@ public class GameController {
         }
     }
 
-    private void loadGame(GameMoves gameMoves) throws IOException {
+    private void loadGame(GameMoves gameMoves) {
         for(Move move : gameMoves.getMoves()){
             checkerboard.move(move);
             game.saveMove(move);
