@@ -28,8 +28,7 @@ public class GameController {
         this.isIllegal = false;
         this.vsAI = vsAI;
 
-        this.engine = new Engine();
-        engine.initialize();
+        this.engine = new Engine(20);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
         Parent root = loader.load();
@@ -54,8 +53,7 @@ public class GameController {
         this.gameMoves = new GameMoves();
         this.isIllegal = false;
 
-        this.engine = new Engine();
-        engine.initialize();
+        this.engine = new Engine(20);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
         Parent root = loader.load();
