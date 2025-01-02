@@ -12,58 +12,57 @@ import java.util.List;
 
 public class GameController {
     private final Checkerboard checkerboard;
-    private Boolean isIllegal;
-    private Piece.Team currentPlayer;
-    private Moveset currentPieceMoveset;
-    private final GameMoves gameMoves;
+    private final GameData gameData;
     private final Game game;
     private final Engine engine;
+
+    private Piece.Team currentPlayer;
+    private Moveset currentPieceMoveset;
+    private Boolean isIllegal;
+
     private Piece.Team vsAI;
+    private final String enginePath = "";
 
     public GameController(Stage stage, Piece.Team vsAI) throws IOException {
         this.checkerboard = new Checkerboard();
+        this.gameData = new GameData(vsAI);
+
         this.currentPlayer = Piece.Team.WHITE;
         this.currentPieceMoveset = null;
-        this.gameMoves = new GameMoves();
         this.isIllegal = false;
-        this.vsAI = vsAI;
 
-        this.engine = new Engine(20);
+        this.vsAI = vsAI;
+        this.engine = new Engine(20, enginePath);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
         Parent root = loader.load();
         this.game = loader.getController();
-
         game.updateAllPieces(checkerboard);
-
         game.setGameController(this);
 
-        if(vsAI == Piece.Team.WHITE) {
+        if(vsAI == Piece.Team.WHITE)
             aiMove();
-        }
 
         stage.getScene().setRoot(root);
         stage.show();
     }
 
-    public GameController(Stage stage, GameMoves gameMoves) throws IOException {
+    public GameController(Stage stage, GameData gameData) throws IOException {
         this.checkerboard = new Checkerboard();
+        this.gameData = gameData;
+        loadGame();
+
         this.currentPlayer = Piece.Team.WHITE;
         this.currentPieceMoveset = null;
-        this.gameMoves = new GameMoves();
         this.isIllegal = false;
 
-        this.engine = new Engine(20);
+        this.engine = new Engine(20, enginePath);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
         Parent root = loader.load();
         this.game = loader.getController();
-
         game.updateAllPieces(checkerboard);
-
         game.setGameController(this);
-
-        loadGame(gameMoves);
 
         stage.getScene().setRoot(root);
         stage.show();
@@ -74,10 +73,10 @@ public class GameController {
     }
 
     private void aiMove() {
-        Move move = engine.calculateMove(gameMoves.getMoves());
+        Move move = engine.calculateMove(gameData.getMoves());
 
         checkerboard.move(move);
-        gameMoves.addMove(move);
+        gameData.addMove(move);
         game.updateAllPieces(checkerboard);
         game.clearBoard();
         game.saveMove(move);
@@ -133,7 +132,7 @@ public class GameController {
                     checkerboard.move(move);
                 }
 
-                gameMoves.addMove(move);
+                gameData.addMove(move);
                 game.updateAllPieces(checkerboard);
                 game.clearBoard();
                 game.saveMove(move);
@@ -184,18 +183,14 @@ public class GameController {
         }
     }
 
-    private void loadGame(GameMoves gameMoves) {
-        for(Move move : gameMoves.getMoves()){
+    private void loadGame() {
+        for(Move move : gameData.getMoves()){
             checkerboard.move(move);
             game.saveMove(move);
         }
-        currentPlayer = gameMoves.getMoves().size() % 2 == 0 ? Piece.Team.WHITE : Piece.Team.BLACK;
         game.updateAllPieces(checkerboard);
-
-
+        currentPlayer = gameData.getMoves().size() % 2 == 0 ? Piece.Team.WHITE : Piece.Team.BLACK;
         game.setPlayer(currentPlayer);
-
-        Piece.Team checkTeam = checkerboard.lookForCheck();
-        game.modifyCheck(checkTeam);
+        game.modifyCheck(checkerboard.lookForCheck());
     }
 }

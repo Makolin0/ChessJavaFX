@@ -1,7 +1,7 @@
 package chess.chessjavafx.javaFX;
 
 import chess.chessjavafx.game.GameController;
-import chess.chessjavafx.game.GameMoves;
+import chess.chessjavafx.game.GameData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,13 +27,13 @@ import java.util.ResourceBundle;
 
 public class LoadGame implements Initializable {
     @FXML
-    public TableColumn<GameMoves, String> dateCol;
+    public TableColumn<GameData, String> dateCol;
     @FXML
-    public TableColumn<GameMoves, String> lengthCol;
+    public TableColumn<GameData, String> lengthCol;
     @FXML
-    public TableColumn<GameMoves, String> winnerCol;
+    public TableColumn<GameData, String> winnerCol;
     @FXML
-    public TableView<GameMoves> tableView;
+    public TableView<GameData> tableView;
 
 
     @Override
@@ -46,12 +46,12 @@ public class LoadGame implements Initializable {
         generateRowClick();
     }
 
-    private List<GameMoves> loadGames() {
-        List<GameMoves> games = new ArrayList<>();
+    private List<GameData> loadGames() {
+        List<GameData> games = new ArrayList<>();
         Path dir = Paths.get("data");
         try(DirectoryStream<Path> ds = Files.newDirectoryStream(dir)){
             for(Path file : ds){
-                GameMoves game = new GameMoves(file);
+                GameData game = new GameData(file);
                 if(game.getWinner() == null){
                     games.add(game);
                 }
@@ -64,15 +64,15 @@ public class LoadGame implements Initializable {
 
     private void generateRowClick(){
         tableView.setRowFactory(tv -> {
-            TableRow<GameMoves> row = new TableRow<>();
+            TableRow<GameData> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if(!row.isEmpty() && event.getClickCount() >= 1){
-                    GameMoves gameMoves = row.getItem();
+                    GameData gameData = row.getItem();
 
                     try {
                         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 //                        stage.show();
-                        new GameController(stage, gameMoves);
+                        new GameController(stage, gameData);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

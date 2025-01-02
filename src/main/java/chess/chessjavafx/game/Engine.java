@@ -4,16 +4,15 @@ import java.io.*;
 import java.util.List;
 
 public class Engine {
-    private Process process;
     private BufferedReader reader;
     private Writer writer;
 
     // difficulty from 0 to 20
-    public Engine(int difficulty) {
+    public Engine(int difficulty, String filePath) {
         try{
-            ProcessBuilder processBuilder = new ProcessBuilder("/home/adamz/Documents/stockfish/stockfish-ubuntu-x86-64-avx2");
+            ProcessBuilder processBuilder = new ProcessBuilder(filePath);
             processBuilder.redirectErrorStream(true);
-            process = processBuilder.start();
+            Process process = processBuilder.start();
             reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             writer = new OutputStreamWriter(process.getOutputStream());
 
