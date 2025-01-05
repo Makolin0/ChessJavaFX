@@ -21,7 +21,7 @@ public class GameController {
     private Boolean isIllegal;
 
     private Piece.Team vsAI;
-    private final String enginePath = "";
+    private final String enginePath = "/home/adamz/Documents/stockfish/stockfish-ubuntu-x86-64-avx2";
 
     public GameController(Stage stage, Piece.Team vsAI) throws IOException {
         this.checkerboard = new Checkerboard();
@@ -72,10 +72,7 @@ public class GameController {
         currentPlayer = currentPlayer == Piece.Team.WHITE ? Piece.Team.BLACK : Piece.Team.WHITE;
     }
 
-    private void aiMove() {
-        Move move = engine.calculateMove(gameData.getMoves());
-
-        checkerboard.move(move);
+    private void makeMove(Move move){
         gameData.addMove(move);
         game.updateAllPieces(checkerboard);
         game.clearBoard();
@@ -91,6 +88,13 @@ public class GameController {
                 // TODO - co zrobic po wykryciu szach mat
             }
         }
+    }
+
+    private void aiMove() {
+        Move move = engine.calculateMove(gameData.getMoves());
+
+        checkerboard.move(move);
+        makeMove(move);
     }
 
     public void pickUp(Position position){
@@ -132,21 +136,7 @@ public class GameController {
                     checkerboard.move(move);
                 }
 
-                gameData.addMove(move);
-                game.updateAllPieces(checkerboard);
-                game.clearBoard();
-                game.saveMove(move);
-                swapTeam();
-                game.setPlayer(currentPlayer);
-                currentPieceMoveset = null;
-
-                Piece.Team checkTeam = checkerboard.lookForCheck();
-                game.modifyCheck(checkTeam);
-                if(checkTeam != null){
-                    if(checkerboard.lookForCheckmate(checkTeam)){
-                        // TODO - co zrobic po wykryciu szach mat
-                    }
-                }
+                makeMove(move);
 
                 if (vsAI == currentPlayer) {
                     aiMove();
