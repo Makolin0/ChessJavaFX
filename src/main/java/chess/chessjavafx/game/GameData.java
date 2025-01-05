@@ -1,6 +1,7 @@
 package chess.chessjavafx.game;
 
-import chess.chessjavafx.pieces.Piece;
+import chess.chessjavafx.Winner;
+import chess.chessjavafx.Team;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -16,9 +17,9 @@ public class GameData {
     private LocalDateTime startTime;
     private Duration duration;
     private Winner winner;
-    private Piece.Team vsAI;
+    private Team vsAI;
 
-    public GameData(Piece.Team vsAI) {
+    public GameData(Team vsAI) {
         this.moves = new ArrayList<>();
         this.formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         this.startTime = LocalDateTime.now();
@@ -58,7 +59,7 @@ public class GameData {
         return startTime;
     }
 
-    public Piece.Team getVsAI() {
+    public Team getVsAI() {
         return vsAI;
     }
 
@@ -92,7 +93,7 @@ public class GameData {
             startTime = LocalDateTime.parse(dateString, formatter);
 
             String line = br.readLine();
-            vsAI = "null".equals(line) ? null : Piece.Team.valueOf(line);
+            vsAI = "null".equals(line) ? null : Team.valueOf(line);
             line = br.readLine();
             winner = "null".equals(line) ? null : Winner.valueOf(line);
             line = br.readLine();

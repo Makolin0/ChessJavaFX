@@ -6,13 +6,16 @@ module chess.chessjavafx {
 
 
     opens chess.chessjavafx to javafx.fxml;
-    exports chess.chessjavafx;
-    exports chess.chessjavafx.javaFX;
     opens chess.chessjavafx.javaFX to javafx.fxml;
-    exports chess.chessjavafx.game;
     opens chess.chessjavafx.game to javafx.fxml;
-    exports chess.chessjavafx.arduino;
     opens chess.chessjavafx.arduino to javafx.fxml;
-    // exports chess.chessjavafx.tests;
-    // opens chess.chessjavafx.tests to javafx.fxml;
+    opens chess.chessjavafx.packages to javafx.fxml;
+    opens chess.chessjavafx.pieces to javafx.fxml;
+
+    exports chess.chessjavafx;
+    exports chess.chessjavafx.arduino;
+    exports chess.chessjavafx.game;
+    exports chess.chessjavafx.javaFX;
+    exports chess.chessjavafx.packages;
+    exports chess.chessjavafx.pieces;
 }

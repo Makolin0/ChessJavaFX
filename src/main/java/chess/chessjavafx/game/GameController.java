@@ -2,7 +2,7 @@ package chess.chessjavafx.game;
 
 import chess.chessjavafx.javaFX.Game;
 import chess.chessjavafx.packages.Moveset;
-import chess.chessjavafx.pieces.Piece;
+import chess.chessjavafx.Team;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
@@ -16,18 +16,18 @@ public class GameController {
     private final Game game;
     private final Engine engine;
 
-    private Piece.Team currentPlayer;
+    private Team currentPlayer;
     private Moveset currentPieceMoveset;
     private Boolean isIllegal;
 
-    private Piece.Team vsAI;
+    private Team vsAI;
     private final String enginePath = "/home/adamz/Documents/stockfish/stockfish-ubuntu-x86-64-avx2";
 
-    public GameController(Stage stage, Piece.Team vsAI) throws IOException {
+    public GameController(Stage stage, Team vsAI) throws IOException {
         this.checkerboard = new Checkerboard();
         this.gameData = new GameData(vsAI);
 
-        this.currentPlayer = Piece.Team.WHITE;
+        this.currentPlayer = Team.WHITE;
         this.currentPieceMoveset = null;
         this.isIllegal = false;
 
@@ -40,7 +40,7 @@ public class GameController {
         game.updateAllPieces(checkerboard);
         game.setGameController(this);
 
-        if(vsAI == Piece.Team.WHITE)
+        if(vsAI == Team.WHITE)
             aiMove();
 
         stage.getScene().setRoot(root);
@@ -52,7 +52,7 @@ public class GameController {
         this.gameData = gameData;
         loadGame();
 
-        this.currentPlayer = Piece.Team.WHITE;
+        this.currentPlayer = Team.WHITE;
         this.currentPieceMoveset = null;
         this.isIllegal = false;
 
@@ -69,7 +69,7 @@ public class GameController {
     }
 
     private void swapTeam(){
-        currentPlayer = currentPlayer == Piece.Team.WHITE ? Piece.Team.BLACK : Piece.Team.WHITE;
+        currentPlayer = currentPlayer == Team.WHITE ? Team.BLACK : Team.WHITE;
     }
 
     private void makeMove(Move move){
@@ -81,7 +81,7 @@ public class GameController {
         game.setPlayer(currentPlayer);
         currentPieceMoveset = null;
 
-        Piece.Team checkTeam = checkerboard.lookForCheck();
+        Team checkTeam = checkerboard.lookForCheck();
         game.modifyCheck(checkTeam);
         if(checkTeam != null){
             if(checkerboard.lookForCheckmate(checkTeam)){
@@ -179,7 +179,7 @@ public class GameController {
             game.saveMove(move);
         }
         game.updateAllPieces(checkerboard);
-        currentPlayer = gameData.getMoves().size() % 2 == 0 ? Piece.Team.WHITE : Piece.Team.BLACK;
+        currentPlayer = gameData.getMoves().size() % 2 == 0 ? Team.WHITE : Team.BLACK;
         game.setPlayer(currentPlayer);
         game.modifyCheck(checkerboard.lookForCheck());
     }

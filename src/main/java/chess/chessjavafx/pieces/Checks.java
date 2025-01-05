@@ -1,5 +1,6 @@
 package chess.chessjavafx.pieces;
 
+import chess.chessjavafx.Team;
 import chess.chessjavafx.game.Position;
 import java.util.Map;
 import java.util.Objects;
@@ -22,7 +23,7 @@ public class Checks {
     }
 
     // checks if beat doesn't leave board and field is enemy piece
-    public static Position legalBeat(int x, int y, Piece.Team myTeam, Map<Integer, Piece> allPieces) {
+    public static Position legalBeat(int x, int y, Team myTeam, Map<Integer, Piece> allPieces) {
         if(x < 0 || x > 7 || y < 0 || y > 7)
             return null;
 

@@ -1,7 +1,7 @@
 package chess.chessjavafx.javaFX;
 
 import chess.chessjavafx.game.GameController;
-import chess.chessjavafx.pieces.Piece;
+import chess.chessjavafx.Team;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -20,11 +20,11 @@ public class MainMenu {
     }
     public void enterGame(ActionEvent event) throws IOException {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        new GameController(stage, (Piece.Team) null);
+        new GameController(stage, (Team) null);
     }
     public void enterGameAI(ActionEvent event) throws IOException {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        new GameController(stage, Piece.Team.BLACK);
+        new GameController(stage, Team.BLACK);
     }
     public void closeApp() {
         System.exit(0);

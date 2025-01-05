@@ -1,14 +1,14 @@
 package chess.chessjavafx.game;
 
-import chess.chessjavafx.pieces.*;
+
+import chess.chessjavafx.Team;
 import chess.chessjavafx.packages.Moveset;
+import chess.chessjavafx.pieces.*;
 import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import static chess.chessjavafx.pieces.Piece.Team.WHITE;
+import java.util.List;
 
 public class Checkerboard {
     private final Map<Integer, Piece> board;
@@ -24,7 +24,7 @@ public class Checkerboard {
         return images;
     }
 
-    public Piece.Team getPieceTeam(Position position){
+    public Team getPieceTeam(Position position){
         return board.get(position.getInt()).getTeam();
     }
 
@@ -36,32 +36,32 @@ public class Checkerboard {
         board.clear();
 
         for(int x = 0; x < 8; x++){
-            Piece pieceW = new Pawn(WHITE);
-            Piece pieceB = new Pawn(Piece.Team.BLACK);
+            Piece pieceW = new Pawn(Team.WHITE);
+            Piece pieceB = new Pawn(Team.BLACK);
             board.put(new Position(x, 1).getInt(), pieceW);
             board.put(new Position(x, 6).getInt(), pieceB);
         }
 
-        board.put(0, new Rook(WHITE));
-        board.put(7, new Rook(WHITE));
-        board.put(56, new Rook(Piece.Team.BLACK));
-        board.put(63, new Rook(Piece.Team.BLACK));
+        board.put(0, new Rook(Team.WHITE));
+        board.put(7, new Rook(Team.WHITE));
+        board.put(56, new Rook(Team.BLACK));
+        board.put(63, new Rook(Team.BLACK));
 
-        board.put(2, new Bishop(WHITE));
-        board.put(5, new Bishop(WHITE));
-        board.put(58, new Bishop(Piece.Team.BLACK));
-        board.put(61, new Bishop(Piece.Team.BLACK));
+        board.put(2, new Bishop(Team.WHITE));
+        board.put(5, new Bishop(Team.WHITE));
+        board.put(58, new Bishop(Team.BLACK));
+        board.put(61, new Bishop(Team.BLACK));
 
-        board.put(1, new Knight(WHITE));
-        board.put(6, new Knight(WHITE));
-        board.put(57, new Knight(Piece.Team.BLACK));
-        board.put(62, new Knight(Piece.Team.BLACK));
+        board.put(1, new Knight(Team.WHITE));
+        board.put(6, new Knight(Team.WHITE));
+        board.put(57, new Knight(Team.BLACK));
+        board.put(62, new Knight(Team.BLACK));
 
-        board.put(3, new Queen(WHITE));
-        board.put(59, new Queen(Piece.Team.BLACK));
+        board.put(3, new Queen(Team.WHITE));
+        board.put(59, new Queen(Team.BLACK));
 
-        board.put(4, new King(WHITE));
-        board.put(60, new King(Piece.Team.BLACK));
+        board.put(4, new King(Team.WHITE));
+        board.put(60, new King(Team.BLACK));
     }
 
     public Moveset possibleMoves(Position position) throws NullPointerException{
@@ -109,7 +109,7 @@ public class Checkerboard {
         move(move, false);
     }
 
-    public Piece.Team lookForCheck(){
+    public Team lookForCheck(){
         for(Map.Entry<Integer, Piece> entry : board.entrySet()) {
             Piece piece = entry.getValue();
             Position currentPos = new Position(entry.getKey());
@@ -126,7 +126,7 @@ public class Checkerboard {
         return null;
     }
 
-    public boolean lookForCheckmate(Piece.Team team) {
+    public boolean lookForCheckmate(Team team) {
         Checkerboard mockCheckerboard = null;
         try {
             mockCheckerboard = (Checkerboard) this.clone();

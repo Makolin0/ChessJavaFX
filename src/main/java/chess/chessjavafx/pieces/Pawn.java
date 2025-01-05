@@ -1,5 +1,6 @@
 package chess.chessjavafx.pieces;
 
+import chess.chessjavafx.Team;
 import chess.chessjavafx.game.Checkerboard;
 import chess.chessjavafx.game.Move;
 import chess.chessjavafx.game.Position;
