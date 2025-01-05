@@ -1,16 +1,17 @@
 package chess.chessjavafx.game;
 
+import chess.chessjavafx.pieces.Piece;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
-class GameMovesTest {
-    GameMoves gm;
+class GameDataTest {
+    GameData gm;
 
     @BeforeEach
     void setUp() {
-        gm = new GameMoves();
+        gm = new GameData((Piece.Team) null);
     }
 
     @Test

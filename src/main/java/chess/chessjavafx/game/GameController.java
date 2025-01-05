@@ -12,48 +12,57 @@ import java.util.List;
 
 public class GameController {
     private final Checkerboard checkerboard;
-    private Boolean isIllegal;
+    private final GameData gameData;
+    private final Game game;
+    private final Engine engine;
+
     private Piece.Team currentPlayer;
     private Moveset currentPieceMoveset;
-    private final GameMoves gameMoves;
-    private final Game game;
+    private Boolean isIllegal;
 
-    public GameController(Stage stage) throws IOException {
+    private Piece.Team vsAI;
+    private final String enginePath = "/home/adamz/Documents/stockfish/stockfish-ubuntu-x86-64-avx2";
+
+    public GameController(Stage stage, Piece.Team vsAI) throws IOException {
         this.checkerboard = new Checkerboard();
+        this.gameData = new GameData(vsAI);
+
         this.currentPlayer = Piece.Team.WHITE;
         this.currentPieceMoveset = null;
-        this.gameMoves = new GameMoves();
         this.isIllegal = false;
+
+        this.vsAI = vsAI;
+        this.engine = new Engine(20, enginePath);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
         Parent root = loader.load();
         this.game = loader.getController();
-
         game.updateAllPieces(checkerboard);
-
         game.setGameController(this);
+
+        if(vsAI == Piece.Team.WHITE)
+            aiMove();
 
         stage.getScene().setRoot(root);
         stage.show();
     }
 
-    public GameController(Stage stage, GameMoves gameMoves) throws IOException {
+    public GameController(Stage stage, GameData gameData) throws IOException {
         this.checkerboard = new Checkerboard();
+        this.gameData = gameData;
+        loadGame();
+
         this.currentPlayer = Piece.Team.WHITE;
         this.currentPieceMoveset = null;
-        this.gameMoves = new GameMoves();
         this.isIllegal = false;
 
+        this.engine = new Engine(20, enginePath);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
         Parent root = loader.load();
         this.game = loader.getController();
-
         game.updateAllPieces(checkerboard);
-
         game.setGameController(this);
-
-        loadGame(gameMoves);
 
         stage.getScene().setRoot(root);
         stage.show();
@@ -61,6 +70,31 @@ public class GameController {
 
     private void swapTeam(){
         currentPlayer = currentPlayer == Piece.Team.WHITE ? Piece.Team.BLACK : Piece.Team.WHITE;
+    }
+
+    private void makeMove(Move move){
+        gameData.addMove(move);
+        game.updateAllPieces(checkerboard);
+        game.clearBoard();
+        game.saveMove(move);
+        swapTeam();
+        game.setPlayer(currentPlayer);
+        currentPieceMoveset = null;
+
+        Piece.Team checkTeam = checkerboard.lookForCheck();
+        game.modifyCheck(checkTeam);
+        if(checkTeam != null){
+            if(checkerboard.lookForCheckmate(checkTeam)){
+                // TODO - co zrobic po wykryciu szach mat
+            }
+        }
+    }
+
+    private void aiMove() {
+        Move move = engine.calculateMove(gameData.getMoves());
+
+        checkerboard.move(move);
+        makeMove(move);
     }
 
     public void pickUp(Position position){
@@ -74,7 +108,7 @@ public class GameController {
         }
     }
 
-    public void place(Position destination){
+    public void place(Position destination) {
         System.out.println("place " + destination);
 
         if(!isIllegal){
@@ -85,7 +119,9 @@ public class GameController {
                 System.out.println("move " + move);
 
 
-                Position extractedEndPosition = currentPieceMoveset.getMovableList().stream().filter(pos -> {
+                List<Position> availableMoves = currentPieceMoveset.getMovableList();
+                availableMoves.addAll(currentPieceMoveset.getBeatableList());
+                Position extractedEndPosition = availableMoves.stream().filter(pos -> {
                     System.out.println("extracted " + pos + " - " + move.getEndPosition() + " - " + (pos.equals(move.getEndPosition())));
                     return pos.equals(move.getEndPosition());
                 }).findFirst().get();
@@ -100,20 +136,10 @@ public class GameController {
                     checkerboard.move(move);
                 }
 
-                gameMoves.addMove(move);
-                game.updateAllPieces(checkerboard);
-                game.clearBoard();
-                game.saveMove(move);
-                swapTeam();
-                game.setPlayer(currentPlayer);
-                currentPieceMoveset = null;
+                makeMove(move);
 
-                Piece.Team checkTeam = checkerboard.lookForCheck();
-                game.modifyCheck(checkTeam);
-                if(checkTeam != null){
-                    if(checkerboard.lookForCheckmate(checkTeam)){
-                        // TODO - co zrobic po wykryciu szach mat
-                    }
+                if (vsAI == currentPlayer) {
+                    aiMove();
                 }
 
             } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
@@ -147,18 +173,14 @@ public class GameController {
         }
     }
 
-    private void loadGame(GameMoves gameMoves) throws IOException {
-        for(Move move : gameMoves.getMoves()){
+    private void loadGame() {
+        for(Move move : gameData.getMoves()){
             checkerboard.move(move);
             game.saveMove(move);
         }
-        currentPlayer = gameMoves.getMoves().size() % 2 == 0 ? Piece.Team.WHITE : Piece.Team.BLACK;
         game.updateAllPieces(checkerboard);
-
-
+        currentPlayer = gameData.getMoves().size() % 2 == 0 ? Piece.Team.WHITE : Piece.Team.BLACK;
         game.setPlayer(currentPlayer);
-
-        Piece.Team checkTeam = checkerboard.lookForCheck();
-        game.modifyCheck(checkTeam);
+        game.modifyCheck(checkerboard.lookForCheck());
     }
 }
