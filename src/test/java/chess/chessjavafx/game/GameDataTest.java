@@ -1,6 +1,6 @@
 package chess.chessjavafx.game;
 
-import chess.chessjavafx.pieces.Piece;
+import chess.chessjavafx.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ class GameDataTest {
 
     @BeforeEach
     void setUp() {
-        gm = new GameData((Piece.Team) null);
+        gm = new GameData((Team) null);
     }
 
     @Test

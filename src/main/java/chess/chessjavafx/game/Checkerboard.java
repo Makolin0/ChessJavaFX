@@ -1,14 +1,14 @@
 package chess.chessjavafx.game;
 
-import chess.chessjavafx.pieces.*;
+
+import chess.chessjavafx.Team;
 import chess.chessjavafx.packages.Moveset;
+import chess.chessjavafx.pieces.*;
 import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import static chess.chessjavafx.pieces.Piece.Team.WHITE;
+import java.util.List;
 
 public class Checkerboard {
     private final Map<Integer, Piece> board;
@@ -24,7 +24,7 @@ public class Checkerboard {
         return images;
     }
 
-    public Piece.Team getPieceTeam(Position position){
+    public Team getPieceTeam(Position position){
         return board.get(position.getInt()).getTeam();
     }
 
@@ -36,32 +36,32 @@ public class Checkerboard {
         board.clear();
 
         for(int x = 0; x < 8; x++){
-            Piece pieceW = new Pawn(WHITE);
-            Piece pieceB = new Pawn(Piece.Team.BLACK);
+            Piece pieceW = new Pawn(Team.WHITE);
+            Piece pieceB = new Pawn(Team.BLACK);
             board.put(new Position(x, 1).getInt(), pieceW);
             board.put(new Position(x, 6).getInt(), pieceB);
         }
 
-        board.put(0, new Rook(WHITE));
-        board.put(7, new Rook(WHITE));
-        board.put(56, new Rook(Piece.Team.BLACK));
-        board.put(63, new Rook(Piece.Team.BLACK));
+        board.put(0, new Rook(Team.WHITE));
+        board.put(7, new Rook(Team.WHITE));
+        board.put(56, new Rook(Team.BLACK));
+        board.put(63, new Rook(Team.BLACK));
 
-        board.put(2, new Bishop(WHITE));
-        board.put(5, new Bishop(WHITE));
-        board.put(58, new Bishop(Piece.Team.BLACK));
-        board.put(61, new Bishop(Piece.Team.BLACK));
+        board.put(2, new Bishop(Team.WHITE));
+        board.put(5, new Bishop(Team.WHITE));
+        board.put(58, new Bishop(Team.BLACK));
+        board.put(61, new Bishop(Team.BLACK));
 
-        board.put(1, new Knight(WHITE));
-        board.put(6, new Knight(WHITE));
-        board.put(57, new Knight(Piece.Team.BLACK));
-        board.put(62, new Knight(Piece.Team.BLACK));
+        board.put(1, new Knight(Team.WHITE));
+        board.put(6, new Knight(Team.WHITE));
+        board.put(57, new Knight(Team.BLACK));
+        board.put(62, new Knight(Team.BLACK));
 
-        board.put(3, new Queen(WHITE));
-        board.put(59, new Queen(Piece.Team.BLACK));
+        board.put(3, new Queen(Team.WHITE));
+        board.put(59, new Queen(Team.BLACK));
 
-        board.put(4, new King(WHITE));
-        board.put(60, new King(Piece.Team.BLACK));
+        board.put(4, new King(Team.WHITE));
+        board.put(60, new King(Team.BLACK));
     }
 
     public Moveset possibleMoves(Position position) throws NullPointerException{
@@ -79,37 +79,57 @@ public class Checkerboard {
     }
 
 
-    public void move(Move move, boolean special) throws NullPointerException, IllegalArgumentException{
-        Piece piece = board.get(move.getStartPosition().getInt());
+    public void move(Move move) throws NullPointerException, IllegalArgumentException{
+        Position piecePosition = move.getStartPosition();
+        Position destination = move.getEndPosition();
+        Piece piece = board.get(piecePosition.getInt());
+
         if(piece == null){
             throw new NullPointerException("Nie odnaleziono takiego piona");
         }
-        if(special || piece.getMovableList(this, move.getStartPosition()).contains(move.getEndPosition())){
+
+        List<Position> movableList = piece.getMovableList(this, piecePosition);
+        List<Position> beatableList = piece.getBeatableList(this, piecePosition);
+
+        if(movableList.contains(destination)){
             // ruch
-            String className = board.get(move.getStartPosition().getInt()).getClass().getSimpleName();
+            destination = movableList.get(movableList.indexOf(destination));
+
+            // Oznaczenie że figura została ruszona
+            String className = board.get(piecePosition.getInt()).getClass().getSimpleName();
             if("King".equals(className)){
-                ((King)board.get(move.getStartPosition().getInt())).setMoved(true);
+                ((King)board.get(piecePosition.getInt())).setMoved(true);
             } else if ("Rook".equals(className)) {
-                ((Rook)board.get(move.getStartPosition().getInt())).setMoved(true);
+                ((Rook)board.get(piecePosition.getInt())).setMoved(true);
             }
 
-            board.remove(move.getStartPosition().getInt());
-            board.put(move.getEndPosition().getInt(), piece);
-        } else if (piece.getBeatableList(this, move.getStartPosition()).contains(move.getEndPosition())) {
+
+            // roszada
+            if(destination.getCastling() != null){
+                System.out.println("castling: " + destination.getCastling());
+                Piece castlingRook = board.get(destination.getCastling().getStartPosition().getInt());
+                board.remove(destination.getCastling().getStartPosition().getInt());
+                board.put(destination.getCastling().getEndPosition().getInt(), castlingRook);
+            }
+            // en passant
+            if(destination.getPassingEnemy() != null){
+                board.remove(destination.getPassingEnemy().getInt());
+            }
+
+            // wykonanie ruchu
+            board.remove(piecePosition.getInt());
+            board.put(destination.getInt(), piece);
+
+        } else if (beatableList.contains(destination)) {
             //bicie
-            board.remove(move.getStartPosition().getInt());
-            board.replace(move.getEndPosition().getInt(), piece);
-
-
+            board.remove(piecePosition.getInt());
+            board.replace(destination.getInt(), piece);
         } else {
             throw new IllegalArgumentException("Pion nie może wykonać tego ruchu");
         }
     }
-    public void move(Move move) throws NullPointerException, IllegalArgumentException {
-        move(move, false);
-    }
 
-    public Piece.Team lookForCheck(){
+    public Team lookForCheck(){
         for(Map.Entry<Integer, Piece> entry : board.entrySet()) {
             Piece piece = entry.getValue();
             Position currentPos = new Position(entry.getKey());
@@ -126,7 +146,7 @@ public class Checkerboard {
         return null;
     }
 
-    public boolean lookForCheckmate(Piece.Team team) {
+    public boolean lookForCheckmate(Team team) {
         Checkerboard mockCheckerboard = null;
         try {
             mockCheckerboard = (Checkerboard) this.clone();

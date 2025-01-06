@@ -5,7 +5,7 @@ import chess.chessjavafx.game.GameController;
 import chess.chessjavafx.game.Move;
 import chess.chessjavafx.game.Position;
 import chess.chessjavafx.packages.Moveset;
-import chess.chessjavafx.pieces.Piece;
+import chess.chessjavafx.Team;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -70,7 +70,7 @@ public class Game implements Initializable {
         this.squares = new ArrayList<>();
         this.positionText = new ArrayList<>();
         this.pieceImgs = new HashMap<>();
-        this.currentPlayerText.setText("Aktualny gracz: "+ Piece.Team.WHITE);
+        this.currentPlayerText.setText("Aktualny gracz: "+ Team.WHITE);
 
         this.alarm.setVisible(false);
 
@@ -121,7 +121,7 @@ public class Game implements Initializable {
     }
 
 
-    public void setPlayer(Piece.Team currentPlayer){
+    public void setPlayer(Team currentPlayer){
         currentPlayerText.setText("Aktualny gracz: " + currentPlayer);
     }
 
@@ -191,7 +191,7 @@ public class Game implements Initializable {
         clearBoard();
     }
 
-    public void modifyCheck(Piece.Team team){
+    public void modifyCheck(Team team){
         if(team == null){
             checkText.setText("");
         } else {

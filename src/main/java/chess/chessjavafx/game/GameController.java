@@ -2,7 +2,7 @@ package chess.chessjavafx.game;
 
 import chess.chessjavafx.javaFX.Game;
 import chess.chessjavafx.packages.Moveset;
-import chess.chessjavafx.pieces.Piece;
+import chess.chessjavafx.Team;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
@@ -16,18 +16,18 @@ public class GameController {
     private final Game game;
     private final Engine engine;
 
-    private Piece.Team currentPlayer;
+    private Team currentPlayer;
     private Moveset currentPieceMoveset;
     private Boolean isIllegal;
 
-    private Piece.Team vsAI;
+    private Team vsAI;
     private final String enginePath = "/home/adamz/Documents/stockfish/stockfish-ubuntu-x86-64-avx2";
 
-    public GameController(Stage stage, Piece.Team vsAI) throws IOException {
+    public GameController(Stage stage, Team vsAI) throws IOException {
         this.checkerboard = new Checkerboard();
         this.gameData = new GameData(vsAI);
 
-        this.currentPlayer = Piece.Team.WHITE;
+        this.currentPlayer = Team.WHITE;
         this.currentPieceMoveset = null;
         this.isIllegal = false;
 
@@ -40,7 +40,7 @@ public class GameController {
         game.updateAllPieces(checkerboard);
         game.setGameController(this);
 
-        if(vsAI == Piece.Team.WHITE)
+        if(vsAI == Team.WHITE)
             aiMove();
 
         stage.getScene().setRoot(root);
@@ -52,7 +52,7 @@ public class GameController {
         this.gameData = gameData;
         loadGame();
 
-        this.currentPlayer = Piece.Team.WHITE;
+        this.currentPlayer = Team.WHITE;
         this.currentPieceMoveset = null;
         this.isIllegal = false;
 
@@ -69,10 +69,10 @@ public class GameController {
     }
 
     private void swapTeam(){
-        currentPlayer = currentPlayer == Piece.Team.WHITE ? Piece.Team.BLACK : Piece.Team.WHITE;
+        currentPlayer = currentPlayer == Team.WHITE ? Team.BLACK : Team.WHITE;
     }
 
-    private void makeMove(Move move){
+    private void saveMove(Move move){
         gameData.addMove(move);
         game.updateAllPieces(checkerboard);
         game.clearBoard();
@@ -81,7 +81,7 @@ public class GameController {
         game.setPlayer(currentPlayer);
         currentPieceMoveset = null;
 
-        Piece.Team checkTeam = checkerboard.lookForCheck();
+        Team checkTeam = checkerboard.lookForCheck();
         game.modifyCheck(checkTeam);
         if(checkTeam != null){
             if(checkerboard.lookForCheckmate(checkTeam)){
@@ -94,7 +94,7 @@ public class GameController {
         Move move = engine.calculateMove(gameData.getMoves());
 
         checkerboard.move(move);
-        makeMove(move);
+        saveMove(move);
     }
 
     public void pickUp(Position position){
@@ -118,38 +118,21 @@ public class GameController {
                 Move move = new Move(currentPieceMoveset.getCurrentPosition(), destination);
                 System.out.println("move " + move);
 
-
-                List<Position> availableMoves = currentPieceMoveset.getMovableList();
-                availableMoves.addAll(currentPieceMoveset.getBeatableList());
-                Position extractedEndPosition = availableMoves.stream().filter(pos -> {
-                    System.out.println("extracted " + pos + " - " + move.getEndPosition() + " - " + (pos.equals(move.getEndPosition())));
-                    return pos.equals(move.getEndPosition());
-                }).findFirst().get();
-
-                if(extractedEndPosition.getCastling() != null) {
-                    checkerboard.move(move);
-                    checkerboard.move(extractedEndPosition.getCastling(), true);
-                } else if (extractedEndPosition.getPassing() != null) {
-                    checkerboard.move(extractedEndPosition.getPassing(), true);
-                    checkerboard.move(new Move(extractedEndPosition.getPassing().getEndPosition(), destination), true);
-                } else {
-                    checkerboard.move(move);
-                }
-
-                makeMove(move);
+                checkerboard.move(move);
+                saveMove(move);
 
                 if (vsAI == currentPlayer) {
                     aiMove();
                 }
 
             } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
-                System.out.println("revert");
 //                odłożenie figury
+                System.out.println("revert");
                 game.clearBoard();
                 currentPieceMoveset = null;
             } else {
-                System.out.println("illegal place with piece!");
 //                nielegalny ruch
+                System.out.println("illegal place with piece!");
                 setAlarm();
             }
         }
@@ -179,7 +162,7 @@ public class GameController {
             game.saveMove(move);
         }
         game.updateAllPieces(checkerboard);
-        currentPlayer = gameData.getMoves().size() % 2 == 0 ? Piece.Team.WHITE : Piece.Team.BLACK;
+        currentPlayer = gameData.getMoves().size() % 2 == 0 ? Team.WHITE : Team.BLACK;
         game.setPlayer(currentPlayer);
         game.modifyCheck(checkerboard.lookForCheck());
     }
