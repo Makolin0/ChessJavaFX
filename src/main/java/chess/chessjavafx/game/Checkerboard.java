@@ -79,34 +79,54 @@ public class Checkerboard {
     }
 
 
-    public void move(Move move, boolean special) throws NullPointerException, IllegalArgumentException{
-        Piece piece = board.get(move.getStartPosition().getInt());
+    public void move(Move move) throws NullPointerException, IllegalArgumentException{
+        Position piecePosition = move.getStartPosition();
+        Position destination = move.getEndPosition();
+        Piece piece = board.get(piecePosition.getInt());
+
         if(piece == null){
             throw new NullPointerException("Nie odnaleziono takiego piona");
         }
-        if(special || piece.getMovableList(this, move.getStartPosition()).contains(move.getEndPosition())){
+
+        List<Position> movableList = piece.getMovableList(this, piecePosition);
+        List<Position> beatableList = piece.getBeatableList(this, piecePosition);
+
+        if(movableList.contains(destination)){
             // ruch
-            String className = board.get(move.getStartPosition().getInt()).getClass().getSimpleName();
+            destination = movableList.get(movableList.indexOf(destination));
+
+            // Oznaczenie że figura została ruszona
+            String className = board.get(piecePosition.getInt()).getClass().getSimpleName();
             if("King".equals(className)){
-                ((King)board.get(move.getStartPosition().getInt())).setMoved(true);
+                ((King)board.get(piecePosition.getInt())).setMoved(true);
             } else if ("Rook".equals(className)) {
-                ((Rook)board.get(move.getStartPosition().getInt())).setMoved(true);
+                ((Rook)board.get(piecePosition.getInt())).setMoved(true);
             }
 
-            board.remove(move.getStartPosition().getInt());
-            board.put(move.getEndPosition().getInt(), piece);
-        } else if (piece.getBeatableList(this, move.getStartPosition()).contains(move.getEndPosition())) {
+
+            // roszada
+            if(destination.getCastling() != null){
+                System.out.println("castling: " + destination.getCastling());
+                Piece castlingRook = board.get(destination.getCastling().getStartPosition().getInt());
+                board.remove(destination.getCastling().getStartPosition().getInt());
+                board.put(destination.getCastling().getEndPosition().getInt(), castlingRook);
+            }
+            // en passant
+            if(destination.getPassingEnemy() != null){
+                board.remove(destination.getPassingEnemy().getInt());
+            }
+
+            // wykonanie ruchu
+            board.remove(piecePosition.getInt());
+            board.put(destination.getInt(), piece);
+
+        } else if (beatableList.contains(destination)) {
             //bicie
-            board.remove(move.getStartPosition().getInt());
-            board.replace(move.getEndPosition().getInt(), piece);
-
-
+            board.remove(piecePosition.getInt());
+            board.replace(destination.getInt(), piece);
         } else {
             throw new IllegalArgumentException("Pion nie może wykonać tego ruchu");
         }
-    }
-    public void move(Move move) throws NullPointerException, IllegalArgumentException {
-        move(move, false);
     }
 
     public Team lookForCheck(){

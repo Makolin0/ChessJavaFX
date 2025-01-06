@@ -72,7 +72,7 @@ public class GameController {
         currentPlayer = currentPlayer == Team.WHITE ? Team.BLACK : Team.WHITE;
     }
 
-    private void makeMove(Move move){
+    private void saveMove(Move move){
         gameData.addMove(move);
         game.updateAllPieces(checkerboard);
         game.clearBoard();
@@ -94,7 +94,7 @@ public class GameController {
         Move move = engine.calculateMove(gameData.getMoves());
 
         checkerboard.move(move);
-        makeMove(move);
+        saveMove(move);
     }
 
     public void pickUp(Position position){
@@ -118,38 +118,21 @@ public class GameController {
                 Move move = new Move(currentPieceMoveset.getCurrentPosition(), destination);
                 System.out.println("move " + move);
 
-
-                List<Position> availableMoves = currentPieceMoveset.getMovableList();
-                availableMoves.addAll(currentPieceMoveset.getBeatableList());
-                Position extractedEndPosition = availableMoves.stream().filter(pos -> {
-                    System.out.println("extracted " + pos + " - " + move.getEndPosition() + " - " + (pos.equals(move.getEndPosition())));
-                    return pos.equals(move.getEndPosition());
-                }).findFirst().get();
-
-                if(extractedEndPosition.getCastling() != null) {
-                    checkerboard.move(move);
-                    checkerboard.move(extractedEndPosition.getCastling(), true);
-                } else if (extractedEndPosition.getPassing() != null) {
-                    checkerboard.move(extractedEndPosition.getPassing(), true);
-                    checkerboard.move(new Move(extractedEndPosition.getPassing().getEndPosition(), destination), true);
-                } else {
-                    checkerboard.move(move);
-                }
-
-                makeMove(move);
+                checkerboard.move(move);
+                saveMove(move);
 
                 if (vsAI == currentPlayer) {
                     aiMove();
                 }
 
             } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
-                System.out.println("revert");
 //                odłożenie figury
+                System.out.println("revert");
                 game.clearBoard();
                 currentPieceMoveset = null;
             } else {
-                System.out.println("illegal place with piece!");
 //                nielegalny ruch
+                System.out.println("illegal place with piece!");
                 setAlarm();
             }
         }

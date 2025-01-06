@@ -2,7 +2,6 @@ package chess.chessjavafx.pieces;
 
 import chess.chessjavafx.Team;
 import chess.chessjavafx.game.Checkerboard;
-import chess.chessjavafx.game.Move;
 import chess.chessjavafx.game.Position;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -52,7 +51,7 @@ public class Pawn implements Piece{
                         Piece leftPawn = allPieces.get(pos.getInt());
                         if(leftPawn.getClass().equals(Pawn.class)){
                             Position p = new Position(currentPosition.getX() - 1, currentPosition.getY() + 1);
-                            p.setPassing(new Move(currentPosition, pos));
+                            p.setPassingEnemy(pos);
                             movableSquares.add(p);
                         }
                     }
@@ -62,7 +61,7 @@ public class Pawn implements Piece{
                         Piece leftPawn = allPieces.get(pos.getInt());
                         if(leftPawn.getClass().equals(Pawn.class)){
                             Position p = new Position(currentPosition.getX() + 1, currentPosition.getY() + 1);
-                            p.setPassing(new Move(currentPosition, pos));
+                            p.setPassingEnemy(pos);
                             movableSquares.add(p);
                         }
                     }
@@ -84,7 +83,7 @@ public class Pawn implements Piece{
                         Piece rightPawn = allPieces.get(pos.getInt());
                         if(rightPawn.getClass().equals(Pawn.class)){
                             Position p = new Position(currentPosition.getX() - 1, currentPosition.getY() - 1);
-                            p.setPassing(new Move(currentPosition, pos));
+                            p.setPassingEnemy(pos);
                             movableSquares.add(p);
                         }
                     }
@@ -94,7 +93,7 @@ public class Pawn implements Piece{
                         Piece rightPawn = allPieces.get(pos.getInt());
                         if(rightPawn.getClass().equals(Pawn.class)){
                             Position p = new Position(currentPosition.getX() + 1, currentPosition.getY() - 1);
-                            p.setPassing(new Move(currentPosition, pos));
+                            p.setPassingEnemy(pos);
                             movableSquares.add(p);
                         }
                     }

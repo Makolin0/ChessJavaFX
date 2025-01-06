@@ -5,7 +5,7 @@ public class Position {
     private int y;
 
     private Move castling;
-    private Move passing;
+    private Position passingEnemy;
 
 
     public Position(int x, int y){
@@ -13,14 +13,14 @@ public class Position {
         this.x = x;
         this.y = y;
         this.castling = null;
-        this.passing = null;
+        this.passingEnemy = null;
     }
     public Position(int position){
         checkIfValid(position);
         this.x = position % 8;
         this.y = position / 8;
         this.castling = null;
-        this.passing = null;
+        this.passingEnemy = null;
     }
 
     public Position(String string){
@@ -28,7 +28,7 @@ public class Position {
         x = string.charAt(0)-'a';
         y = string.charAt(1) - '1';
         this.castling = null;
-        this.passing = null;
+        this.passingEnemy = null;
     }
 
     public Move getCastling() {
@@ -38,12 +38,12 @@ public class Position {
     public void setCastling(Move castling) {
         this.castling = castling;
     }
-    public Move getPassing() {
-        return passing;
+    public Position getPassingEnemy() {
+        return passingEnemy;
     }
 
-    public void setPassing(Move passing) {
-        this.passing = passing;
+    public void setPassingEnemy(Position passingEnemy) {
+        this.passingEnemy = passingEnemy;
     }
 
 
