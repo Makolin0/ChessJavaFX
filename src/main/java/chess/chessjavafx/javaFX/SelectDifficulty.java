@@ -60,26 +60,46 @@ public class SelectDifficulty implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        button1.setOnAction(event -> {enterGameAI(event, 1);});
-        button2.setOnAction(event -> {enterGameAI(event, 2);});
-        button3.setOnAction(event -> {enterGameAI(event, 3);});
-        button4.setOnAction(event -> {enterGameAI(event, 4);});
-        button5.setOnAction(event -> {enterGameAI(event, 5);});
-        button6.setOnAction(event -> {enterGameAI(event, 6);});
-        button7.setOnAction(event -> {enterGameAI(event, 7);});
-        button8.setOnAction(event -> {enterGameAI(event, 8);});
-        button9.setOnAction(event -> {enterGameAI(event, 9);});
-        button10.setOnAction(event -> {enterGameAI(event, 10);});
-        button11.setOnAction(event -> {enterGameAI(event, 11);});
-        button12.setOnAction(event -> {enterGameAI(event, 12);});
-        button13.setOnAction(event -> {enterGameAI(event, 13);});
-        button14.setOnAction(event -> {enterGameAI(event, 14);});
-        button15.setOnAction(event -> {enterGameAI(event, 15);});
-        button16.setOnAction(event -> {enterGameAI(event, 16);});
-        button17.setOnAction(event -> {enterGameAI(event, 17);});
-        button18.setOnAction(event -> {enterGameAI(event, 18);});
-        button19.setOnAction(event -> {enterGameAI(event, 19);});
-        button20.setOnAction(event -> {enterGameAI(event, 20);});
+        button1.setOnAction(event -> {
+            selectTimer(event, 1);});
+        button2.setOnAction(event -> {
+            selectTimer(event, 2);});
+        button3.setOnAction(event -> {
+            selectTimer(event, 3);});
+        button4.setOnAction(event -> {
+            selectTimer(event, 4);});
+        button5.setOnAction(event -> {
+            selectTimer(event, 5);});
+        button6.setOnAction(event -> {
+            selectTimer(event, 6);});
+        button7.setOnAction(event -> {
+            selectTimer(event, 7);});
+        button8.setOnAction(event -> {
+            selectTimer(event, 8);});
+        button9.setOnAction(event -> {
+            selectTimer(event, 9);});
+        button10.setOnAction(event -> {
+            selectTimer(event, 10);});
+        button11.setOnAction(event -> {
+            selectTimer(event, 11);});
+        button12.setOnAction(event -> {
+            selectTimer(event, 12);});
+        button13.setOnAction(event -> {
+            selectTimer(event, 13);});
+        button14.setOnAction(event -> {
+            selectTimer(event, 14);});
+        button15.setOnAction(event -> {
+            selectTimer(event, 15);});
+        button16.setOnAction(event -> {
+            selectTimer(event, 16);});
+        button17.setOnAction(event -> {
+            selectTimer(event, 17);});
+        button18.setOnAction(event -> {
+            selectTimer(event, 18);});
+        button19.setOnAction(event -> {
+            selectTimer(event, 19);});
+        button20.setOnAction(event -> {
+            selectTimer(event, 20);});
     }
 
     public void goBack(ActionEvent event) throws IOException {
@@ -89,10 +109,16 @@ public class SelectDifficulty implements Initializable {
         stage.show();
     }
 
-    public void enterGameAI(ActionEvent event, int difficulty) {
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+    public void selectTimer(ActionEvent event, Integer difficulty) {
         try {
-            new GameController(stage, Team.BLACK, difficulty);
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/select-timer.fxml")));
+            Parent root = loader.load();
+            SelectTimer controller = loader.getController();
+            controller.setData(Team.BLACK, difficulty);
+
+            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+            stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

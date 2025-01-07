@@ -18,11 +18,17 @@ public class MainMenu {
         stage.getScene().setRoot(root);
         stage.show();
     }
-    public void enterGame(ActionEvent event) throws IOException {
+    public void newGame(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/select-timer.fxml")));
+        Parent root = loader.load();
+        SelectTimer controller = loader.getController();
+        controller.setData(null, null);
+
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        new GameController(stage, (Team) null, 10);
+        stage.getScene().setRoot(root);
+        stage.show();
     }
-    public void enterGameAI(ActionEvent event) throws IOException {
+    public void newGameAI(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/select-difficulty.fxml")));
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.getScene().setRoot(root);

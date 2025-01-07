@@ -33,11 +33,15 @@ public class GameData {
     public GameData(Integer timerMinutes, Team vsAI, Integer aiDifficulty) {
         this.moves = new ArrayList<>();
         this.startTime = LocalDateTime.now();
-        this.timerMinutes = timerMinutes;
+
         this.duration = null;
         this.winner = null;
         this.vsAI = vsAI;
         this.aiDifficulty = aiDifficulty;
+
+        this.timerMinutes = timerMinutes;
+        this.whiteTimerLeft = timerMinutes == null ? null : Duration.ofMinutes(timerMinutes);
+        this.blackTimerLeft = timerMinutes == null ? null : Duration.ofMinutes(timerMinutes);
 
         save();
     }
@@ -89,6 +93,15 @@ public class GameData {
             bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void lowerTimer(Team team, Duration duration) {
+        if(team == Team.WHITE){
+            whiteTimerLeft = whiteTimerLeft.minus(duration);
+        }
+        if(team == Team.BLACK){
+            blackTimerLeft = blackTimerLeft.minus(duration);
         }
     }
 

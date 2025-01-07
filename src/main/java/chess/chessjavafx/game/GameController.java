@@ -22,7 +22,7 @@ public class GameController {
 
     private final String enginePath = "/home/adamz/Documents/stockfish/stockfish-ubuntu-x86-64-avx2";
 
-    public GameController(Stage stage, Team vsAI, int difficulty) throws IOException {
+    public GameController(Stage stage, Integer timerMinutes, Team vsAI, Integer difficulty) throws IOException {
         this.checkerboard = new Checkerboard();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
@@ -31,13 +31,14 @@ public class GameController {
         game.updateAllPieces(checkerboard);
         game.setGameController(this);
 
-        this.gameData = new GameData(vsAI, difficulty);
+        this.gameData = new GameData(timerMinutes, vsAI, difficulty);
 
         this.currentPlayer = Team.WHITE;
         this.currentPieceMoveset = null;
         this.isIllegal = false;
 
-        this.engine = new Engine(difficulty, enginePath);
+        if(vsAI != null)
+            this.engine = new Engine(difficulty, enginePath);
 
 
         if(vsAI == Team.WHITE)
