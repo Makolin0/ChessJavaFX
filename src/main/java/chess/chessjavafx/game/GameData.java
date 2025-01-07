@@ -24,10 +24,16 @@ public class GameData {
     private Team vsAI;
     private Integer aiDifficulty;
 
+    // null means infinite time
+    private Integer timerMinutes;
+    private Duration blackTimerLeft;
+    private Duration whiteTimerLeft;
 
-    public GameData(Team vsAI, Integer aiDifficulty) {
+
+    public GameData(Integer timerMinutes, Team vsAI, Integer aiDifficulty) {
         this.moves = new ArrayList<>();
         this.startTime = LocalDateTime.now();
+        this.timerMinutes = timerMinutes;
         this.duration = null;
         this.winner = null;
         this.vsAI = vsAI;
@@ -94,6 +100,9 @@ public class GameData {
 
             bufferedWriter.write(vsAI + "\n");
             bufferedWriter.write(aiDifficulty + "\n");
+            bufferedWriter.write(timerMinutes + "\n");
+            bufferedWriter.write(whiteTimerLeft + "\n");
+            bufferedWriter.write(blackTimerLeft + "\n");
             bufferedWriter.write(winner + "\n");
             bufferedWriter.write(duration + "\n");
 
@@ -118,12 +127,27 @@ public class GameData {
             String line = br.readLine();
             System.out.println(line);
             vsAI = "null".equals(line) ? null : Team.valueOf(line);
+
             line = br.readLine();
             System.out.println(line);
             aiDifficulty = "null".equals(line) ? null : Integer.parseInt(line);
+
+            line = br.readLine();
+            System.out.println(line);
+            timerMinutes = "null".equals(line) ? null : Integer.parseInt(line);
+
+            line = br.readLine();
+            System.out.println(line);
+            whiteTimerLeft = "null".equals(line) ? null : Duration.parse(line);
+
+            line = br.readLine();
+            System.out.println(line);
+            blackTimerLeft = "null".equals(line) ? null : Duration.parse(line);
+
             line = br.readLine();
             System.out.println(line);
             winner = "null".equals(line) ? null : Winner.valueOf(line);
+
             line = br.readLine();
             System.out.println(line);
             duration = "null".equals(line) ? null : Duration.parse(line);
