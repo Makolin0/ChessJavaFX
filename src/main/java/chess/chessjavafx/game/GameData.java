@@ -85,6 +85,15 @@ public class GameData {
         return aiDifficulty;
     }
 
+    public Duration getBlackTimerLeft() {
+        return blackTimerLeft;
+    }
+
+    public Duration getWhiteTimerLeft() {
+        return whiteTimerLeft;
+    }
+
+
     public void addMove(Move move){
         moves.add(move);
 

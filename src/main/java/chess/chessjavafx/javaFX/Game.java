@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.*;
 
 public class Game implements Initializable {
@@ -50,6 +51,17 @@ public class Game implements Initializable {
     @FXML
     public Button sendPositionButton;
 
+    @FXML
+    public Text timerText;
+    @FXML
+    public Text timerWhiteText;
+    @FXML
+    public Text timerBlackText;
+    @FXML
+    public Text comTeamText;
+    @FXML
+    public Text comDifficultyText;
+
     private List<Rectangle> squares;
     private Map<Integer, ImageView> pieceImgs;
     private List<Text> positionText;
@@ -70,6 +82,7 @@ public class Game implements Initializable {
         this.squares = new ArrayList<>();
         this.positionText = new ArrayList<>();
         this.pieceImgs = new HashMap<>();
+
         this.currentPlayerText.setText("Aktualny gracz: "+ Team.WHITE);
 
         this.alarm.setVisible(false);
@@ -228,5 +241,18 @@ public class Game implements Initializable {
 
     public void setAlarmVisibility(Boolean isVisible){
         alarm.setVisible(isVisible);
+    }
+
+    public void setInfo(Team vsAI, Integer difficulty, Integer timer){
+        comTeamText.setText(vsAI == null ? "" : "Kolor komputera: " + vsAI);
+        comDifficultyText.setText(difficulty == null ? "" : "Poziom trudności: " + difficulty);
+        timerText.setText(timer == null ? "Czas: nieskończoność" : "Czas: " + timer);
+    }
+
+    public void updateTimer(Team team, Duration timeLeft){
+        if(team == Team.WHITE)
+            timerWhiteText.setText("Biały pozostały czas: " + timeLeft);
+        if(team == Team.BLACK)
+            timerBlackText.setText("Czarny pozostały czas: " + timeLeft);
     }
 }

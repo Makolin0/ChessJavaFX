@@ -33,6 +33,10 @@ public class GameController {
 
         this.gameData = new GameData(timerMinutes, vsAI, difficulty);
 
+        game.setInfo(vsAI, difficulty, timerMinutes);
+        game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeft());
+        game.updateTimer(Team.BLACK, gameData.getBlackTimerLeft());
+
         this.currentPlayer = Team.WHITE;
         this.currentPieceMoveset = null;
         this.isIllegal = false;
