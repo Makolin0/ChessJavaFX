@@ -246,7 +246,7 @@ public class Game implements Initializable {
     public void setInfo(Team vsAI, Integer difficulty, Integer timer){
         comTeamText.setText(vsAI == null ? "" : "Kolor komputera: " + vsAI);
         comDifficultyText.setText(difficulty == null ? "" : "Poziom trudności: " + difficulty);
-        timerText.setText(timer == null ? "Czas: nieskończoność" : "Czas: " + timer);
+        timerText.setText(timer == null ? "Czas: nieskończoność" : "Czas: " + timer + " minut");
     }
 
     public void updateTimer(Team team, Duration timeLeft){

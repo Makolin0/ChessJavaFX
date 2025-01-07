@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class GameController {
@@ -17,6 +18,7 @@ public class GameController {
     private Engine engine;
 
     private Team currentPlayer;
+    private LocalDateTime currentTurnStart;
     private Moveset currentPieceMoveset;
     private Boolean isIllegal;
 
@@ -63,6 +65,10 @@ public class GameController {
 
         this.gameData = gameData;
         loadGame();
+
+        game.setInfo(gameData.getVsAI(), gameData.getAiDifficulty(), gameData.getTimerMinutes());
+        game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeft());
+        game.updateTimer(Team.BLACK, gameData.getBlackTimerLeft());
 
         this.currentPlayer = Team.WHITE;
         this.currentPieceMoveset = null;

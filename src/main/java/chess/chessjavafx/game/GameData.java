@@ -85,6 +85,10 @@ public class GameData {
         return aiDifficulty;
     }
 
+    public Integer getTimerMinutes() {
+        return timerMinutes;
+    }
+
     public Duration getBlackTimerLeft() {
         return blackTimerLeft;
     }
