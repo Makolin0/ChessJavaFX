@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class GameController {
         game.updateTimer(Team.BLACK, gameData.getBlackTimerLeft());
 
         this.currentPlayer = Team.WHITE;
+        this.currentTurnStart = LocalDateTime.now();
         this.currentPieceMoveset = null;
         this.isIllegal = false;
 
@@ -71,6 +73,7 @@ public class GameController {
         game.updateTimer(Team.BLACK, gameData.getBlackTimerLeft());
 
         this.currentPlayer = Team.WHITE;
+        this.currentTurnStart = LocalDateTime.now();
         this.currentPieceMoveset = null;
         this.isIllegal = false;
 
@@ -88,12 +91,19 @@ public class GameController {
     private void saveMove(Move move){
         gameData.addMove(move);
 
+        gameData.lowerTimer(currentPlayer, Duration.between(currentTurnStart, LocalDateTime.now()));
+        if(currentPlayer == Team.WHITE)
+            game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeft());
+        if(currentPlayer == Team.BLACK)
+            game.updateTimer(Team.BLACK, gameData.getBlackTimerLeft());
+
         game.updateAllPieces(checkerboard);
         game.clearBoard();
         game.saveMove(move);
         swapTeam();
         game.setPlayer(currentPlayer);
         currentPieceMoveset = null;
+        currentTurnStart = LocalDateTime.now();
 
         Team checkTeam = checkerboard.lookForCheck();
         game.modifyCheck(checkTeam);
