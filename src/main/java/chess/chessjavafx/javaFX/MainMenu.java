@@ -20,11 +20,13 @@ public class MainMenu {
     }
     public void enterGame(ActionEvent event) throws IOException {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        new GameController(stage, (Team) null);
+        new GameController(stage, (Team) null, 10);
     }
     public void enterGameAI(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/select-difficulty.fxml")));
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        new GameController(stage, Team.BLACK);
+        stage.getScene().setRoot(root);
+        stage.show();
     }
     public void closeApp() {
         System.exit(0);
