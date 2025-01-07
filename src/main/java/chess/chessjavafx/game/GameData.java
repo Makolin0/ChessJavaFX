@@ -12,25 +12,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameData {
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+    private BufferedWriter bufferedWriter;
+
     private final List<Move> moves;
-    private final DateTimeFormatter formatter;
     private LocalDateTime startTime;
     private Duration duration;
     private Winner winner;
-    private Team vsAI;
 
-    public GameData(Team vsAI) {
+    private Team vsAI;
+    private Integer aiDifficulty;
+
+
+    public GameData(Team vsAI, Integer aiDifficulty) {
         this.moves = new ArrayList<>();
-        this.formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         this.startTime = LocalDateTime.now();
         this.duration = null;
         this.winner = null;
         this.vsAI = vsAI;
+        this.aiDifficulty = aiDifficulty;
+
+        save();
     }
 
     public GameData(Path file) {
         this.moves = new ArrayList<>();
-        this.formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         load(file);
     }
 
@@ -63,24 +71,37 @@ public class GameData {
         return vsAI;
     }
 
+    public Integer getAiDifficulty() {
+        return aiDifficulty;
+    }
+
     public void addMove(Move move){
         moves.add(move);
+
+        try {
+            bufferedWriter.write(move.toString() + "\n");
+            bufferedWriter.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void save(){
         String filename = startTime.format(formatter) + ".txt";
 
-        try(FileWriter fw = new FileWriter("data/" + filename);
-            BufferedWriter bw = new BufferedWriter(fw)){
+        try{
+            bufferedWriter = new BufferedWriter(new FileWriter("data/" + filename));
 
-            bw.write(vsAI + "\n");
-            bw.write(winner + "\n");
-            bw.write(duration + "\n");
+            bufferedWriter.write(vsAI + "\n");
+            bufferedWriter.write(aiDifficulty + "\n");
+            bufferedWriter.write(winner + "\n");
+            bufferedWriter.write(duration + "\n");
 
             for (Move move : moves) {
-                bw.write(move.toString() + "\n");
+                bufferedWriter.write(move.toString() + "\n");
             }
 
+            bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -88,22 +109,31 @@ public class GameData {
 
     public void load(Path file){
         try(BufferedReader br = new BufferedReader(new FileReader(String.valueOf(file)))){
+            bufferedWriter = new BufferedWriter(new FileWriter(String.valueOf(file), true));
+
             String fileName = file.getFileName().toString();
             String dateString = fileName.substring(0, fileName.length()-4);
             startTime = LocalDateTime.parse(dateString, formatter);
 
             String line = br.readLine();
+            System.out.println(line);
             vsAI = "null".equals(line) ? null : Team.valueOf(line);
             line = br.readLine();
+            System.out.println(line);
+            aiDifficulty = "null".equals(line) ? null : Integer.parseInt(line);
+            line = br.readLine();
+            System.out.println(line);
             winner = "null".equals(line) ? null : Winner.valueOf(line);
             line = br.readLine();
-            duration = Duration.parse(line);
+            System.out.println(line);
+            duration = "null".equals(line) ? null : Duration.parse(line);
 
             String moveString;
             moves.clear();
             while ((moveString = br.readLine()) != null){
                 moves.add(new Move(moveString));
             }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

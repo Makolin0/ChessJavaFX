@@ -14,31 +14,31 @@ public class GameController {
     private final Checkerboard checkerboard;
     private final GameData gameData;
     private final Game game;
-    private final Engine engine;
+    private Engine engine;
 
     private Team currentPlayer;
     private Moveset currentPieceMoveset;
     private Boolean isIllegal;
 
-    private Team vsAI;
     private final String enginePath = "/home/adamz/Documents/stockfish/stockfish-ubuntu-x86-64-avx2";
 
     public GameController(Stage stage, Team vsAI, int difficulty) throws IOException {
         this.checkerboard = new Checkerboard();
-        this.gameData = new GameData(vsAI);
-
-        this.currentPlayer = Team.WHITE;
-        this.currentPieceMoveset = null;
-        this.isIllegal = false;
-
-        this.vsAI = vsAI;
-        this.engine = new Engine(difficulty, enginePath);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
         Parent root = loader.load();
         this.game = loader.getController();
         game.updateAllPieces(checkerboard);
         game.setGameController(this);
+
+        this.gameData = new GameData(vsAI, difficulty);
+
+        this.currentPlayer = Team.WHITE;
+        this.currentPieceMoveset = null;
+        this.isIllegal = false;
+
+        this.engine = new Engine(difficulty, enginePath);
+
 
         if(vsAI == Team.WHITE)
             aiMove();
@@ -49,6 +49,13 @@ public class GameController {
 
     public GameController(Stage stage, GameData gameData) throws IOException {
         this.checkerboard = new Checkerboard();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
+        Parent root = loader.load();
+        this.game = loader.getController();
+        game.updateAllPieces(checkerboard);
+        game.setGameController(this);
+
         this.gameData = gameData;
         loadGame();
 
@@ -56,13 +63,8 @@ public class GameController {
         this.currentPieceMoveset = null;
         this.isIllegal = false;
 
-        this.engine = new Engine(20, enginePath);
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
-        Parent root = loader.load();
-        this.game = loader.getController();
-        game.updateAllPieces(checkerboard);
-        game.setGameController(this);
+        if(gameData.getVsAI() != null)
+            this.engine = new Engine(gameData.getAiDifficulty(), enginePath);
 
         stage.getScene().setRoot(root);
         stage.show();
@@ -74,6 +76,7 @@ public class GameController {
 
     private void saveMove(Move move){
         gameData.addMove(move);
+
         game.updateAllPieces(checkerboard);
         game.clearBoard();
         game.saveMove(move);
@@ -121,7 +124,7 @@ public class GameController {
                 checkerboard.move(move);
                 saveMove(move);
 
-                if (vsAI == currentPlayer) {
+                if (gameData.getVsAI() == currentPlayer) {
                     aiMove();
                 }
 

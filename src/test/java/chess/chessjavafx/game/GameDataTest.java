@@ -11,7 +11,7 @@ class GameDataTest {
 
     @BeforeEach
     void setUp() {
-        gm = new GameData((Team) null);
+        gm = new GameData(null, null);
     }
 
     @Test
