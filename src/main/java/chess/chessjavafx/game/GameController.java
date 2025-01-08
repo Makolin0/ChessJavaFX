@@ -8,21 +8,30 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GameController {
+    private ScheduledExecutorService scheduler;
+    private Duration timeLeft;
+
     private final Checkerboard checkerboard;
     private final GameData gameData;
     private final Game game;
     private Engine engine;
 
     private Team currentPlayer;
+    private LocalDateTime currentTurnStart;
     private Moveset currentPieceMoveset;
     private Boolean isIllegal;
 
     private final String enginePath = "/home/adamz/Documents/stockfish/stockfish-ubuntu-x86-64-avx2";
 
-    public GameController(Stage stage, Team vsAI, int difficulty) throws IOException {
+    public GameController(Stage stage, Integer timerMinutes, Team vsAI, Integer difficulty) throws IOException {
         this.checkerboard = new Checkerboard();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/game.fxml"));
@@ -31,13 +40,19 @@ public class GameController {
         game.updateAllPieces(checkerboard);
         game.setGameController(this);
 
-        this.gameData = new GameData(vsAI, difficulty);
+        this.gameData = new GameData(timerMinutes, vsAI, difficulty);
+
+        game.setInfo(vsAI, difficulty, timerMinutes);
+        game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeft());
+        game.updateTimer(Team.BLACK, gameData.getBlackTimerLeft());
 
         this.currentPlayer = Team.WHITE;
+        this.currentTurnStart = LocalDateTime.now();
         this.currentPieceMoveset = null;
         this.isIllegal = false;
 
-        this.engine = new Engine(difficulty, enginePath);
+        if(vsAI != null)
+            this.engine = new Engine(difficulty, enginePath);
 
 
         if(vsAI == Team.WHITE)
@@ -45,6 +60,9 @@ public class GameController {
 
         stage.getScene().setRoot(root);
         stage.show();
+
+        timeLeft = currentPlayer == Team.WHITE ? gameData.getWhiteTimerLeft() : gameData.getBlackTimerLeft();
+        startTimer();
     }
 
     public GameController(Stage stage, GameData gameData) throws IOException {
@@ -59,7 +77,12 @@ public class GameController {
         this.gameData = gameData;
         loadGame();
 
+        game.setInfo(gameData.getVsAI(), gameData.getAiDifficulty(), gameData.getTimerMinutes());
+        game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeft());
+        game.updateTimer(Team.BLACK, gameData.getBlackTimerLeft());
+
         this.currentPlayer = Team.WHITE;
+        this.currentTurnStart = LocalDateTime.now();
         this.currentPieceMoveset = null;
         this.isIllegal = false;
 
@@ -68,6 +91,9 @@ public class GameController {
 
         stage.getScene().setRoot(root);
         stage.show();
+
+        timeLeft = currentPlayer == Team.WHITE ? gameData.getWhiteTimerLeft() : gameData.getBlackTimerLeft();
+        startTimer();
     }
 
     private void swapTeam(){
@@ -77,12 +103,19 @@ public class GameController {
     private void saveMove(Move move){
         gameData.addMove(move);
 
+        gameData.lowerTimer(currentPlayer, Duration.between(currentTurnStart, LocalDateTime.now()));
+        if(currentPlayer == Team.WHITE)
+            game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeft());
+        if(currentPlayer == Team.BLACK)
+            game.updateTimer(Team.BLACK, gameData.getBlackTimerLeft());
+
         game.updateAllPieces(checkerboard);
         game.clearBoard();
         game.saveMove(move);
         swapTeam();
         game.setPlayer(currentPlayer);
         currentPieceMoveset = null;
+        currentTurnStart = LocalDateTime.now();
 
         Team checkTeam = checkerboard.lookForCheck();
         game.modifyCheck(checkTeam);
@@ -91,6 +124,8 @@ public class GameController {
                 // TODO - co zrobic po wykryciu szach mat
             }
         }
+
+        timeLeft = currentPlayer == Team.WHITE ? gameData.getWhiteTimerLeft() : gameData.getBlackTimerLeft();
     }
 
     private void aiMove() {
@@ -168,5 +203,22 @@ public class GameController {
         currentPlayer = gameData.getMoves().size() % 2 == 0 ? Team.WHITE : Team.BLACK;
         game.setPlayer(currentPlayer);
         game.modifyCheck(checkerboard.lookForCheck());
+    }
+
+    public void startTimer() {
+        scheduler = Executors.newScheduledThreadPool(1);
+
+        scheduler.scheduleAtFixedRate(() -> {
+            timeLeft = timeLeft.minusSeconds(1);
+            game.updateTimer(currentPlayer, timeLeft);
+            if(timeLeft.isNegative()){
+                stopTimer();
+                // TODO - CO ZROBIC JAK SKONCZY SIE CZAS
+            }
+        }, 1, 1, TimeUnit.SECONDS);
+    }
+
+    public void stopTimer() {
+        scheduler.shutdown();
     }
 }

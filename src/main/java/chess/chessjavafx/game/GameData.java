@@ -24,14 +24,24 @@ public class GameData {
     private Team vsAI;
     private Integer aiDifficulty;
 
+    // null means infinite time
+    private Integer timerMinutes;
+    private Duration blackTimerLeft;
+    private Duration whiteTimerLeft;
 
-    public GameData(Team vsAI, Integer aiDifficulty) {
+
+    public GameData(Integer timerMinutes, Team vsAI, Integer aiDifficulty) {
         this.moves = new ArrayList<>();
         this.startTime = LocalDateTime.now();
+
         this.duration = null;
         this.winner = null;
         this.vsAI = vsAI;
         this.aiDifficulty = aiDifficulty;
+
+        this.timerMinutes = timerMinutes;
+        this.whiteTimerLeft = timerMinutes == null ? null : Duration.ofMinutes(timerMinutes);
+        this.blackTimerLeft = timerMinutes == null ? null : Duration.ofMinutes(timerMinutes);
 
         save();
     }
@@ -75,6 +85,19 @@ public class GameData {
         return aiDifficulty;
     }
 
+    public Integer getTimerMinutes() {
+        return timerMinutes;
+    }
+
+    public Duration getBlackTimerLeft() {
+        return blackTimerLeft;
+    }
+
+    public Duration getWhiteTimerLeft() {
+        return whiteTimerLeft;
+    }
+
+
     public void addMove(Move move){
         moves.add(move);
 
@@ -86,6 +109,17 @@ public class GameData {
         }
     }
 
+    public void lowerTimer(Team team, Duration duration) {
+        if(team == Team.WHITE){
+            whiteTimerLeft = whiteTimerLeft.minus(duration);
+        }
+        if(team == Team.BLACK){
+            blackTimerLeft = blackTimerLeft.minus(duration);
+        }
+
+        save();
+    }
+
     public void save(){
         String filename = startTime.format(formatter) + ".txt";
 
@@ -94,6 +128,9 @@ public class GameData {
 
             bufferedWriter.write(vsAI + "\n");
             bufferedWriter.write(aiDifficulty + "\n");
+            bufferedWriter.write(timerMinutes + "\n");
+            bufferedWriter.write(whiteTimerLeft + "\n");
+            bufferedWriter.write(blackTimerLeft + "\n");
             bufferedWriter.write(winner + "\n");
             bufferedWriter.write(duration + "\n");
 
@@ -118,12 +155,27 @@ public class GameData {
             String line = br.readLine();
             System.out.println(line);
             vsAI = "null".equals(line) ? null : Team.valueOf(line);
+
             line = br.readLine();
             System.out.println(line);
             aiDifficulty = "null".equals(line) ? null : Integer.parseInt(line);
+
+            line = br.readLine();
+            System.out.println(line);
+            timerMinutes = "null".equals(line) ? null : Integer.parseInt(line);
+
+            line = br.readLine();
+            System.out.println(line);
+            whiteTimerLeft = "null".equals(line) ? null : Duration.parse(line);
+
+            line = br.readLine();
+            System.out.println(line);
+            blackTimerLeft = "null".equals(line) ? null : Duration.parse(line);
+
             line = br.readLine();
             System.out.println(line);
             winner = "null".equals(line) ? null : Winner.valueOf(line);
+
             line = br.readLine();
             System.out.println(line);
             duration = "null".equals(line) ? null : Duration.parse(line);

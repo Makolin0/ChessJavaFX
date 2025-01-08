@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import java.net.URL?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="chess.chessjavafx.javaFX.SelectTimer"
+            prefHeight="400.0" prefWidth="600.0">
+  <Button onAction="#goBack" text="Wróć" />
+
+  <Label layoutX="351.0" layoutY="148.0" styleClass="title" text="Długość stopera" />
+
+  <GridPane layoutX="351.0" layoutY="293.0" styleClass="select-difficulty">
+    <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0"/>
+    </columnConstraints>
+    <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <Button fx:id="button1" text="1"/>
+    <Button fx:id="button5" text="5" GridPane.columnIndex="1"/>
+    <Button fx:id="button10" text="10" GridPane.columnIndex="2"/>
+    <Button fx:id="button15" text="15" GridPane.columnIndex="3"/>
+    <Button fx:id="button20" text="20" GridPane.columnIndex="4"/>
+    <Button fx:id="buttonInfinite" text="inf." GridPane.columnIndex="5"/>
+  </GridPane>
+
+  <stylesheets>
+    <URL value="@style.css" />
+  </stylesheets>
+</AnchorPane>
