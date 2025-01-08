@@ -11,8 +11,14 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GameController {
+    private ScheduledExecutorService scheduler;
+    private Duration timeLeft;
+
     private final Checkerboard checkerboard;
     private final GameData gameData;
     private final Game game;
@@ -54,6 +60,9 @@ public class GameController {
 
         stage.getScene().setRoot(root);
         stage.show();
+
+        timeLeft = currentPlayer == Team.WHITE ? gameData.getWhiteTimerLeft() : gameData.getBlackTimerLeft();
+        startTimer();
     }
 
     public GameController(Stage stage, GameData gameData) throws IOException {
@@ -82,6 +91,9 @@ public class GameController {
 
         stage.getScene().setRoot(root);
         stage.show();
+
+        timeLeft = currentPlayer == Team.WHITE ? gameData.getWhiteTimerLeft() : gameData.getBlackTimerLeft();
+        startTimer();
     }
 
     private void swapTeam(){
@@ -112,6 +124,8 @@ public class GameController {
                 // TODO - co zrobic po wykryciu szach mat
             }
         }
+
+        timeLeft = currentPlayer == Team.WHITE ? gameData.getWhiteTimerLeft() : gameData.getBlackTimerLeft();
     }
 
     private void aiMove() {
@@ -189,5 +203,22 @@ public class GameController {
         currentPlayer = gameData.getMoves().size() % 2 == 0 ? Team.WHITE : Team.BLACK;
         game.setPlayer(currentPlayer);
         game.modifyCheck(checkerboard.lookForCheck());
+    }
+
+    public void startTimer() {
+        scheduler = Executors.newScheduledThreadPool(1);
+
+        scheduler.scheduleAtFixedRate(() -> {
+            timeLeft = timeLeft.minusSeconds(1);
+            game.updateTimer(currentPlayer, timeLeft);
+            if(timeLeft.isNegative()){
+                stopTimer();
+                // TODO - CO ZROBIC JAK SKONCZY SIE CZAS
+            }
+        }, 1, 1, TimeUnit.SECONDS);
+    }
+
+    public void stopTimer() {
+        scheduler.shutdown();
     }
 }

@@ -48,8 +48,6 @@ public class Game implements Initializable {
 
     @FXML
     public TextField positionField;
-    @FXML
-    public Button sendPositionButton;
 
     @FXML
     public Text timerText;
@@ -225,14 +223,14 @@ public class Game implements Initializable {
         }
     }
 
-    public void sendPickUp(ActionEvent actionEvent) {
+    public void sendPickUp() {
         Position position = new Position(positionField.getText());
         positionField.clear();
 
         gameController.pickUp(position);
     }
 
-    public void sendPlace(ActionEvent actionEvent) {
+    public void sendPlace() {
         Position position = new Position(positionField.getText());
         positionField.clear();
 
@@ -250,9 +248,10 @@ public class Game implements Initializable {
     }
 
     public void updateTimer(Team team, Duration timeLeft){
+        String displayedTime = timeLeft.toMinutesPart() + String.format(":%02d", timeLeft.toSecondsPart());
         if(team == Team.WHITE)
-            timerWhiteText.setText("Biały pozostały czas: " + timeLeft);
+            timerWhiteText.setText("Biały pozostały czas: " + displayedTime);
         if(team == Team.BLACK)
-            timerBlackText.setText("Czarny pozostały czas: " + timeLeft);
+            timerBlackText.setText("Czarny pozostały czas: " + displayedTime);
     }
 }

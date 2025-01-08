@@ -116,6 +116,8 @@ public class GameData {
         if(team == Team.BLACK){
             blackTimerLeft = blackTimerLeft.minus(duration);
         }
+
+        save();
     }
 
     public void save(){
