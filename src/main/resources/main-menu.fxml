@@ -8,7 +8,7 @@
       xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="chess.chessjavafx.javaFX.MainMenu">
   <Pane>
-    <VBox styleClass="background" alignment="CENTER" spacing="10">
+    <VBox styleClass="background" alignment="CENTER">
       <Label styleClass="title" text="Szachy"/>
       <Button onAction="#newGame" styleClass="main-menu-button" text="Nowa gra"/>
       <Button onAction="#newGameAI" styleClass="main-menu-button" text="Nowa gra vs AI"/>

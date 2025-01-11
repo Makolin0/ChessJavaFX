@@ -20,12 +20,12 @@
     -fx-background-color: #eee;
     -fx-background-radius: 10px;
     -fx-padding: 20px;
+    -fx-spacing: 30px;
 }
 
 .title {
     -fx-font-weight: bold;
     -fx-font-size: 64px;
-    -fx-padding:  0 0 30px 0;
 }
 .main-menu-button {
     -fx-font-weight: bold;
@@ -67,8 +67,12 @@
 }
 
 .selection-grid Button{
-    -fx-min-height: 50px;
-    -fx-max-width: 50px;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+
+    -fx-min-height: 64px;
+    -fx-max-width: 64px;
+
     -fx-background-color: #73a1e3;
     -fx-border-color: black;
 }

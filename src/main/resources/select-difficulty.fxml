@@ -4,54 +4,41 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox alignment="CENTER" prefHeight="900.0" prefWidth="1200.0" styleClass="main-padding" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chess.chessjavafx.javaFX.SelectDifficulty">
+<HBox styleClass="main-padding" alignment="CENTER" prefHeight="900.0" prefWidth="1200.0"
+      xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="chess.chessjavafx.javaFX.SelectDifficulty">
   <Pane>
     <VBox alignment="CENTER" styleClass="background">
-    <Label styleClass="title" text="Poziom trudności" />
+      <Label styleClass="title" text="Poziom trudności"/>
+
       <GridPane styleClass="selection-grid">
-        <columnConstraints>
-          <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
-          <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
-          <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
-          <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
-          <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
-          <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
-          <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
-          <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
-          <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
-          <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="50.0" />
-          <RowConstraints minHeight="10.0" prefHeight="50.0" />
-        </rowConstraints>
-        <Button fx:id="button1" text="1" />
-        <Button fx:id="button2" text="2" GridPane.columnIndex="1" />
-        <Button fx:id="button3" text="3" GridPane.columnIndex="2" />
-        <Button fx:id="button4" text="4" GridPane.columnIndex="3" />
-        <Button fx:id="button5" text="5" GridPane.columnIndex="4" />
-        <Button fx:id="button6" text="6" GridPane.columnIndex="5" />
-        <Button fx:id="button7" text="7" GridPane.columnIndex="6" />
-        <Button fx:id="button8" text="8" GridPane.columnIndex="7" />
-        <Button fx:id="button9" text="9" GridPane.columnIndex="8" />
-        <Button fx:id="button10" text="10" GridPane.columnIndex="9" />
-        <Button fx:id="button11" text="11" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <Button fx:id="button12" text="12" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Button fx:id="button13" text="13" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-        <Button fx:id="button14" text="14" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-        <Button fx:id="button15" text="15" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-        <Button fx:id="button16" text="16" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-        <Button fx:id="button17" text="17" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-        <Button fx:id="button18" text="18" GridPane.columnIndex="7" GridPane.rowIndex="1" />
-        <Button fx:id="button19" text="19" GridPane.columnIndex="8" GridPane.rowIndex="1" />
-        <Button fx:id="button20" text="20" GridPane.columnIndex="9" GridPane.rowIndex="1" />
+        <Button fx:id="button1" text="1"/>
+        <Button fx:id="button2" text="2" GridPane.columnIndex="1"/>
+        <Button fx:id="button3" text="3" GridPane.columnIndex="2"/>
+        <Button fx:id="button4" text="4" GridPane.columnIndex="3"/>
+        <Button fx:id="button5" text="5" GridPane.columnIndex="4"/>
+        <Button fx:id="button6" text="6" GridPane.columnIndex="5"/>
+        <Button fx:id="button7" text="7" GridPane.columnIndex="6"/>
+        <Button fx:id="button8" text="8" GridPane.columnIndex="7"/>
+        <Button fx:id="button9" text="9" GridPane.columnIndex="8"/>
+        <Button fx:id="button10" text="10" GridPane.columnIndex="9"/>
+        <Button fx:id="button11" text="11" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <Button fx:id="button12" text="12" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Button fx:id="button13" text="13" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+        <Button fx:id="button14" text="14" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+        <Button fx:id="button15" text="15" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+        <Button fx:id="button16" text="16" GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+        <Button fx:id="button17" text="17" GridPane.columnIndex="6" GridPane.rowIndex="1"/>
+        <Button fx:id="button18" text="18" GridPane.columnIndex="7" GridPane.rowIndex="1"/>
+        <Button fx:id="button19" text="19" GridPane.columnIndex="8" GridPane.rowIndex="1"/>
+        <Button fx:id="button20" text="20" GridPane.columnIndex="9" GridPane.rowIndex="1"/>
       </GridPane>
 
-      <Button styleClass="back-button" onAction="#goBack" text="Wróć" />
+      <Button styleClass="back-button" onAction="#goBack" text="Wróć"/>
     </VBox>
   </Pane>
 
   <stylesheets>
-    <URL value="@style.css" />
+    <URL value="@style.css"/>
   </stylesheets>
 </HBox>
