@@ -55,7 +55,6 @@ public class Engine {
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("bestmove")) {
                     String bestMove = line.split(" ")[1];
-                    System.out.println("Best move: " + bestMove);
                     return new Move(bestMove);
                 }
             }

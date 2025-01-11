@@ -38,8 +38,8 @@ public class LoadGame implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        dateCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-        lengthCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("startTimeString"));
+        lengthCol.setCellValueFactory(new PropertyValueFactory<>("durationString"));
         winnerCol.setCellValueFactory(new PropertyValueFactory<>("winner"));
 
         tableView.getItems().setAll(loadGames());

@@ -37,8 +37,8 @@ public class History implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        dateCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-        lengthCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("startTimeString"));
+        lengthCol.setCellValueFactory(new PropertyValueFactory<>("durationString"));
         winnerCol.setCellValueFactory(new PropertyValueFactory<>("winner"));
 
         tableView.getItems().setAll(loadGames());
@@ -50,7 +50,10 @@ public class History implements Initializable {
         Path dir = Paths.get("data");
         try(DirectoryStream<Path> ds = Files.newDirectoryStream(dir)){
             for(Path file : ds){
-                games.add(new GameData(file));
+                GameData gameData = new GameData(file);
+                if(gameData.getWinner() != null)
+                    games.add(gameData);
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -12,12 +12,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -30,6 +30,12 @@ import java.time.Duration;
 import java.util.*;
 
 public class Game implements Initializable {
+
+    private static final int SQUARE_SIZE = 80;
+    private static final int BORDER_SHIFT = 15;
+    private static final Color LIGHT_COLOR = Color.WHITE;
+    private static final Color DARK_COLOR = Color.DARKGRAY;
+
     @FXML
     public Pane board;
     @FXML
@@ -59,6 +65,10 @@ public class Game implements Initializable {
     public Text comTeamText;
     @FXML
     public Text comDifficultyText;
+    @FXML
+    public FlowPane timerWhiteBg;
+    @FXML
+    public FlowPane timerBlackBg;
 
     private List<Rectangle> squares;
     private Map<Integer, ImageView> pieceImgs;
@@ -70,7 +80,7 @@ public class Game implements Initializable {
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
-    
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -81,7 +91,7 @@ public class Game implements Initializable {
         this.positionText = new ArrayList<>();
         this.pieceImgs = new HashMap<>();
 
-        this.currentPlayerText.setText("Aktualny gracz: "+ Team.WHITE);
+        setPlayer(Team.WHITE);
 
         this.alarm.setVisible(false);
 
@@ -92,38 +102,38 @@ public class Game implements Initializable {
 
     public void goBack(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/main-menu.fxml")));
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.getScene().setRoot(root);
         stage.show();
     }
 
 
-    private void generateBoard(){
+    private void generateBoard() {
         for (int y = 0; y < 8; y++) {
-            for(int x = 0; x < 8; x++){
+            for (int x = 0; x < 8; x++) {
                 Rectangle rectangle = new Rectangle();
-                rectangle.setFill((y+x)%2==0? Color.DARKGRAY:Color.WHITE);
-                rectangle.setX(x*100);
-                rectangle.setY(7*100 - y*100);
-                rectangle.setWidth(100);
-                rectangle.setHeight(100);
+                rectangle.setFill((y + x) % 2 == 0 ? DARK_COLOR : LIGHT_COLOR);
+                rectangle.setX(x * SQUARE_SIZE + BORDER_SHIFT);
+                rectangle.setY(7 * SQUARE_SIZE - y * SQUARE_SIZE + BORDER_SHIFT);
+                rectangle.setWidth(SQUARE_SIZE);
+                rectangle.setHeight(SQUARE_SIZE);
                 squares.add(rectangle);
             }
         }
         // numbers
-        for(int i = 0; i < 8; i++){
+        for (int i = 0; i < 8; i++) {
             Text text = new Text();
-            text.setText(Integer.toString(i+1));
-            text.setX(5);
-            text.setY((8-i)*100 - 85);
+            text.setText(Integer.toString(i + 1));
+            text.setX(5 + BORDER_SHIFT);
+            text.setY((8 - i) * SQUARE_SIZE + BORDER_SHIFT - ((double) (SQUARE_SIZE * 5) / 6));
             positionText.add(text);
         }
         // alphabet
-        for(int i = 0; i < 8; i++){
+        for (int i = 0; i < 8; i++) {
             Text text = new Text();
-            text.setText((char)(i+'a') + "");
-            text.setX(i*100 + 85);
-            text.setY(8*100 - 5);
+            text.setText((char) (i + 'a') + "");
+            text.setX(i * SQUARE_SIZE + BORDER_SHIFT + ((double) (SQUARE_SIZE * 5) / 6));
+            text.setY(8 * SQUARE_SIZE - 5 + BORDER_SHIFT);
             positionText.add(text);
         }
 
@@ -132,40 +142,54 @@ public class Game implements Initializable {
     }
 
 
-    public void setPlayer(Team currentPlayer){
-        currentPlayerText.setText("Aktualny gracz: " + currentPlayer);
+    public void setPlayer(Team currentPlayer) {
+        if (currentPlayer == Team.WHITE) {
+            System.out.println("Bialy");
+            timerWhiteBg.getStyleClass().add("timer-current");
+            timerBlackBg.getStyleClass().remove("timer-current");
+            currentPlayerText.setText("Biały");
+        } else {
+            System.out.println("Czarny");
+            timerBlackBg.getStyleClass().add("timer-current");
+            timerWhiteBg.getStyleClass().remove("timer-current");
+            currentPlayerText.setText("Czarny");
+        }
     }
 
-    private void colorCurrentPos(Position pos){
-        squares.get(pos.getInt()).setFill((pos.getX() + pos.getY())%2==0? Color.BLUE:Color.LIGHTBLUE);
-    }
-    private void colorMovePos(Position pos){
-        squares.get(pos.getInt()).setFill((pos.getX() + pos.getY())%2==0? Color.GREEN:Color.LIGHTGREEN);
-    }
-    private void colorBeatPos(Position pos){
-        squares.get(pos.getInt()).setFill((pos.getX() + pos.getY())%2==0? Color.DARKRED:Color.RED);
+    private void colorCurrentPos(Position pos) {
+        squares.get(pos.getInt()).setFill((pos.getX() + pos.getY()) % 2 == 0 ? Color.BLUE : Color.LIGHTBLUE);
     }
 
-    public void showMoveset(Moveset moveset){
+    private void colorMovePos(Position pos) {
+        squares.get(pos.getInt()).setFill((pos.getX() + pos.getY()) % 2 == 0 ? Color.GREEN : Color.LIGHTGREEN);
+    }
+
+    private void colorBeatPos(Position pos) {
+        squares.get(pos.getInt()).setFill((pos.getX() + pos.getY()) % 2 == 0 ? Color.DARKRED : Color.RED);
+    }
+
+    public void showMoveset(Moveset moveset) {
         colorCurrentPos(moveset.getCurrentPosition());
         moveset.getMovableList().forEach(this::colorMovePos);
         moveset.getBeatableList().forEach(this::colorBeatPos);
     }
 
-    public void clearBoard(){
+    public void clearBoard() {
         for (int y = 0; y < 8; y++) {
-            for(int x = 0; x < 8; x++){
-                squares.get(y*8+x).setFill((y+x)%2==0? Color.DARKGRAY:Color.WHITE);
+            for (int x = 0; x < 8; x++) {
+                squares.get(y * 8 + x).setFill((y + x) % 2 == 0 ? Color.DARKGRAY : Color.WHITE);
             }
         }
     }
 
-    public void updateAllPieces(Checkerboard checkerboard){
+    public void updateAllPieces(Checkerboard checkerboard) {
         Map<Integer, ImageView> newPieceImgs = checkerboard.getImages();
-        newPieceImgs.forEach((key, img)->{
+        newPieceImgs.forEach((key, img) -> {
             Position pos = new Position(key);
-            img.setX(pos.getX() * 100);
-            img.setY((7 - pos.getY()) * 100);
+            img.setX(pos.getX() * SQUARE_SIZE + BORDER_SHIFT);
+            img.setY((7 - pos.getY()) * SQUARE_SIZE + BORDER_SHIFT);
+            img.setFitHeight(SQUARE_SIZE);
+            img.setFitWidth(SQUARE_SIZE);
         });
         board.getChildren().removeAll(new ArrayList<>(pieceImgs.values()));
         pieceImgs.clear();
@@ -173,26 +197,25 @@ public class Game implements Initializable {
         board.getChildren().addAll(new ArrayList<>(pieceImgs.values()));
     }
 
-    public void saveMove(Move move){
-        switch (tableView.getItems().get(0).getState()){
+    public void saveMove(Move move) {
+        switch (tableView.getItems().get(0).getState()) {
             case 0:
                 tableView.getItems().get(0).setMoveWhite(move.toString());
                 break;
-                case 1:
-                    tableView.getItems().get(0).setMoveBlack(move.toString());
-                    tableView.getItems().add(0, new MoveRow());
-                    break;
-                    case 2:
-                        System.out.println("Nigdy nie powinno byc");
-                        break;
+            case 1:
+                tableView.getItems().get(0).setMoveBlack(move.toString());
+                tableView.getItems().add(0, new MoveRow());
+                break;
+            case 2:
+                break;
         }
         this.tableView.refresh();
     }
 
-    public void movePiece(Move move){
+    public void movePiece(Move move) {
         ImageView pieceImg = pieceImgs.get(move.getStartPosition().getInt());
-        pieceImg.setX(move.getEndPosition().getX() * 100);
-        pieceImg.setY((7 - move.getEndPosition().getY()) * 100);
+        pieceImg.setX(move.getEndPosition().getX() * SQUARE_SIZE + BORDER_SHIFT);
+        pieceImg.setY((7 - move.getEndPosition().getY()) * SQUARE_SIZE + BORDER_SHIFT);
         pieceImgs.remove(move.getStartPosition().getInt());
         board.getChildren().remove(pieceImgs.get(move.getEndPosition().getInt()));
 
@@ -202,8 +225,8 @@ public class Game implements Initializable {
         clearBoard();
     }
 
-    public void modifyCheck(Team team){
-        if(team == null){
+    public void modifyCheck(Team team) {
+        if (team == null) {
             checkText.setText("");
         } else {
             checkText.setText("Szach dla: " + team);
@@ -211,14 +234,14 @@ public class Game implements Initializable {
     }
 
 
-    public void colorIllegalPlace(List<Position> illegalPlace){
-        for(Position position : illegalPlace){
+    public void colorIllegalPlace(List<Position> illegalPlace) {
+        for (Position position : illegalPlace) {
             colorBeatPos(position);
         }
     }
 
-    public void colorIllegalPickUp(List<Position> illegalPickUp){
-        for(Position position : illegalPickUp){
+    public void colorIllegalPickUp(List<Position> illegalPickUp) {
+        for (Position position : illegalPickUp) {
             colorCurrentPos(position);
         }
     }
@@ -237,21 +260,21 @@ public class Game implements Initializable {
         gameController.place(position);
     }
 
-    public void setAlarmVisibility(Boolean isVisible){
+    public void setAlarmVisibility(Boolean isVisible) {
         alarm.setVisible(isVisible);
     }
 
-    public void setInfo(Team vsAI, Integer difficulty, Integer timer){
+    public void setInfo(Team vsAI, Integer difficulty, Integer timer) {
         comTeamText.setText(vsAI == null ? "" : "Kolor komputera: " + vsAI);
         comDifficultyText.setText(difficulty == null ? "" : "Poziom trudności: " + difficulty);
         timerText.setText(timer == null ? "Czas: nieskończoność" : "Czas: " + timer + " minut");
     }
 
-    public void updateTimer(Team team, Duration timeLeft){
+    public void updateTimer(Team team, Duration timeLeft) {
         String displayedTime = timeLeft.toMinutesPart() + String.format(":%02d", timeLeft.toSecondsPart());
-        if(team == Team.WHITE)
-            timerWhiteText.setText("Biały pozostały czas: " + displayedTime);
-        if(team == Team.BLACK)
-            timerBlackText.setText("Czarny pozostały czas: " + displayedTime);
+        if (team == Team.WHITE)
+            timerWhiteText.setText(displayedTime);
+        if (team == Team.BLACK)
+            timerBlackText.setText(displayedTime);
     }
 }

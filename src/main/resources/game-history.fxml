@@ -5,8 +5,10 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chess.chessjavafx.javaFX.GameHistory">
-    <Button onAction="#goBack" text="Wróć" />
-     <TableView fx:id="tableView" layoutX="464.0" layoutY="82.0" prefHeight="713.0" prefWidth="273.0">
+
+  <HBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+  <VBox alignment="CENTER">
+     <TableView fx:id="tableView" prefHeight="713.0" prefWidth="273.0">
          <columns>
              <TableColumn fx:id="whiteCol" prefWidth="75.0" text="Biały" />
              <TableColumn fx:id="blackCol" prefWidth="75.0" text="Czarny" />
@@ -15,6 +17,9 @@
              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
      </TableView>
+    <Button onAction="#goBack" text="Wróć" />
+  </VBox>
+  </HBox>
   <stylesheets>
     <URL value="@style.css" />
   </stylesheets>

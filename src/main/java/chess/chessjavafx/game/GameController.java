@@ -81,7 +81,6 @@ public class GameController {
         game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeft());
         game.updateTimer(Team.BLACK, gameData.getBlackTimerLeft());
 
-        this.currentPlayer = Team.WHITE;
         this.currentTurnStart = LocalDateTime.now();
         this.currentPieceMoveset = null;
         this.isIllegal = false;
@@ -136,25 +135,20 @@ public class GameController {
     }
 
     public void pickUp(Position position){
-        System.out.println("pick up " + position);
         if(!isIllegal && currentPlayer == checkerboard.getPieceTeam(position)){
             currentPieceMoveset = checkerboard.possibleMoves(position);
             game.showMoveset(currentPieceMoveset);
         } else {
-            System.out.println("illegal!");
             setAlarm();
         }
     }
 
     public void place(Position destination) {
-        System.out.println("place " + destination);
-
         if(!isIllegal){
 //            podniesienie gdy legalne
             if(currentPieceMoveset.getMovableList().contains(destination) || currentPieceMoveset.getBeatableList().contains(destination)){
 //                legalny ruch
                 Move move = new Move(currentPieceMoveset.getCurrentPosition(), destination);
-                System.out.println("move " + move);
 
                 checkerboard.move(move);
                 saveMove(move);
@@ -165,19 +159,16 @@ public class GameController {
 
             } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
 //                odłożenie figury
-                System.out.println("revert");
                 game.clearBoard();
                 currentPieceMoveset = null;
             } else {
 //                nielegalny ruch
-                System.out.println("illegal place with piece!");
                 setAlarm();
             }
         }
     }
 
     private void setAlarm(){
-        System.out.println("ALARM");
         isIllegal = true;
         game.setAlarmVisibility(true);
         game.clearBoard();
@@ -211,7 +202,7 @@ public class GameController {
         scheduler.scheduleAtFixedRate(() -> {
             timeLeft = timeLeft.minusSeconds(1);
             game.updateTimer(currentPlayer, timeLeft);
-            if(timeLeft.isNegative()){
+            if (timeLeft.isNegative()) {
                 stopTimer();
                 // TODO - CO ZROBIC JAK SKONCZY SIE CZAS
             }
