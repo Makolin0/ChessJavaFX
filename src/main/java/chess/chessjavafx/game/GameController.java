@@ -81,7 +81,6 @@ public class GameController {
         game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeft());
         game.updateTimer(Team.BLACK, gameData.getBlackTimerLeft());
 
-        this.currentPlayer = Team.WHITE;
         this.currentTurnStart = LocalDateTime.now();
         this.currentPieceMoveset = null;
         this.isIllegal = false;

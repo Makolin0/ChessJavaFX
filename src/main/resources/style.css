@@ -41,13 +41,6 @@
     -fx-background-color: #4c6c98;
 }
 
-.alarm {
-    -fx-font-size: 32px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #f00;
-    -fx-background-color: red;
-}
-
 .root {
     -fx-background-image: url("ezra.jpg");
     -fx-background-position: center;
@@ -55,10 +48,6 @@
     -fx-background-size: cover;
 }
 
-.pane {
-    -fx-background-color: #611919;
-    -fx-padding: 20px;
-}
 
 .selection-grid {
     -fx-alignment: center;
@@ -83,4 +72,57 @@
     -fx-padding: 8px 16px;
     -fx-background-color: #f86464;
     -fx-background-radius: 10px;
+}
+
+
+
+.game-pane {
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-column-halignment: center;
+    -fx-row-valignment: center;
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+.board {
+    -fx-background-color: #611919;
+    -fx-padding: 20px;
+}
+
+.current-player {
+    -fx-font-weight: bold;
+    -fx-font-size: 32px;
+    -fx-text-alignment: center;
+}
+
+.alarm {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f00;
+    -fx-background-color: red;
+}
+
+.timer-bg {
+    -fx-background-color: #999;
+    -fx-alignment: center;
+}
+
+.timer-text {
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+    -fx-text-alignment: center;
+}
+
+.timer-bg-white {
+    -fx-background-radius: 20px 0 0 20px;
+}
+
+.timer-bg-black {
+    -fx-background-radius: 0 20px 20px 0;
+}
+
+.timer-current {
+    -fx-border-color: red;
+    -fx-border-width: 3px;
 }

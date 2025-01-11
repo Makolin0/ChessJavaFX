@@ -5,36 +5,68 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chess.chessjavafx.javaFX.Game">
-    <Button onAction="#goBack" text="Wróć" />
-    <Pane prefHeight="850.0" prefWidth="850.0" styleClass="pane">
-        <Pane fx:id="board" />
-    </Pane>
-    <VBox spacing="10.0">
-        <Text fx:id="currentPlayerText" />
-        <Text fx:id="checkText" />
+<GridPane alignment="CENTER" prefHeight="900.0" prefWidth="1200.0" styleClass="game-pane"
+          xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="chess.chessjavafx.javaFX.Game">
 
-        <Text fx:id="timerText" />
-        <Text fx:id="timerWhiteText" />
-        <Text fx:id="timerBlackText" />
-        <Text fx:id="comTeamText" />
-        <Text fx:id="comDifficultyText" />
+  <Button onAction="#goBack" styleClass="back-button" text="Wróć" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
 
-        <TableView fx:id="tableView" prefHeight="433.0" prefWidth="214.0">
-            <columns>
-                <TableColumn fx:id="whiteCol" prefWidth="75.0" text="Biały" />
-                <TableColumn fx:id="blackCol" prefWidth="75.0" text="Czarny" />
-            </columns>
-            <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-            </columnResizePolicy>
-        </TableView>
-        <TextField fx:id="positionField" />
-        <Button mnemonicParsing="false" onAction="#sendPickUp" text="Podnieś" />
-        <Button mnemonicParsing="false" onAction="#sendPlace" text="Postaw" />
-    </VBox>
-    <Text fx:id="alarm" fill="RED" styleClass="alarm" text="COFNIJ DO POPRZEDNIEGO STANU" />
-    <stylesheets>
-    <URL value="@style.css" />
+  <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" alignment="CENTER">
+    <Text text="Aktualny gracz"/>
+    <Text fx:id="currentPlayerText" styleClass="current-player"/>
+  </VBox>
+
+  <HBox GridPane.columnIndex="2" GridPane.rowIndex="0">
+    <FlowPane fx:id="timerWhiteBg" styleClass="timer-bg, timer-bg-white">
+      <Text fx:id="timerWhiteText" styleClass="timer-text"/>
+    </FlowPane>
+    <FlowPane fx:id="timerBlackBg" styleClass="timer-bg, timer-bg-black">
+      <Text fx:id="timerBlackText" styleClass="timer-text"/>
+    </FlowPane>
+  </HBox>
+
+  <VBox spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+    <Text fx:id="timerText"/>
+    <Text fx:id="comTeamText"/>
+    <Text fx:id="comDifficultyText"/>
+  </VBox>
+
+  <Pane prefHeight="850.0" prefWidth="850.0" styleClass="board" GridPane.columnIndex="1" GridPane.rowIndex="1">
+    <Pane fx:id="board"/>
+  </Pane>
+
+  <TableView fx:id="tableView" GridPane.columnIndex="2" GridPane.rowIndex="1">
+    <columns>
+      <TableColumn fx:id="whiteCol" prefWidth="75.0" text="Biały"/>
+      <TableColumn fx:id="blackCol" prefWidth="75.0" text="Czarny"/>
+    </columns>
+    <columnResizePolicy>
+      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+    </columnResizePolicy>
+  </TableView>
+
+  <Pane GridPane.columnIndex="1" GridPane.rowIndex="2">
+    <Text fx:id="checkText"/>
+    <Text fx:id="alarm" fill="RED" styleClass="alarm" text="COFNIJ DO POPRZEDNIEGO STANU"/>
+  </Pane>
+
+  <VBox spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+    <TextField fx:id="positionField"/>
+    <Button mnemonicParsing="false" onAction="#sendPickUp" text="Podnieś"/>
+    <Button mnemonicParsing="false" onAction="#sendPlace" text="Postaw"/>
+  </VBox>
+
+  <stylesheets>
+    <URL value="@style.css"/>
   </stylesheets>
-</AnchorPane>
+  <columnConstraints>
+    <ColumnConstraints halignment="CENTER"/>
+    <ColumnConstraints halignment="CENTER"/>
+    <ColumnConstraints halignment="CENTER"/>
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints valignment="CENTER"/>
+    <RowConstraints valignment="CENTER"/>
+    <RowConstraints valignment="CENTER"/>
+  </rowConstraints>
+</GridPane>
