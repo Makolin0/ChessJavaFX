@@ -9,13 +9,23 @@
 
 * {
     -fx-font-family: 'Lato';
-    /*-fx-text-fill: #222;*/
+    -fx-text-fill: #222;
 }
 
+.main-padding {
+    -fx-padding: 40px;
+}
+
+.background {
+    -fx-background-color: #eee;
+    -fx-background-radius: 10px;
+    -fx-padding: 20px;
+}
 
 .title {
     -fx-font-weight: bold;
     -fx-font-size: 64px;
+    -fx-padding:  0 0 30px 0;
 }
 .main-menu-button {
     -fx-font-weight: bold;
@@ -50,10 +60,23 @@
     -fx-padding: 20px;
 }
 
+.selection-grid {
+    -fx-alignment: center;
+    -fx-hgap: 3px;
+    -fx-vgap: 3px;
+}
 
-.select-difficulty Button{
+.selection-grid Button{
     -fx-min-height: 50px;
     -fx-max-width: 50px;
     -fx-background-color: #73a1e3;
     -fx-border-color: black;
+}
+
+.back-button {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 8px 16px;
+    -fx-background-color: #f86464;
+    -fx-background-radius: 10px;
 }

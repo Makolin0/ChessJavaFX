@@ -77,6 +77,20 @@ public class GameData {
         return startTime;
     }
 
+    public String getStartTimeString() {
+        return startTime.format(formatter);
+    }
+
+    public String getDurationString() {
+        if(duration == null) {
+            return "";
+        }
+        if(duration.toHours() >= 1){
+            return duration.toHoursPart() + String.format(":%02d", duration.toMinutesPart()) + String.format(":%02d", duration.toSecondsPart());
+        }
+        return duration.toMinutesPart() + String.format(":%02d", duration.toSecondsPart());
+    }
+
     public Team getVsAI() {
         return vsAI;
     }
@@ -153,31 +167,24 @@ public class GameData {
             startTime = LocalDateTime.parse(dateString, formatter);
 
             String line = br.readLine();
-            System.out.println(line);
             vsAI = "null".equals(line) ? null : Team.valueOf(line);
 
             line = br.readLine();
-            System.out.println(line);
             aiDifficulty = "null".equals(line) ? null : Integer.parseInt(line);
 
             line = br.readLine();
-            System.out.println(line);
             timerMinutes = "null".equals(line) ? null : Integer.parseInt(line);
 
             line = br.readLine();
-            System.out.println(line);
             whiteTimerLeft = "null".equals(line) ? null : Duration.parse(line);
 
             line = br.readLine();
-            System.out.println(line);
             blackTimerLeft = "null".equals(line) ? null : Duration.parse(line);
 
             line = br.readLine();
-            System.out.println(line);
             winner = "null".equals(line) ? null : Winner.valueOf(line);
 
             line = br.readLine();
-            System.out.println(line);
             duration = "null".equals(line) ? null : Duration.parse(line);
 
             String moveString;

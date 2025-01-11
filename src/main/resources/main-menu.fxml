@@ -4,16 +4,20 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chess.chessjavafx.javaFX.MainMenu">
-    <VBox alignment="TOP_CENTER" spacing="10">
-        <Label styleClass="title" text="Szachy" />
-        <Button onAction="#newGame" styleClass="main-menu-button" text="Nowa gra" />
-        <Button onAction="#newGameAI" styleClass="main-menu-button" text="Nowa gra vs AI" />
-        <Button onAction="#enterLoadGame" styleClass="main-menu-button" text="Załaduj grę" />
-        <Button onAction="#enterHistory" styleClass="main-menu-button" text="Historia" />
-        <Button onAction="#closeApp" styleClass="main-menu-button" text="Wyjście" />
+<HBox styleClass="main-padding" alignment="CENTER" prefHeight="900.0" prefWidth="1200.0"
+      xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="chess.chessjavafx.javaFX.MainMenu">
+  <Pane>
+    <VBox styleClass="background" alignment="CENTER" spacing="10">
+      <Label styleClass="title" text="Szachy"/>
+      <Button onAction="#newGame" styleClass="main-menu-button" text="Nowa gra"/>
+      <Button onAction="#newGameAI" styleClass="main-menu-button" text="Nowa gra vs AI"/>
+      <Button onAction="#enterLoadGame" styleClass="main-menu-button" text="Załaduj grę"/>
+      <Button onAction="#enterHistory" styleClass="main-menu-button" text="Historia"/>
+      <Button onAction="#closeApp" styleClass="main-menu-button" text="Wyjście"/>
     </VBox>
-    <stylesheets>
-        <URL value="@style.css" />
-    </stylesheets>
-</AnchorPane>
+  </Pane>
+  <stylesheets>
+    <URL value="@style.css"/>
+  </stylesheets>
+</HBox>

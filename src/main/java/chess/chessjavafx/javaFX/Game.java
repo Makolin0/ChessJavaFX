@@ -12,7 +12,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -183,7 +182,6 @@ public class Game implements Initializable {
                     tableView.getItems().add(0, new MoveRow());
                     break;
                     case 2:
-                        System.out.println("Nigdy nie powinno byc");
                         break;
         }
         this.tableView.refresh();

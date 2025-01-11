@@ -106,7 +106,6 @@ public class Checkerboard {
 
             // roszada
             if(destination.getCastling() != null){
-                System.out.println("castling: " + destination.getCastling());
                 Piece castlingRook = board.get(destination.getCastling().getStartPosition().getInt());
                 board.remove(destination.getCastling().getStartPosition().getInt());
                 board.put(destination.getCastling().getEndPosition().getInt(), castlingRook);
@@ -178,7 +177,6 @@ public class Checkerboard {
                 }
             }
         }
-        System.out.println("SZACH MAT!!");
         return true;
     }
 
