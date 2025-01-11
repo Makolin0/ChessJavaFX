@@ -50,7 +50,10 @@ public class History implements Initializable {
         Path dir = Paths.get("data");
         try(DirectoryStream<Path> ds = Files.newDirectoryStream(dir)){
             for(Path file : ds){
-                games.add(new GameData(file));
+                GameData gameData = new GameData(file);
+                if(gameData.getWinner() != null)
+                    games.add(gameData);
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -31,8 +31,8 @@ import java.util.*;
 
 public class Game implements Initializable {
 
-    private static final int SQUARE_SIZE = 100;
-    private static final int BORDER_SHIFT = 25;
+    private static final int SQUARE_SIZE = 80;
+    private static final int BORDER_SHIFT = 15;
     private static final Color LIGHT_COLOR = Color.WHITE;
     private static final Color DARK_COLOR = Color.DARKGRAY;
 
@@ -125,14 +125,14 @@ public class Game implements Initializable {
             Text text = new Text();
             text.setText(Integer.toString(i + 1));
             text.setX(5 + BORDER_SHIFT);
-            text.setY((8 - i) * SQUARE_SIZE - 85 + BORDER_SHIFT);
+            text.setY((8 - i) * SQUARE_SIZE + BORDER_SHIFT - ((double) (SQUARE_SIZE * 5) / 6));
             positionText.add(text);
         }
         // alphabet
         for (int i = 0; i < 8; i++) {
             Text text = new Text();
             text.setText((char) (i + 'a') + "");
-            text.setX(i * SQUARE_SIZE + 85 + BORDER_SHIFT);
+            text.setX(i * SQUARE_SIZE + BORDER_SHIFT + ((double) (SQUARE_SIZE * 5) / 6));
             text.setY(8 * SQUARE_SIZE - 5 + BORDER_SHIFT);
             positionText.add(text);
         }
@@ -143,7 +143,7 @@ public class Game implements Initializable {
 
 
     public void setPlayer(Team currentPlayer) {
-        if(currentPlayer == Team.WHITE) {
+        if (currentPlayer == Team.WHITE) {
             System.out.println("Bialy");
             timerWhiteBg.getStyleClass().add("timer-current");
             timerBlackBg.getStyleClass().remove("timer-current");
@@ -188,6 +188,8 @@ public class Game implements Initializable {
             Position pos = new Position(key);
             img.setX(pos.getX() * SQUARE_SIZE + BORDER_SHIFT);
             img.setY((7 - pos.getY()) * SQUARE_SIZE + BORDER_SHIFT);
+            img.setFitHeight(SQUARE_SIZE);
+            img.setFitWidth(SQUARE_SIZE);
         });
         board.getChildren().removeAll(new ArrayList<>(pieceImgs.values()));
         pieceImgs.clear();

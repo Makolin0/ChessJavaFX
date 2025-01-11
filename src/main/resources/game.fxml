@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane alignment="CENTER" prefHeight="900.0" prefWidth="1200.0" styleClass="game-pane"
+<GridPane alignment="CENTER" prefHeight="900.0" prefWidth="1200.0" styleClass="game-pane, main-padding"
           xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="chess.chessjavafx.javaFX.Game">
 
@@ -14,16 +14,15 @@
   <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" alignment="CENTER">
     <Text text="Aktualny gracz"/>
     <Text fx:id="currentPlayerText" styleClass="current-player"/>
+    <HBox alignment="CENTER">
+      <FlowPane fx:id="timerWhiteBg" styleClass="timer-bg, timer-bg-white">
+        <Text fx:id="timerWhiteText" styleClass="timer-text"/>
+      </FlowPane>
+      <FlowPane fx:id="timerBlackBg" styleClass="timer-bg, timer-bg-black">
+        <Text fx:id="timerBlackText" styleClass="timer-text"/>
+      </FlowPane>
+    </HBox>
   </VBox>
-
-  <HBox GridPane.columnIndex="2" GridPane.rowIndex="0">
-    <FlowPane fx:id="timerWhiteBg" styleClass="timer-bg, timer-bg-white">
-      <Text fx:id="timerWhiteText" styleClass="timer-text"/>
-    </FlowPane>
-    <FlowPane fx:id="timerBlackBg" styleClass="timer-bg, timer-bg-black">
-      <Text fx:id="timerBlackText" styleClass="timer-text"/>
-    </FlowPane>
-  </HBox>
 
   <VBox spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
     <Text fx:id="timerText"/>
@@ -31,7 +30,7 @@
     <Text fx:id="comDifficultyText"/>
   </VBox>
 
-  <Pane prefHeight="850.0" prefWidth="850.0" styleClass="board" GridPane.columnIndex="1" GridPane.rowIndex="1">
+  <Pane prefHeight="670.0" prefWidth="670.0" styleClass="board" GridPane.columnIndex="1" GridPane.rowIndex="1">
     <Pane fx:id="board"/>
   </Pane>
 

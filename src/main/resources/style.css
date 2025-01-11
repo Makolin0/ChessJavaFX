@@ -2,6 +2,7 @@
     font-family: 'Lato';
     src: url('fonts/Lato-Regular.ttf');
 }
+
 @font-face {
     font-family: 'Lato';
     src: url('fonts/Lato-Bold.ttf');
@@ -27,6 +28,7 @@
     -fx-font-weight: bold;
     -fx-font-size: 64px;
 }
+
 .main-menu-button {
     -fx-font-weight: bold;
     -fx-font-size: 32px;
@@ -34,9 +36,11 @@
     -fx-background-color: #73a1e3;
     -fx-background-radius: 10px;
 }
+
 .main-menu-button:hover {
     -fx-background-color: #5d82b6;
 }
+
 .main-menu-button:pressed {
     -fx-background-color: #4c6c98;
 }
@@ -55,7 +59,7 @@
     -fx-vgap: 3px;
 }
 
-.selection-grid Button{
+.selection-grid Button {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
 
@@ -73,7 +77,6 @@
     -fx-background-color: #f86464;
     -fx-background-radius: 10px;
 }
-
 
 
 .game-pane {
@@ -106,6 +109,8 @@
 .timer-bg {
     -fx-background-color: #999;
     -fx-alignment: center;
+    -fx-max-width: 200px;
+    -fx-padding: 10px 20px;
 }
 
 .timer-text {
@@ -116,13 +121,17 @@
 
 .timer-bg-white {
     -fx-background-radius: 20px 0 0 20px;
+    -fx-border-radius: 20px 0 0 20px;
 }
 
 .timer-bg-black {
     -fx-background-radius: 0 20px 20px 0;
+    -fx-border-radius: 0 20px 20px 0;
 }
 
 .timer-current {
     -fx-border-color: red;
     -fx-border-width: 3px;
+    -fx-background-color: #eee;
+    /*-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 5, 5);*/
 }

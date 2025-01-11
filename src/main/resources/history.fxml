@@ -18,7 +18,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
         </columnResizePolicy>
     </TableView>
-        <Button onAction="#goBack" text="Wróć" />
+        <Button styleClass="back-button" onAction="#goBack" text="Wróć" />
     </VBox>
     </HBox>
     <stylesheets>
