@@ -99,7 +99,7 @@
     -fx-text-alignment: center;
 }
 
-.alarm {
+.alarm-text {
     -fx-font-size: 32px;
     -fx-font-weight: bold;
     -fx-text-fill: #f00;
@@ -134,4 +134,16 @@
     -fx-border-width: 3px;
     -fx-background-color: #eee;
     /*-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 5, 5);*/
+}
+
+.check-bg {
+    -fx-background-color: red;
+    -fx-alignment: center;
+    -fx-max-width: 200px;
+    -fx-padding: 10px 20px;
+}
+.check-text {
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+    -fx-text-alignment: center;
 }

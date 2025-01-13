@@ -69,6 +69,10 @@ public class Game implements Initializable {
     public FlowPane timerWhiteBg;
     @FXML
     public FlowPane timerBlackBg;
+    @FXML
+    public FlowPane checkBg;
+    @FXML
+    public FlowPane alarmBg;
 
     private List<Rectangle> squares;
     private Map<Integer, ImageView> pieceImgs;
@@ -94,6 +98,7 @@ public class Game implements Initializable {
         setPlayer(Team.WHITE);
 
         this.alarm.setVisible(false);
+        this.alarmBg.setVisible(false);
 
         this.tableView.getItems().add(0, new MoveRow());
 
@@ -228,7 +233,9 @@ public class Game implements Initializable {
     public void modifyCheck(Team team) {
         if (team == null) {
             checkText.setText("");
+            checkBg.setVisible(false);
         } else {
+            checkBg.setVisible(true);
             checkText.setText("Szach dla: " + team);
         }
     }
@@ -262,6 +269,7 @@ public class Game implements Initializable {
 
     public void setAlarmVisibility(Boolean isVisible) {
         alarm.setVisible(isVisible);
+        alarmBg.setVisible(isVisible);
     }
 
     public void setInfo(Team vsAI, Integer difficulty, Integer timer) {

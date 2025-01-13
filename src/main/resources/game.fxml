@@ -11,7 +11,7 @@
 
   <Button onAction="#goBack" styleClass="back-button" text="Wróć" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
 
-  <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" alignment="CENTER">
+  <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="0">
     <Text text="Aktualny gracz"/>
     <Text fx:id="currentPlayerText" styleClass="current-player"/>
     <HBox alignment="CENTER">
@@ -44,10 +44,14 @@
     </columnResizePolicy>
   </TableView>
 
-  <Pane GridPane.columnIndex="1" GridPane.rowIndex="2">
-    <Text fx:id="checkText"/>
-    <Text fx:id="alarm" fill="RED" styleClass="alarm" text="COFNIJ DO POPRZEDNIEGO STANU"/>
-  </Pane>
+  <VBox alignment="CENTER" spacing="10"  GridPane.columnIndex="1" GridPane.rowIndex="2">
+    <FlowPane alignment="CENTER" fx:id="checkBg" styleClass="check-bg">
+      <Text fx:id="checkText" fill="WHITE" styleClass="check-text" text="Szach dla: Biały!"/>
+    </FlowPane>
+    <FlowPane alignment="CENTER" fx:id="alarmBg" styleClass="check-bg">
+      <Text fx:id="alarm" fill="WHITE" styleClass="alarm-text" text="COFNIJ DO POPRZEDNIEGO STANU"/>
+    </FlowPane>
+  </VBox>
 
   <VBox spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
     <TextField fx:id="positionField"/>
