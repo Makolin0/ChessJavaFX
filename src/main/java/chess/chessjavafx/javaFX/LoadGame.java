@@ -34,13 +34,19 @@ public class LoadGame implements Initializable {
     public TableColumn<GameData, String> aiCol;
     @FXML
     public TableView<GameData> tableView;
+    @FXML
+    public TableColumn<GameData, String> whiteTimerCol;
+    @FXML
+    public TableColumn<GameData, String> blackTimerCol;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dateCol.setCellValueFactory(new PropertyValueFactory<>("startTimeString"));
-        timerCol.setCellValueFactory(new PropertyValueFactory<>("timerMinutes"));
+        timerCol.setCellValueFactory(new PropertyValueFactory<>("timerMinutesString"));
         aiCol.setCellValueFactory(new PropertyValueFactory<>("aiDifficulty"));
+        whiteTimerCol.setCellValueFactory(new PropertyValueFactory<>("whiteTimerLeftString"));
+        blackTimerCol.setCellValueFactory(new PropertyValueFactory<>("blackTimerLeftString"));
 
         tableView.getItems().setAll(loadGames());
         generateRowClick();

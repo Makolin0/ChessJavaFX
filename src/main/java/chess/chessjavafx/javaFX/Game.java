@@ -149,12 +149,10 @@ public class Game implements Initializable {
 
     public void setPlayer(Team currentPlayer) {
         if (currentPlayer == Team.WHITE) {
-            System.out.println("Bialy");
             timerWhiteBg.getStyleClass().add("timer-current");
             timerBlackBg.getStyleClass().remove("timer-current");
             currentPlayerText.setText("Biały");
         } else {
-            System.out.println("Czarny");
             timerBlackBg.getStyleClass().add("timer-current");
             timerWhiteBg.getStyleClass().remove("timer-current");
             currentPlayerText.setText("Czarny");
@@ -278,11 +276,10 @@ public class Game implements Initializable {
         timerText.setText(timer == null ? "Czas: nieskończoność" : "Czas: " + timer + " minut");
     }
 
-    public void updateTimer(Team team, Duration timeLeft) {
-        String displayedTime = timeLeft.toMinutesPart() + String.format(":%02d", timeLeft.toSecondsPart());
+    public void updateTimer(Team team, String timeLeft) {
         if (team == Team.WHITE)
-            timerWhiteText.setText(displayedTime);
+            timerWhiteText.setText(timeLeft);
         if (team == Team.BLACK)
-            timerBlackText.setText(displayedTime);
+            timerBlackText.setText(timeLeft);
     }
 }

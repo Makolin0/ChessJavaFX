@@ -43,8 +43,8 @@ public class GameController {
         this.gameData = new GameData(timerMinutes, vsAI, difficulty);
 
         game.setInfo(vsAI, difficulty, timerMinutes);
-        game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeft());
-        game.updateTimer(Team.BLACK, gameData.getBlackTimerLeft());
+        game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeftString());
+        game.updateTimer(Team.BLACK, gameData.getBlackTimerLeftString());
 
         this.currentPlayer = Team.WHITE;
         this.currentTurnStart = LocalDateTime.now();
@@ -78,8 +78,8 @@ public class GameController {
         loadGame();
 
         game.setInfo(gameData.getVsAI(), gameData.getAiDifficulty(), gameData.getTimerMinutes());
-        game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeft());
-        game.updateTimer(Team.BLACK, gameData.getBlackTimerLeft());
+        game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeftString());
+        game.updateTimer(Team.BLACK, gameData.getBlackTimerLeftString());
 
         this.currentTurnStart = LocalDateTime.now();
         this.currentPieceMoveset = null;
@@ -104,9 +104,9 @@ public class GameController {
 
         gameData.lowerTimer(currentPlayer, Duration.between(currentTurnStart, LocalDateTime.now()));
         if(currentPlayer == Team.WHITE)
-            game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeft());
+            game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeftString());
         if(currentPlayer == Team.BLACK)
-            game.updateTimer(Team.BLACK, gameData.getBlackTimerLeft());
+            game.updateTimer(Team.BLACK, gameData.getBlackTimerLeftString());
 
         game.updateAllPieces(checkerboard);
         game.clearBoard();
@@ -201,7 +201,7 @@ public class GameController {
 
         scheduler.scheduleAtFixedRate(() -> {
             timeLeft = timeLeft.minusSeconds(1);
-            game.updateTimer(currentPlayer, timeLeft);
+            game.updateTimer(currentPlayer, timeLeft.toMinutesPart() + String.format(":%02d", timeLeft.toSecondsPart()));
             if (timeLeft.isNegative()) {
                 stopTimer();
                 // TODO - CO ZROBIC JAK SKONCZY SIE CZAS

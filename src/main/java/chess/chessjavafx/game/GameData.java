@@ -103,12 +103,23 @@ public class GameData {
         return timerMinutes;
     }
 
+    public String getTimerMinutesString() {
+        return timerMinutes == null ? "inf." : timerMinutes.toString();
+    }
+
     public Duration getBlackTimerLeft() {
         return blackTimerLeft;
     }
 
     public Duration getWhiteTimerLeft() {
         return whiteTimerLeft;
+    }
+    public String getBlackTimerLeftString() {
+        return whiteTimerLeft == null ? "inf." : whiteTimerLeft.toMinutesPart() + String.format(":%02d", whiteTimerLeft.toSecondsPart());
+    }
+
+    public String getWhiteTimerLeftString() {
+        return blackTimerLeft == null ? "inf." : blackTimerLeft.toMinutesPart() + String.format(":%02d", blackTimerLeft.toSecondsPart());
     }
 
 
