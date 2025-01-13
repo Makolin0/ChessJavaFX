@@ -29,9 +29,9 @@ public class LoadGame implements Initializable {
     @FXML
     public TableColumn<GameData, String> dateCol;
     @FXML
-    public TableColumn<GameData, String> lengthCol;
+    public TableColumn<GameData, String> timerCol;
     @FXML
-    public TableColumn<GameData, String> winnerCol;
+    public TableColumn<GameData, String> aiCol;
     @FXML
     public TableView<GameData> tableView;
 
@@ -39,8 +39,8 @@ public class LoadGame implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dateCol.setCellValueFactory(new PropertyValueFactory<>("startTimeString"));
-        lengthCol.setCellValueFactory(new PropertyValueFactory<>("durationString"));
-        winnerCol.setCellValueFactory(new PropertyValueFactory<>("winner"));
+        timerCol.setCellValueFactory(new PropertyValueFactory<>("timerMinutes"));
+        aiCol.setCellValueFactory(new PropertyValueFactory<>("aiDifficulty"));
 
         tableView.getItems().setAll(loadGames());
         generateRowClick();
