@@ -97,8 +97,8 @@ public class Game implements Initializable {
 
         setPlayer(Team.WHITE);
 
-        this.alarm.setVisible(false);
         this.alarmBg.setVisible(false);
+        this.checkBg.setVisible(false);
 
         this.tableView.getItems().add(0, new MoveRow());
 

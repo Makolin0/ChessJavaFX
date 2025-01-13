@@ -46,7 +46,7 @@
 
   <VBox alignment="CENTER" spacing="10"  GridPane.columnIndex="1" GridPane.rowIndex="2">
     <FlowPane alignment="CENTER" fx:id="checkBg" styleClass="check-bg">
-      <Text fx:id="checkText" fill="WHITE" styleClass="check-text" text="Szach dla: Biały!"/>
+      <Text fx:id="checkText" fill="WHITE" styleClass="check-text"/>
     </FlowPane>
     <FlowPane alignment="CENTER" fx:id="alarmBg" styleClass="check-bg">
       <Text fx:id="alarm" fill="WHITE" styleClass="alarm-text" text="COFNIJ DO POPRZEDNIEGO STANU"/>
