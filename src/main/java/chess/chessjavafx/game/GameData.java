@@ -114,11 +114,11 @@ public class GameData {
     public Duration getWhiteTimerLeft() {
         return whiteTimerLeft;
     }
-    public String getBlackTimerLeftString() {
+    public String getWhiteTimerLeftString() {
         return whiteTimerLeft == null ? "inf." : whiteTimerLeft.toMinutesPart() + String.format(":%02d", whiteTimerLeft.toSecondsPart());
     }
 
-    public String getWhiteTimerLeftString() {
+    public String getBlackTimerLeftString() {
         return blackTimerLeft == null ? "inf." : blackTimerLeft.toMinutesPart() + String.format(":%02d", blackTimerLeft.toSecondsPart());
     }
 
