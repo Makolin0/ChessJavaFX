@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -134,16 +133,18 @@ public class GameController {
         saveMove(move);
     }
 
-    public void pickUp(Position position){
+    public boolean pickUp(Position position){
         if(!isIllegal && currentPlayer == checkerboard.getPieceTeam(position)){
             currentPieceMoveset = checkerboard.possibleMoves(position);
             game.showMoveset(currentPieceMoveset);
+            return true;
         } else {
-            setAlarm();
+            enableAlarm();
+            return false;
         }
     }
 
-    public void place(Position destination) {
+    public boolean place(Position destination) {
         if(!isIllegal){
 //            podniesienie gdy legalne
             if(currentPieceMoveset.getMovableList().contains(destination) || currentPieceMoveset.getBeatableList().contains(destination)){
@@ -157,32 +158,34 @@ public class GameController {
                     aiMove();
                 }
 
+                return true;
             } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
 //                odłożenie figury
                 game.clearBoard();
                 currentPieceMoveset = null;
+
+                return true;
             } else {
 //                nielegalny ruch
-                setAlarm();
+                enableAlarm();
+                return false;
             }
         }
+        return false;
     }
 
-    private void setAlarm(){
+    public void enableAlarm(){
         isIllegal = true;
         game.setAlarmVisibility(true);
         game.clearBoard();
         currentPieceMoveset = null;
-        // TODO - Informuj płytkę Arduino żeby wysyłała cały stan
     }
 
-    public void fixBoard(List<Integer> physicalBoard){
-        if(checkerboard.checkIfLegal(physicalBoard)){
-            isIllegal = false;
-            game.setAlarmVisibility(false);
-            game.clearBoard();
-            currentPieceMoveset = null;
-        }
+    public void disableAlarm(){
+        isIllegal = false;
+        game.setAlarmVisibility(false);
+        game.clearBoard();
+        currentPieceMoveset = null;
     }
 
     private void loadGame() {
