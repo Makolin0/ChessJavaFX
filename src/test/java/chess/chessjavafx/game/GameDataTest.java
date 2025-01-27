@@ -1,6 +1,5 @@
 package chess.chessjavafx.game;
 
-import chess.chessjavafx.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +32,7 @@ class GameDataTest {
         gm.addMove(new Move(new Position(4, 1), new Position(2, 6)));
 
 //        gm.setWinner(Winner.WHITE);
-        gm.setDuration(Duration.ofHours(2));
+        gm.setGameDuration(Duration.ofHours(2));
 
         gm.save();
     }

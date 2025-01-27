@@ -18,7 +18,7 @@ public class GameData {
 
     private final List<Move> moves;
     private LocalDateTime startTime;
-    private Duration duration;
+    private Duration gameDuration;
     private Winner winner;
 
     private Team vsAI;
@@ -34,7 +34,7 @@ public class GameData {
         this.moves = new ArrayList<>();
         this.startTime = LocalDateTime.now();
 
-        this.duration = null;
+        this.gameDuration = Duration.ZERO;
         this.winner = null;
         this.vsAI = vsAI;
         this.aiDifficulty = aiDifficulty;
@@ -61,12 +61,12 @@ public class GameData {
         this.winner = winner;
     }
 
-    public Duration getDuration() {
-        return duration;
+    public Duration getGameDuration() {
+        return gameDuration;
     }
 
-    public void setDuration(Duration duration) {
-        this.duration = duration;
+    public void setGameDuration(Duration gameDuration) {
+        this.gameDuration = gameDuration;
     }
 
     public List<Move> getMoves() {
@@ -82,13 +82,13 @@ public class GameData {
     }
 
     public String getDurationString() {
-        if(duration == null) {
+        if(gameDuration == null) {
             return "";
         }
-        if(duration.toHours() >= 1){
-            return duration.toHoursPart() + String.format(":%02d", duration.toMinutesPart()) + String.format(":%02d", duration.toSecondsPart());
+        if(gameDuration.toHours() >= 1){
+            return gameDuration.toHoursPart() + String.format(":%02d", gameDuration.toMinutesPart()) + String.format(":%02d", gameDuration.toSecondsPart());
         }
-        return duration.toMinutesPart() + String.format(":%02d", duration.toSecondsPart());
+        return gameDuration.toMinutesPart() + String.format(":%02d", gameDuration.toSecondsPart());
     }
 
     public Team getVsAI() {
@@ -103,12 +103,23 @@ public class GameData {
         return timerMinutes;
     }
 
+    public String getTimerMinutesString() {
+        return timerMinutes == null ? "inf." : timerMinutes.toString();
+    }
+
     public Duration getBlackTimerLeft() {
         return blackTimerLeft;
     }
 
     public Duration getWhiteTimerLeft() {
         return whiteTimerLeft;
+    }
+    public String getWhiteTimerLeftString() {
+        return whiteTimerLeft == null ? "inf." : whiteTimerLeft.toMinutesPart() + String.format(":%02d", whiteTimerLeft.toSecondsPart());
+    }
+
+    public String getBlackTimerLeftString() {
+        return blackTimerLeft == null ? "inf." : blackTimerLeft.toMinutesPart() + String.format(":%02d", blackTimerLeft.toSecondsPart());
     }
 
 
@@ -131,6 +142,7 @@ public class GameData {
             blackTimerLeft = blackTimerLeft.minus(duration);
         }
 
+        gameDuration = gameDuration.plus(duration);
         save();
     }
 
@@ -146,7 +158,7 @@ public class GameData {
             bufferedWriter.write(whiteTimerLeft + "\n");
             bufferedWriter.write(blackTimerLeft + "\n");
             bufferedWriter.write(winner + "\n");
-            bufferedWriter.write(duration + "\n");
+            bufferedWriter.write(gameDuration + "\n");
 
             for (Move move : moves) {
                 bufferedWriter.write(move.toString() + "\n");
@@ -185,7 +197,7 @@ public class GameData {
             winner = "null".equals(line) ? null : Winner.valueOf(line);
 
             line = br.readLine();
-            duration = "null".equals(line) ? null : Duration.parse(line);
+            gameDuration = "null".equals(line) ? null : Duration.parse(line);
 
             String moveString;
             moves.clear();
