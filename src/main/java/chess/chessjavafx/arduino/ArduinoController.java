@@ -10,12 +10,15 @@ import java.util.TimerTask;
 
 public class ArduinoController extends TimerTask implements SerialPortDataListener {
     private final GameController gameController;
-    private String board;
     private boolean alarm;
+    private String prevBoard;
+    private String newBoard;
 
     public ArduinoController(GameController gameController) {
         this.gameController = gameController;
-        this.board = "";
+        // TODO - ustaw startowe rozłożenie pionków
+        this.prevBoard = "0000000000000000000000000000000000000000000000000000000000000000";
+        this.newBoard = "";
         this.alarm = false;
     }
 
@@ -27,9 +30,25 @@ public class ArduinoController extends TimerTask implements SerialPortDataListen
     @Override
     public void serialEvent(SerialPortEvent serialPortEvent) {
         if(serialPortEvent.getEventType() == SerialPort.LISTENING_EVENT_DATA_RECEIVED){
-            byte[] receivedData = serialPortEvent.getReceivedData();
-            System.out.println("Received: " + new String(receivedData));
-//            gameController.sendPosition(new Position(1, 1));
+            String receivedFragment = new String(serialPortEvent.getReceivedData());
+
+            // new message
+            if(receivedFragment.startsWith("s")) {
+                newBoard = receivedFragment.substring(1);
+                return;
+            }
+            // final part of message
+            if(receivedFragment.endsWith("e")){
+                newBoard = newBoard.concat(receivedFragment.substring(0,receivedFragment.length()-1));
+//                System.out.println("message: " + newMessage);
+                if(!alarm) {
+                    loadBoard();
+                } else {
+                    restoreBoard();
+                }
+                return;
+            }
+            newBoard = newBoard.concat(receivedFragment);
         }
     }
 
@@ -38,43 +57,48 @@ public class ArduinoController extends TimerTask implements SerialPortDataListen
         // System.out.println("Time elapsed: " +(System.currentTimeMillis() - this.timeStart) + " miliseconds ");
     }
 
-    public void setBoard(String board) {
-        if(!alarm){
-            loadBoard(board);
-        } else {
-            if (this.board.equals(board)) {
-                alarm = false;
-                gameController.disableAlarm();
-            }
+    public void restoreBoard() {
+        if (newBoard.equals(prevBoard)) {
+            alarm = false;
+            gameController.disableAlarm();
         }
     }
 
-    private void loadBoard(String bytes) {
-        if(bytes.length() != 64){
-            throw new IllegalArgumentException("bytes length must be 64");
-        }
+    private void loadBoard() {
+        String[] slicedMessage = newBoard.split(" ");
+        slicedMessage[0] = String.format("%32s", Long.toBinaryString(Long.parseLong(slicedMessage[0]))).replace(' ', '0');
+        slicedMessage[1] = String.format("%32s", Long.toBinaryString(Long.parseLong(slicedMessage[1]))).replace(' ', '0');
+        String newBoard = slicedMessage[0].concat(slicedMessage[1]);
 
-        if(bytes.equals(board)) {
+//        System.out.println(newBoard);
+
+        if(prevBoard.equals(newBoard)) {
             return;
         }
 
-        boolean positive = true;
+        boolean noAlarm = true;
         for(int i = 0; i < 64; i++) {
-            if(board.charAt(i) != bytes.charAt(i)) {
-                if(bytes.charAt(i) == '0'){
-                    positive = gameController.pickUp(new Position(i)) && positive;
+            if(newBoard.charAt(i) != prevBoard.charAt(i)) {
+                if(newBoard.charAt(i) == '0'){
+//                    noAlarm = gameController.pickUp(new Position(i));
+                    System.out.println("pick up: " + new Position(i));
                 } else {
-                    positive = gameController.place(new Position(i)) && positive;
+//                    noAlarm = gameController.place(new Position(i));
+                    System.out.println("place: " + new Position(i));
                 }
+                break;
             }
         }
 
-        if(positive) {
-            board = bytes;
+        if(noAlarm) {
+            prevBoard = newBoard;
         } else {
-            alarm = true;
-            gameController.enableAlarm();
+            enableAlarm();
         }
     }
 
+    private void enableAlarm() {
+        alarm = true;
+        gameController.enableAlarm();
+    }
 }

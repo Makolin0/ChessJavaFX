@@ -3,6 +3,7 @@ module chess.chessjavafx {
     requires javafx.fxml;
     requires com.fazecast.jSerialComm;
     requires java.desktop;
+    requires jssc;
 
 
     opens chess.chessjavafx to javafx.fxml;
