@@ -148,7 +148,6 @@ public class GameData {
 
     public void save(){
         String filename = startTime.format(formatter) + ".txt";
-
         try{
             bufferedWriter = new BufferedWriter(new FileWriter("data/" + filename));
 
@@ -163,7 +162,6 @@ public class GameData {
             for (Move move : moves) {
                 bufferedWriter.write(move.toString() + "\n");
             }
-
             bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -171,34 +169,32 @@ public class GameData {
     }
 
     public void load(Path file){
+        // opens writer and reader to file
         try(BufferedReader br = new BufferedReader(new FileReader(String.valueOf(file)))){
             bufferedWriter = new BufferedWriter(new FileWriter(String.valueOf(file), true));
 
+            // loads start time from filename
             String fileName = file.getFileName().toString();
             String dateString = fileName.substring(0, fileName.length()-4);
             startTime = LocalDateTime.parse(dateString, formatter);
 
+            // loads game parameters from 7 first lines
             String line = br.readLine();
             vsAI = "null".equals(line) ? null : Team.valueOf(line);
-
             line = br.readLine();
             aiDifficulty = "null".equals(line) ? null : Integer.parseInt(line);
-
             line = br.readLine();
             timerMinutes = "null".equals(line) ? null : Integer.parseInt(line);
-
             line = br.readLine();
             whiteTimerLeft = "null".equals(line) ? null : Duration.parse(line);
-
             line = br.readLine();
             blackTimerLeft = "null".equals(line) ? null : Duration.parse(line);
-
             line = br.readLine();
             winner = "null".equals(line) ? null : Winner.valueOf(line);
-
             line = br.readLine();
             gameDuration = "null".equals(line) ? null : Duration.parse(line);
 
+            // all next lines are moves from start to end
             String moveString;
             moves.clear();
             while ((moveString = br.readLine()) != null){

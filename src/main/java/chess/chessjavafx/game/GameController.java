@@ -1,8 +1,11 @@
 package chess.chessjavafx.game;
 
+import chess.chessjavafx.Winner;
+import chess.chessjavafx.arduino.SerialInit;
 import chess.chessjavafx.javaFX.Game;
 import chess.chessjavafx.packages.Moveset;
 import chess.chessjavafx.Team;
+import com.fazecast.jSerialComm.SerialPort;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
@@ -10,7 +13,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +31,10 @@ public class GameController {
     private Moveset currentPieceMoveset;
     private Boolean isIllegal;
 
-    private final String enginePath = "/home/adamz/Documents/stockfish/stockfish-ubuntu-x86-64-avx2";
+    private Move aiTurn;
+    private boolean arduinoOn;
+
+    private final String enginePath = "./stockfish";
 
     public GameController(Stage stage, Integer timerMinutes, Team vsAI, Integer difficulty) throws IOException {
         this.checkerboard = new Checkerboard();
@@ -39,6 +44,7 @@ public class GameController {
         this.game = loader.getController();
         game.updateAllPieces(checkerboard);
         game.setGameController(this);
+
 
         this.gameData = new GameData(timerMinutes, vsAI, difficulty);
 
@@ -50,19 +56,31 @@ public class GameController {
         this.currentTurnStart = LocalDateTime.now();
         this.currentPieceMoveset = null;
         this.isIllegal = false;
+        this.aiTurn = null;
 
-        if(vsAI != null)
+        if (vsAI != null)
             this.engine = new Engine(difficulty, enginePath);
 
 
-        if(vsAI == Team.WHITE)
+        if (vsAI == Team.WHITE)
             aiMove();
 
         stage.getScene().setRoot(root);
         stage.show();
 
+
+
         timeLeft = currentPlayer == Team.WHITE ? gameData.getWhiteTimerLeft() : gameData.getBlackTimerLeft();
         startTimer();
+
+        String portName = findArduino();
+        if(portName != null) {
+            new SerialInit(this, portName);
+            arduinoOn = true;
+            game.hideSimulator();
+        } else {
+            arduinoOn = false;
+        }
     }
 
     public GameController(Stage stage, GameData gameData) throws IOException {
@@ -84,109 +102,145 @@ public class GameController {
         this.currentTurnStart = LocalDateTime.now();
         this.currentPieceMoveset = null;
         this.isIllegal = false;
+        this.aiTurn = null;
 
-        if(gameData.getVsAI() != null)
+        if (gameData.getVsAI() != null)
             this.engine = new Engine(gameData.getAiDifficulty(), enginePath);
 
         stage.getScene().setRoot(root);
         stage.show();
 
+        String portName = findArduino();
+        if(portName != null) {
+            new SerialInit(this, portName);
+            game.hideSimulator();
+            arduinoOn = true;
+        } else {
+            arduinoOn = false;
+        }
+
         timeLeft = currentPlayer == Team.WHITE ? gameData.getWhiteTimerLeft() : gameData.getBlackTimerLeft();
         startTimer();
     }
 
-    private void swapTeam(){
+    private void swapTeam() {
         currentPlayer = currentPlayer == Team.WHITE ? Team.BLACK : Team.WHITE;
     }
 
-    private void saveMove(Move move){
+    private void saveMove(Move move) {
         gameData.addMove(move);
-
         gameData.lowerTimer(currentPlayer, Duration.between(currentTurnStart, LocalDateTime.now()));
-        if(currentPlayer == Team.WHITE)
-            game.updateTimer(Team.WHITE, gameData.getWhiteTimerLeftString());
-        if(currentPlayer == Team.BLACK)
-            game.updateTimer(Team.BLACK, gameData.getBlackTimerLeftString());
 
+        game.updateTimer(currentPlayer, currentPlayer == Team.WHITE ? gameData.getWhiteTimerLeftString() : gameData.getBlackTimerLeftString());
         game.updateAllPieces(checkerboard);
         game.clearBoard();
         game.saveMove(move);
         swapTeam();
         game.setPlayer(currentPlayer);
         currentPieceMoveset = null;
-        currentTurnStart = LocalDateTime.now();
 
         Team checkTeam = checkerboard.lookForCheck();
         game.modifyCheck(checkTeam);
-        if(checkTeam != null){
-            if(checkerboard.lookForCheckmate(checkTeam)){
-                // TODO - co zrobic po wykryciu szach mat
+        if (checkTeam != null) {
+            if (checkerboard.lookForCheckmate(checkTeam)) {
+                endGame(checkTeam);
             }
         }
 
         timeLeft = currentPlayer == Team.WHITE ? gameData.getWhiteTimerLeft() : gameData.getBlackTimerLeft();
+        currentTurnStart = LocalDateTime.now();
+    }
+
+    private void endGame(Team loser) {
+        Winner winner = loser == Team.WHITE ? Winner.BLACK : Winner.WHITE;
+        gameData.setWinner(winner);
+        gameData.save();
+        game.setEndScene(winner);
     }
 
     private void aiMove() {
-        Move move = engine.calculateMove(gameData.getMoves());
-
-        checkerboard.move(move);
-        saveMove(move);
+        aiTurn = engine.calculateMove(gameData.getMoves());
+        game.colorAiMove(aiTurn);
+        checkerboard.move(aiTurn);
     }
 
-    public void pickUp(Position position){
-        if(!isIllegal && currentPlayer == checkerboard.getPieceTeam(position)){
+    public boolean pickUp(Position position) {
+        if(aiTurn != null && aiTurn.getStartPosition() != null) {
+            return position.equals(aiTurn.getStartPosition());
+        }
+
+        // picking up piece to beat
+        if (currentPieceMoveset != null && currentPieceMoveset.getBeatableList().contains(position)) {
+            return true;
+        }
+
+
+        if (!isIllegal && currentPlayer == checkerboard.getPieceTeam(position)) {
             currentPieceMoveset = checkerboard.possibleMoves(position);
             game.showMoveset(currentPieceMoveset);
+            return true;
         } else {
-            setAlarm();
+            enableAlarm();
+            return false;
         }
     }
 
-    public void place(Position destination) {
-        if(!isIllegal){
-//            podniesienie gdy legalne
-            if(currentPieceMoveset.getMovableList().contains(destination) || currentPieceMoveset.getBeatableList().contains(destination)){
-//                legalny ruch
-                Move move = new Move(currentPieceMoveset.getCurrentPosition(), destination);
-
-                checkerboard.move(move);
-                saveMove(move);
-
-                if (gameData.getVsAI() == currentPlayer) {
-                    aiMove();
-                }
-
-            } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
-//                odłożenie figury
-                game.clearBoard();
-                currentPieceMoveset = null;
+    public boolean place(Position destination) {
+        if(aiTurn != null) {
+            saveMove(aiTurn);
+            if(destination.equals(aiTurn.getEndPosition())){
+                aiTurn = null;
+                return true;
             } else {
-//                nielegalny ruch
-                setAlarm();
+                return false;
             }
         }
+
+        if (isIllegal)
+            return false;
+
+        if (currentPieceMoveset.getMovableList().contains(destination) || currentPieceMoveset.getBeatableList().contains(destination)) {
+            // makes move
+            Move move = new Move(currentPieceMoveset.getCurrentPosition(), destination);
+
+            checkerboard.move(move);
+            saveMove(move);
+
+            if (gameData.getVsAI() == currentPlayer)
+                aiMove();
+            return true;
+        } else if (currentPieceMoveset.getCurrentPosition().equals(destination)) {
+            // puts back piece
+            game.clearBoard();
+            currentPieceMoveset = null;
+            return true;
+        } else {
+            // makes illegal move
+            enableAlarm();
+            return false;
+        }
     }
 
-    private void setAlarm(){
+
+    public void enableAlarm() {
         isIllegal = true;
         game.setAlarmVisibility(true);
         game.clearBoard();
         currentPieceMoveset = null;
-        // TODO - Informuj płytkę Arduino żeby wysyłała cały stan
     }
 
-    public void fixBoard(List<Integer> physicalBoard){
-        if(checkerboard.checkIfLegal(physicalBoard)){
-            isIllegal = false;
-            game.setAlarmVisibility(false);
-            game.clearBoard();
-            currentPieceMoveset = null;
+    public void disableAlarm() {
+        isIllegal = false;
+        game.setAlarmVisibility(false);
+        game.clearBoard();
+        currentPieceMoveset = null;
+        if(aiTurn != null) {
+            game.colorAiMove(aiTurn);
         }
     }
 
     private void loadGame() {
-        for(Move move : gameData.getMoves()){
+        for (Move move : gameData.getMoves()) {
             checkerboard.move(move);
             game.saveMove(move);
         }
@@ -204,7 +258,7 @@ public class GameController {
             game.updateTimer(currentPlayer, timeLeft.toMinutesPart() + String.format(":%02d", timeLeft.toSecondsPart()));
             if (timeLeft.isNegative()) {
                 stopTimer();
-                // TODO - CO ZROBIC JAK SKONCZY SIE CZAS
+                endGame(currentPlayer);
             }
         }, 1, 1, TimeUnit.SECONDS);
     }
@@ -212,4 +266,16 @@ public class GameController {
     public void stopTimer() {
         scheduler.shutdown();
     }
+
+    private String findArduino() {
+        for (SerialPort port : SerialPort.getCommPorts()) {
+            String manufacturer = port.getManufacturer().toLowerCase();
+            if (manufacturer.contains("arduino")) {
+                return port.getSystemPortName();
+            }
+        }
+        return null;
+    }
 }
+
+

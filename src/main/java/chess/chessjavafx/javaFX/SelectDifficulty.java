@@ -1,7 +1,6 @@
 package chess.chessjavafx.javaFX;
 
 import chess.chessjavafx.Team;
-import chess.chessjavafx.game.GameController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -46,7 +45,7 @@ public class SelectDifficulty implements Initializable {
     @FXML
     private Button button14;
     @FXML
-    private Button button15;
+    private Button  button15;
     @FXML
     private Button button16;
     @FXML
@@ -60,46 +59,26 @@ public class SelectDifficulty implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        button1.setOnAction(event -> {
-            selectTimer(event, 1);});
-        button2.setOnAction(event -> {
-            selectTimer(event, 2);});
-        button3.setOnAction(event -> {
-            selectTimer(event, 3);});
-        button4.setOnAction(event -> {
-            selectTimer(event, 4);});
-        button5.setOnAction(event -> {
-            selectTimer(event, 5);});
-        button6.setOnAction(event -> {
-            selectTimer(event, 6);});
-        button7.setOnAction(event -> {
-            selectTimer(event, 7);});
-        button8.setOnAction(event -> {
-            selectTimer(event, 8);});
-        button9.setOnAction(event -> {
-            selectTimer(event, 9);});
-        button10.setOnAction(event -> {
-            selectTimer(event, 10);});
-        button11.setOnAction(event -> {
-            selectTimer(event, 11);});
-        button12.setOnAction(event -> {
-            selectTimer(event, 12);});
-        button13.setOnAction(event -> {
-            selectTimer(event, 13);});
-        button14.setOnAction(event -> {
-            selectTimer(event, 14);});
-        button15.setOnAction(event -> {
-            selectTimer(event, 15);});
-        button16.setOnAction(event -> {
-            selectTimer(event, 16);});
-        button17.setOnAction(event -> {
-            selectTimer(event, 17);});
-        button18.setOnAction(event -> {
-            selectTimer(event, 18);});
-        button19.setOnAction(event -> {
-            selectTimer(event, 19);});
-        button20.setOnAction(event -> {
-            selectTimer(event, 20);});
+        button1.setOnAction(event -> selectTimer(event, 1));
+        button2.setOnAction(event -> selectTimer(event, 2));
+        button3.setOnAction(event -> selectTimer(event, 3));
+        button4.setOnAction(event -> selectTimer(event, 4));
+        button5.setOnAction(event -> selectTimer(event, 5));
+        button6.setOnAction(event -> selectTimer(event, 6));
+        button7.setOnAction(event -> selectTimer(event, 7));
+        button8.setOnAction(event -> selectTimer(event, 8));
+        button9.setOnAction(event -> selectTimer(event, 9));
+        button10.setOnAction(event -> selectTimer(event, 10));
+        button11.setOnAction(event -> selectTimer(event, 11));
+        button12.setOnAction(event -> selectTimer(event, 12));
+        button13.setOnAction(event -> selectTimer(event, 13));
+        button14.setOnAction(event -> selectTimer(event, 14));
+        button15.setOnAction(event -> selectTimer(event, 15));
+        button16.setOnAction(event -> selectTimer(event, 16));
+        button17.setOnAction(event -> selectTimer(event, 17));
+        button18.setOnAction(event -> selectTimer(event, 18));
+        button19.setOnAction(event -> selectTimer(event, 19));
+        button20.setOnAction(event -> selectTimer(event, 20));
     }
 
     public void goBack(ActionEvent event) throws IOException {
