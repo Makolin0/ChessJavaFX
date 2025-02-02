@@ -76,7 +76,7 @@ public class GameController {
 
         String portName = findArduino();
         if(portName != null) {
-            new SerialInit(this, portName);
+            new SerialInit(this, portName, checkerboard.getBoard());
             arduinoOn = true;
             game.hideSimulator();
         } else {
@@ -113,7 +113,7 @@ public class GameController {
 
         String portName = findArduino();
         if(portName != null) {
-            new SerialInit(this, portName);
+            new SerialInit(this, portName, checkerboard.getBoard());
             game.hideSimulator();
             arduinoOn = true;
         } else {
