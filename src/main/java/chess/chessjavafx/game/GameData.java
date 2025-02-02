@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameData {
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm");
 
     private BufferedWriter bufferedWriter;
 
@@ -148,6 +148,7 @@ public class GameData {
 
     public void save(){
         String filename = startTime.format(formatter) + ".txt";
+        System.out.println(filename);
         try{
             bufferedWriter = new BufferedWriter(new FileWriter("data/" + filename));
 
