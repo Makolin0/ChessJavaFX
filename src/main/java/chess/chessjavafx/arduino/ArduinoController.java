@@ -6,6 +6,8 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimerTask;
 
 public class ArduinoController extends TimerTask implements SerialPortDataListener {
@@ -69,6 +71,14 @@ public class ArduinoController extends TimerTask implements SerialPortDataListen
         if (newBoard.equals(prevLegalBoard)) {
             prevBoard = prevLegalBoard;
             disableAlarm();
+        } else {
+            List<Position> wrongList = new ArrayList<>();
+            for (int i = 0; i < 64; i++) {
+                if (newBoard.charAt(i) != prevLegalBoard.charAt(i)) {
+                    wrongList.add(new Position(i/8, i%8));
+                }
+            }
+            gameController.colorWrongFields(wrongList);
         }
     }
 
@@ -86,6 +96,7 @@ public class ArduinoController extends TimerTask implements SerialPortDataListen
                         prevBoard = newBoard;
                     } else {
                         enableAlarm();
+                        restoreBoard();
                     }
                     System.out.println("pick up: " + new Position(i / 8, i % 8));
                 } else {
@@ -95,6 +106,7 @@ public class ArduinoController extends TimerTask implements SerialPortDataListen
                         prevLegalBoard = newBoard;
                     } else {
                         enableAlarm();
+                        restoreBoard();
                     }
                     System.out.println("place: " + new Position(i / 8, i % 8));
                 }

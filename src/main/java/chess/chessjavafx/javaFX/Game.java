@@ -177,7 +177,7 @@ public class Game implements Initializable {
         });
     }
 
-    private void colorBeatPos(Position pos) {
+    public void colorBeatPos(Position pos) {
         Platform.runLater(() -> {
             squares.get(pos.getInt()).setFill((pos.getX() + pos.getY()) % 2 == 0 ? Color.DARKRED : Color.RED);
         });
@@ -269,6 +269,7 @@ public class Game implements Initializable {
             colorCurrentPos(move.getEndPosition());
         });
     }
+
 
     public void sendPickUp() {
         Platform.runLater(() -> {
