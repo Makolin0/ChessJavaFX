@@ -1,14 +1,14 @@
 package chess.chessjavafx.game;
 
-import chess.chessjavafx.arduino.ArduinoController;
+import chess.chessjavafx.Winner;
 import chess.chessjavafx.arduino.SerialInit;
 import chess.chessjavafx.javaFX.Game;
 import chess.chessjavafx.packages.Moveset;
 import chess.chessjavafx.Team;
+import com.fazecast.jSerialComm.SerialPort;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
-import jssc.SerialPortList;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -31,9 +31,10 @@ public class GameController {
     private Moveset currentPieceMoveset;
     private Boolean isIllegal;
 
+    private Move aiTurn;
     private boolean arduinoOn;
 
-    private final String enginePath = "/home/adamz/Documents/stockfish/stockfish-ubuntu-x86-64-avx2";
+    private final String enginePath = "./stockfish";
 
     public GameController(Stage stage, Integer timerMinutes, Team vsAI, Integer difficulty) throws IOException {
         this.checkerboard = new Checkerboard();
@@ -43,6 +44,7 @@ public class GameController {
         this.game = loader.getController();
         game.updateAllPieces(checkerboard);
         game.setGameController(this);
+
 
         this.gameData = new GameData(timerMinutes, vsAI, difficulty);
 
@@ -54,6 +56,7 @@ public class GameController {
         this.currentTurnStart = LocalDateTime.now();
         this.currentPieceMoveset = null;
         this.isIllegal = false;
+        this.aiTurn = null;
 
         if (vsAI != null)
             this.engine = new Engine(difficulty, enginePath);
@@ -65,6 +68,8 @@ public class GameController {
         stage.getScene().setRoot(root);
         stage.show();
 
+
+
         timeLeft = currentPlayer == Team.WHITE ? gameData.getWhiteTimerLeft() : gameData.getBlackTimerLeft();
         startTimer();
 
@@ -72,6 +77,7 @@ public class GameController {
         if(portName != null) {
             new SerialInit(this, portName);
             arduinoOn = true;
+            game.hideSimulator();
         } else {
             arduinoOn = false;
         }
@@ -96,6 +102,7 @@ public class GameController {
         this.currentTurnStart = LocalDateTime.now();
         this.currentPieceMoveset = null;
         this.isIllegal = false;
+        this.aiTurn = null;
 
         if (gameData.getVsAI() != null)
             this.engine = new Engine(gameData.getAiDifficulty(), enginePath);
@@ -106,6 +113,10 @@ public class GameController {
         String portName = findArduino();
         if(portName != null) {
             new SerialInit(this, portName);
+            game.hideSimulator();
+            arduinoOn = true;
+        } else {
+            arduinoOn = false;
         }
 
         timeLeft = currentPlayer == Team.WHITE ? gameData.getWhiteTimerLeft() : gameData.getBlackTimerLeft();
@@ -136,23 +147,34 @@ public class GameController {
             }
         }
 
-
         timeLeft = currentPlayer == Team.WHITE ? gameData.getWhiteTimerLeft() : gameData.getBlackTimerLeft();
         currentTurnStart = LocalDateTime.now();
     }
 
-    private void endGame(Team checkTeam) {
-        // TODO - zamień na ekran końca gry, ustaw zwycięzcę
+    private void endGame(Team loser) {
+        Winner winner = loser == Team.WHITE ? Winner.BLACK : Winner.WHITE;
+        gameData.setWinner(winner);
+        gameData.save();
+        game.setEndScene(winner);
     }
 
     private void aiMove() {
-        Move move = engine.calculateMove(gameData.getMoves());
-
-        checkerboard.move(move);
-        saveMove(move);
+        aiTurn = engine.calculateMove(gameData.getMoves());
+        game.colorAiMove(aiTurn);
+        checkerboard.move(aiTurn);
     }
 
     public boolean pickUp(Position position) {
+        if(aiTurn != null && aiTurn.getStartPosition() != null) {
+            return position.equals(aiTurn.getStartPosition());
+        }
+
+        // picking up piece to beat
+        if (currentPieceMoveset != null && currentPieceMoveset.getBeatableList().contains(position)) {
+            return true;
+        }
+
+
         if (!isIllegal && currentPlayer == checkerboard.getPieceTeam(position)) {
             currentPieceMoveset = checkerboard.possibleMoves(position);
             game.showMoveset(currentPieceMoveset);
@@ -164,7 +186,17 @@ public class GameController {
     }
 
     public boolean place(Position destination) {
-        if (!isIllegal)
+        if(aiTurn != null) {
+            saveMove(aiTurn);
+            if(destination.equals(aiTurn.getEndPosition())){
+                aiTurn = null;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        if (isIllegal)
             return false;
 
         if (currentPieceMoveset.getMovableList().contains(destination) || currentPieceMoveset.getBeatableList().contains(destination)) {
@@ -202,6 +234,9 @@ public class GameController {
         game.setAlarmVisibility(false);
         game.clearBoard();
         currentPieceMoveset = null;
+        if(aiTurn != null) {
+            game.colorAiMove(aiTurn);
+        }
     }
 
     private void loadGame() {
@@ -223,7 +258,7 @@ public class GameController {
             game.updateTimer(currentPlayer, timeLeft.toMinutesPart() + String.format(":%02d", timeLeft.toSecondsPart()));
             if (timeLeft.isNegative()) {
                 stopTimer();
-                // TODO - CO ZROBIC JAK SKONCZY SIE CZAS
+                endGame(currentPlayer);
             }
         }, 1, 1, TimeUnit.SECONDS);
     }
@@ -233,13 +268,14 @@ public class GameController {
     }
 
     private String findArduino() {
-        for (String port : SerialPortList.getPortNames()) {
-            String lowerPort = port.toLowerCase();
-            if (lowerPort.contains("usb") || lowerPort.contains("arduino") ||
-                    lowerPort.contains("ttyacm") || lowerPort.contains("ttyusb")) {
-                return port;
+        for (SerialPort port : SerialPort.getCommPorts()) {
+            String manufacturer = port.getManufacturer().toLowerCase();
+            if (manufacturer.contains("arduino")) {
+                return port.getSystemPortName();
             }
         }
         return null;
     }
 }
+
+

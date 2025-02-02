@@ -53,7 +53,7 @@
     </FlowPane>
   </VBox>
 
-  <VBox spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+  <VBox fx:id="simulator" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
     <TextField fx:id="positionField"/>
     <Button mnemonicParsing="false" onAction="#sendPickUp" text="Podnieś"/>
     <Button mnemonicParsing="false" onAction="#sendPlace" text="Postaw"/>

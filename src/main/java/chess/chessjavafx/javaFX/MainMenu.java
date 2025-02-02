@@ -2,6 +2,7 @@ package chess.chessjavafx.javaFX;
 
 import chess.chessjavafx.game.GameController;
 import chess.chessjavafx.Team;
+import com.fazecast.jSerialComm.SerialPort;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +12,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import jssc.SerialPortList;
 
 import java.io.IOException;
 import java.net.URL;
@@ -66,11 +66,10 @@ public class MainMenu implements Initializable {
     }
 
     private void findArduino() {
-        for (String port : SerialPortList.getPortNames()) {
-            String lowerPort = port.toLowerCase();
-            if (lowerPort.contains("usb") || lowerPort.contains("arduino") ||
-                    lowerPort.contains("ttyacm") || lowerPort.contains("ttyusb")) {
-                portName = port;
+        for (SerialPort port : SerialPort.getCommPorts()) {
+            String manufacturer = port.getManufacturer().toLowerCase();
+            if (manufacturer.contains("arduino")) {
+                portName = port.getSystemPortName();
                 arduinoFound.setText("Port Arduino: " + portName);
                 return;
             }

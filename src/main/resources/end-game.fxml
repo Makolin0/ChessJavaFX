@@ -6,9 +6,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="chess.chessjavafx.javaFX.EndGame"
-            prefHeight="900.0" prefWidth="1200.0">
+<?import java.net.URL?>
+<?import javafx.scene.text.Text?>
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="chess.chessjavafx.javaFX.EndGame"
+      prefHeight="900.0" prefWidth="1200.0">
 
-</AnchorPane>
+  <Pane>
+    <VBox styleClass="background" alignment="CENTER">
+      <Label styleClass="title" text="Koniec gry!"/>
+      <Text text="Zwyciężył:" />
+      <Button onAction="#goBack" styleClass="back-button" text="Wróć" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    </VBox>
+  </Pane>
+  <stylesheets>
+    <URL value="@style.css"/>
+  </stylesheets>
+</HBox>

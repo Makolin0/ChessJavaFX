@@ -1,11 +1,13 @@
 package chess.chessjavafx.javaFX;
 
+import chess.chessjavafx.Winner;
 import chess.chessjavafx.game.Checkerboard;
 import chess.chessjavafx.game.GameController;
 import chess.chessjavafx.game.Move;
 import chess.chessjavafx.game.Position;
 import chess.chessjavafx.packages.Moveset;
 import chess.chessjavafx.Team;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,15 +21,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import jssc.SerialPortList;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.Duration;
 import java.util.*;
 
 public class Game implements Initializable {
@@ -74,6 +75,7 @@ public class Game implements Initializable {
     public FlowPane checkBg;
     @FXML
     public FlowPane alarmBg;
+    public VBox simulator;
 
     private List<Rectangle> squares;
     private Map<Integer, ImageView> pieceImgs;
@@ -149,114 +151,132 @@ public class Game implements Initializable {
 
 
     public void setPlayer(Team currentPlayer) {
-        if (currentPlayer == Team.WHITE) {
-            timerWhiteBg.getStyleClass().add("timer-current");
-            timerBlackBg.getStyleClass().remove("timer-current");
-            currentPlayerText.setText("Biały");
-        } else {
-            timerBlackBg.getStyleClass().add("timer-current");
-            timerWhiteBg.getStyleClass().remove("timer-current");
-            currentPlayerText.setText("Czarny");
-        }
+
+        Platform.runLater(() -> {
+            if (currentPlayer == Team.WHITE) {
+                timerWhiteBg.getStyleClass().add("timer-current");
+                timerBlackBg.getStyleClass().remove("timer-current");
+                currentPlayerText.setText("Biały");
+            } else {
+                timerBlackBg.getStyleClass().add("timer-current");
+                timerWhiteBg.getStyleClass().remove("timer-current");
+                currentPlayerText.setText("Czarny");
+            }
+        });
     }
 
     private void colorCurrentPos(Position pos) {
-        squares.get(pos.getInt()).setFill((pos.getX() + pos.getY()) % 2 == 0 ? Color.BLUE : Color.LIGHTBLUE);
+        Platform.runLater(() -> {
+            squares.get(pos.getInt()).setFill((pos.getX() + pos.getY()) % 2 == 0 ? Color.BLUE : Color.LIGHTBLUE);
+        });
     }
 
     private void colorMovePos(Position pos) {
-        squares.get(pos.getInt()).setFill((pos.getX() + pos.getY()) % 2 == 0 ? Color.GREEN : Color.LIGHTGREEN);
+        Platform.runLater(() -> {
+            squares.get(pos.getInt()).setFill((pos.getX() + pos.getY()) % 2 == 0 ? Color.GREEN : Color.LIGHTGREEN);
+        });
     }
 
     private void colorBeatPos(Position pos) {
-        squares.get(pos.getInt()).setFill((pos.getX() + pos.getY()) % 2 == 0 ? Color.DARKRED : Color.RED);
+        Platform.runLater(() -> {
+            squares.get(pos.getInt()).setFill((pos.getX() + pos.getY()) % 2 == 0 ? Color.DARKRED : Color.RED);
+        });
     }
 
     public void showMoveset(Moveset moveset) {
-        colorCurrentPos(moveset.getCurrentPosition());
-        moveset.getMovableList().forEach(this::colorMovePos);
-        moveset.getBeatableList().forEach(this::colorBeatPos);
+        Platform.runLater(() -> {
+            colorCurrentPos(moveset.getCurrentPosition());
+            moveset.getMovableList().forEach(this::colorMovePos);
+            moveset.getBeatableList().forEach(this::colorBeatPos);
+        });
     }
 
     public void clearBoard() {
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++) {
-                squares.get(y * 8 + x).setFill((y + x) % 2 == 0 ? Color.DARKGRAY : Color.WHITE);
+        Platform.runLater(() -> {
+            for (int y = 0; y < 8; y++) {
+                for (int x = 0; x < 8; x++) {
+                    squares.get(y * 8 + x).setFill((y + x) % 2 == 0 ? Color.DARKGRAY : Color.WHITE);
+                }
             }
-        }
+        });
     }
 
     public void updateAllPieces(Checkerboard checkerboard) {
-        Map<Integer, ImageView> newPieceImgs = checkerboard.getImages();
-        newPieceImgs.forEach((key, img) -> {
-            Position pos = new Position(key);
-            img.setX(pos.getX() * SQUARE_SIZE + BORDER_SHIFT);
-            img.setY((7 - pos.getY()) * SQUARE_SIZE + BORDER_SHIFT);
-            img.setFitHeight(SQUARE_SIZE);
-            img.setFitWidth(SQUARE_SIZE);
+        Platform.runLater(() -> {
+            Map<Integer, ImageView> newPieceImgs = checkerboard.getImages();
+            newPieceImgs.forEach((key, img) -> {
+                Position pos = new Position(key);
+                img.setX(pos.getX() * SQUARE_SIZE + BORDER_SHIFT);
+                img.setY((7 - pos.getY()) * SQUARE_SIZE + BORDER_SHIFT);
+                img.setFitHeight(SQUARE_SIZE);
+                img.setFitWidth(SQUARE_SIZE);
+            });
+            board.getChildren().removeAll(new ArrayList<>(pieceImgs.values()));
+            pieceImgs.clear();
+            pieceImgs.putAll(newPieceImgs);
+            board.getChildren().addAll(new ArrayList<>(pieceImgs.values()));
         });
-        board.getChildren().removeAll(new ArrayList<>(pieceImgs.values()));
-        pieceImgs.clear();
-        pieceImgs.putAll(newPieceImgs);
-        board.getChildren().addAll(new ArrayList<>(pieceImgs.values()));
     }
 
     public void saveMove(Move move) {
-        switch (tableView.getItems().get(0).getState()) {
-            case 0:
-                tableView.getItems().get(0).setMoveWhite(move.toString());
-                break;
-            case 1:
-                tableView.getItems().get(0).setMoveBlack(move.toString());
-                tableView.getItems().add(0, new MoveRow());
-                break;
-            case 2:
-                break;
-        }
-        this.tableView.refresh();
+        Platform.runLater(() -> {
+            switch (tableView.getItems().get(0).getState()) {
+                case 0:
+                    tableView.getItems().get(0).setMoveWhite(move.toString());
+                    break;
+                case 1:
+                    tableView.getItems().get(0).setMoveBlack(move.toString());
+                    tableView.getItems().add(0, new MoveRow());
+                    break;
+                case 2:
+                    break;
+            }
+            this.tableView.refresh();
+        });
     }
 
     public void movePiece(Move move) {
-        ImageView pieceImg = pieceImgs.get(move.getStartPosition().getInt());
-        pieceImg.setX(move.getEndPosition().getX() * SQUARE_SIZE + BORDER_SHIFT);
-        pieceImg.setY((7 - move.getEndPosition().getY()) * SQUARE_SIZE + BORDER_SHIFT);
-        pieceImgs.remove(move.getStartPosition().getInt());
-        board.getChildren().remove(pieceImgs.get(move.getEndPosition().getInt()));
+        Platform.runLater(() -> {
+            ImageView pieceImg = pieceImgs.get(move.getStartPosition().getInt());
+            pieceImg.setX(move.getEndPosition().getX() * SQUARE_SIZE + BORDER_SHIFT);
+            pieceImg.setY((7 - move.getEndPosition().getY()) * SQUARE_SIZE + BORDER_SHIFT);
+            pieceImgs.remove(move.getStartPosition().getInt());
+            board.getChildren().remove(pieceImgs.get(move.getEndPosition().getInt()));
 
-        pieceImgs.replace(move.getEndPosition().getInt(), pieceImg);
+            pieceImgs.replace(move.getEndPosition().getInt(), pieceImg);
 
-        saveMove(move);
-        clearBoard();
+            saveMove(move);
+            clearBoard();
+        });
     }
 
     public void modifyCheck(Team team) {
-        if (team == null) {
-            checkText.setText("");
-            checkBg.setVisible(false);
-        } else {
-            checkBg.setVisible(true);
-            checkText.setText("Szach dla: " + team);
-        }
+        Platform.runLater(() -> {
+            if (team == null) {
+                checkText.setText("");
+                checkBg.setVisible(false);
+            } else {
+                checkBg.setVisible(true);
+                checkText.setText("Szach dla: " + team);
+            }
+        });
     }
 
 
-    public void colorIllegalPlace(List<Position> illegalPlace) {
-        for (Position position : illegalPlace) {
-            colorBeatPos(position);
-        }
-    }
-
-    public void colorIllegalPickUp(List<Position> illegalPickUp) {
-        for (Position position : illegalPickUp) {
-            colorCurrentPos(position);
-        }
+    public void colorAiMove(Move move) {
+        Platform.runLater(() -> {
+            colorCurrentPos(move.getStartPosition());
+            colorCurrentPos(move.getEndPosition());
+        });
     }
 
     public void sendPickUp() {
-        Position position = new Position(positionField.getText());
-        positionField.clear();
+        Platform.runLater(() -> {
+            Position position = new Position(positionField.getText());
+            positionField.clear();
 
-        gameController.pickUp(position);
+            gameController.pickUp(position);
+        });
     }
 
     public void sendPlace() {
@@ -267,22 +287,49 @@ public class Game implements Initializable {
     }
 
     public void setAlarmVisibility(Boolean isVisible) {
-        alarm.setVisible(isVisible);
-        alarmBg.setVisible(isVisible);
+        Platform.runLater(() -> {
+            alarm.setVisible(isVisible);
+            alarmBg.setVisible(isVisible);
+        });
     }
 
     public void setInfo(Team vsAI, Integer difficulty, Integer timer) {
-        comTeamText.setText(vsAI == null ? "" : "Kolor komputera: " + vsAI);
-        comDifficultyText.setText(difficulty == null ? "" : "Poziom trudności: " + difficulty);
-        timerText.setText(timer == null ? "Czas: nieskończoność" : "Czas: " + timer + " minut");
+        Platform.runLater(() -> {
+            comTeamText.setText(vsAI == null ? "" : "Kolor komputera: " + vsAI);
+            comDifficultyText.setText(difficulty == null ? "" : "Poziom trudności: " + difficulty);
+            timerText.setText(timer == null ? "Czas: nieskończoność" : "Czas: " + timer + " minut");
+        });
     }
 
     public void updateTimer(Team team, String timeLeft) {
-        if (team == Team.WHITE)
-            timerWhiteText.setText(timeLeft);
-        if (team == Team.BLACK)
-            timerBlackText.setText(timeLeft);
+        Platform.runLater(() -> {
+            if (team == Team.WHITE)
+                timerWhiteText.setText(timeLeft);
+            if (team == Team.BLACK)
+                timerBlackText.setText(timeLeft);
+        });
     }
 
+    public void setEndScene(Winner winner) {
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/end-game.fxml")));
+                Parent root = loader.load();
+                EndGame controller = loader.getController();
+                controller.setData(winner);
 
+                Stage stage = (Stage) board.getScene().getWindow();
+                stage.getScene().setRoot(root);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void hideSimulator() {
+        Platform.runLater(() -> {
+            simulator.setVisible(false);
+        });
+    }
 }
