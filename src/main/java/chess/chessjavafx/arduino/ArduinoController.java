@@ -2,10 +2,14 @@ package chess.chessjavafx.arduino;
 
 import chess.chessjavafx.game.GameController;
 import chess.chessjavafx.game.Position;
+import chess.chessjavafx.pieces.Piece;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.TimerTask;
 
 public class ArduinoController extends TimerTask implements SerialPortDataListener {
@@ -15,16 +19,14 @@ public class ArduinoController extends TimerTask implements SerialPortDataListen
     private String prevBoard;
     private String newBoard;
 
-    public ArduinoController(GameController gameController) {
+    public ArduinoController(GameController gameController, Map<Integer, Piece> board) {
+        char[] temp = "0000000000000000000000000000000000000000000000000000000000000000".toCharArray();
+        for(Map.Entry<Integer, Piece> entry : board.entrySet()) {
+            temp[(entry.getKey()%8)*8 + (entry.getKey()/8)] = '1';
+        }
+        this.prevBoard = new String(temp);
+
         this.gameController = gameController;
-        this.prevBoard = "11000011" +
-                "11000011" +
-                "11000011" +
-                "11000011" +
-                "11000011" +
-                "11000011" +
-                "11000011" +
-                "11000011";
         this.prevLegalBoard = prevBoard;
         this.newBoard = "";
         enableAlarm();
@@ -69,6 +71,14 @@ public class ArduinoController extends TimerTask implements SerialPortDataListen
         if (newBoard.equals(prevLegalBoard)) {
             prevBoard = prevLegalBoard;
             disableAlarm();
+        } else {
+            List<Position> wrongList = new ArrayList<>();
+            for (int i = 0; i < 64; i++) {
+                if (newBoard.charAt(i) != prevLegalBoard.charAt(i)) {
+                    wrongList.add(new Position(i/8, i%8));
+                }
+            }
+            gameController.colorWrongFields(wrongList);
         }
     }
 
@@ -86,6 +96,7 @@ public class ArduinoController extends TimerTask implements SerialPortDataListen
                         prevBoard = newBoard;
                     } else {
                         enableAlarm();
+                        restoreBoard();
                     }
                     System.out.println("pick up: " + new Position(i / 8, i % 8));
                 } else {
@@ -95,6 +106,7 @@ public class ArduinoController extends TimerTask implements SerialPortDataListen
                         prevLegalBoard = newBoard;
                     } else {
                         enableAlarm();
+                        restoreBoard();
                     }
                     System.out.println("place: " + new Position(i / 8, i % 8));
                 }

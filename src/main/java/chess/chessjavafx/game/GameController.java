@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -75,7 +76,7 @@ public class GameController {
 
         String portName = findArduino();
         if(portName != null) {
-            new SerialInit(this, portName);
+            new SerialInit(this, portName, checkerboard.getBoard());
             arduinoOn = true;
             game.hideSimulator();
         } else {
@@ -112,7 +113,7 @@ public class GameController {
 
         String portName = findArduino();
         if(portName != null) {
-            new SerialInit(this, portName);
+            new SerialInit(this, portName, checkerboard.getBoard());
             game.hideSimulator();
             arduinoOn = true;
         } else {
@@ -275,6 +276,13 @@ public class GameController {
             }
         }
         return null;
+    }
+
+    public void colorWrongFields(List<Position> wrongList) {
+        game.clearBoard();
+        for(Position p : wrongList) {
+            game.colorBeatPos(p);
+        }
     }
 }
 
