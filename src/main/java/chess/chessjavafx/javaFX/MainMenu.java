@@ -74,7 +74,7 @@ public class MainMenu implements Initializable {
                 return;
             }
         }
-        arduinoFound.setText("Nie znalezono Arduino");
+        arduinoFound.setText("Nie znaleziono Arduino");
         portName = null;
     }
 }

@@ -8,9 +8,9 @@ public class Engine {
     private Writer writer;
 
     // difficulty from 0 to 20
-    public Engine(int difficulty, String filePath) {
+    public Engine(int difficulty) {
         try{
-            ProcessBuilder processBuilder = new ProcessBuilder(filePath);
+            ProcessBuilder processBuilder = new ProcessBuilder("./stockfish.exe");
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
             reader = new BufferedReader(new InputStreamReader(process.getInputStream()));

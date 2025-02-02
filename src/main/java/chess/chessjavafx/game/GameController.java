@@ -35,8 +35,6 @@ public class GameController {
     private Move aiTurn;
     private boolean arduinoOn;
 
-    private final String enginePath = "./stockfish";
-
     public GameController(Stage stage, Integer timerMinutes, Team vsAI, Integer difficulty) throws IOException {
         this.checkerboard = new Checkerboard();
 
@@ -60,7 +58,7 @@ public class GameController {
         this.aiTurn = null;
 
         if (vsAI != null)
-            this.engine = new Engine(difficulty, enginePath);
+            this.engine = new Engine(difficulty);
 
 
         if (vsAI == Team.WHITE)
@@ -106,7 +104,7 @@ public class GameController {
         this.aiTurn = null;
 
         if (gameData.getVsAI() != null)
-            this.engine = new Engine(gameData.getAiDifficulty(), enginePath);
+            this.engine = new Engine(gameData.getAiDifficulty());
 
         stage.getScene().setRoot(root);
         stage.show();
